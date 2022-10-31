@@ -1,0 +1,29 @@
+server:
+  port: 8000
+  servlet:
+    context-path: /
+
+spring:
+  datasource:
+    url: jdbc:mariadb://localhost:3306/jobs
+    driver-class-name: org.mariadb.jdbc.Driver
+    username: jobsmatch
+    password: 1234
+  redis: 
+    host: localhost
+    port: 6379
+  # jpa:
+  #   open-in-view: false
+  #   hibernate:
+  #     ddl-auto: create
+      
+    # properties:
+    #   '[hibernate.format_sql]': true    
+  output:
+    ansi:
+      enabled: always
+
+logging:
+  level:
+    '[org.hibernate.SQL]': DEBUG
+    #root: DEBUG

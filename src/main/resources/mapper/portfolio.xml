@@ -1,0 +1,16 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="site.metacoding.miniproject.domain.portfolio.PortfolioDao">
+
+<insert id="insert" useGeneratedKeys="true" keyProperty="portfolioId" keyColumn="portfolio_id">
+	INSERT INTO portfolio (portfolio_source, portfolio_file, created_at)
+	VALUES(#{portfolioSource}, #{portfolioFile}, NOW())
+</insert>
+
+<update id="update">
+	UPDATE portfolio 
+	SET portfolio_source = #{portfolioSource},
+	portfolio_file =#{portfolioFile}
+	WHERE portfolio_id = #{portfolioId}
+</update>
+</mapper>

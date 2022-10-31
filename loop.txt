@@ -1,0 +1,123 @@
+개인회원은 51 ~ 100 번
+기업 회원은 1 ~ 50 번
+auto_increment 재조정 :
+ALTER TABLE [테이블명] AUTO_INCREMENT=1;
+SET @COUNT = 0;
+UPDATE [테이블명] SET [AUTO_INCREMENT 열 이름] = @COUNT:=@COUNT+1;
+-------------------- user(기업) -------------------
+DELIMITER $$
+DROP PROCEDURE IF EXISTS loopInsert$$
+CREATE PROCEDURE loopInsert()
+BEGIN
+DECLARE i INT DEFAULT 1;	
+WHILE i <= 50 DO	
+INSERT INTO users (login_id, login_password, company_id, created_at)
+VALUES(concat('company',i), '1234', i, now());
+SET i = i + 1;
+END WHILE;
+END$$
+DELIMITER $$
+CALL loopInsert;
+-------------------- user(개인) -------------------
+DELIMITER $$
+DROP PROCEDURE IF EXISTS loopInsert$$
+CREATE PROCEDURE loopInsert()
+BEGIN
+DECLARE i INT DEFAULT 1;	
+WHILE i <= 50 DO	
+INSERT INTO users (login_id, login_password, personal_id, created_at)
+VALUES(concat('personal',i), '1234', i, now());
+SET i = i + 1;
+END WHILE;
+END$$
+DELIMITER $$
+CALL loopInsert;
+-------------------- company -------------------
+DELIMITER $$
+DROP PROCEDURE IF EXISTS loopInsert$$
+CREATE PROCEDURE loopInsert()
+BEGIN
+DECLARE i INT DEFAULT 1;	
+WHILE i <= 50 DO	
+INSERT INTO company (company_name, company_category_id, created_at)
+VALUES(concat('companyname',i), i,  NOW());
+SET i = i + 1;
+END WHILE;
+END$$
+DELIMITER $$
+
+CALL loopInsert;
+-------------------- personal -------------------
+DELIMITER $$
+DROP PROCEDURE IF EXISTS loopInsert$$
+CREATE PROCEDURE loopInsert()
+BEGIN
+DECLARE i INT DEFAULT 51;	
+WHILE i <= 100 DO	
+INSERT INTO personal (personal_name, personal_category_id, created_at)
+VALUES(concat('companyname',i), i,  NOW());
+SET i = i + 1;
+END WHILE;
+END$$
+DELIMITER $$
+
+CALL loopInsert;
+-------------------- company_detail -------------------
+DELIMITER $$
+DROP PROCEDURE IF EXISTS loopInsert$$
+CREATE PROCEDURE loopInsert()
+BEGIN
+DECLARE i INT DEFAULT 1;	
+WHILE i <= 50 DO	
+INSERT INTO company_detail (company_id, company_email, company_phonenumber, company_address, created_at)
+VALUES(i, CONCAT('company_email',i,'@example.com'), CONCAT('010-',i,'-0000'), CONCAT('company_adress', i), NOW());
+SET i = i + 1;
+END WHILE;
+END$$
+DELIMITER $$
+
+CALL loopInsert;
+-------------------- personal_detail -------------------
+DELIMITER $$
+DROP PROCEDURE IF EXISTS loopInsert$$
+CREATE PROCEDURE loopInsert()
+BEGIN
+DECLARE i INT DEFAULT 51;	
+WHILE i <= 100 DO	
+INSERT INTO personal_detail (personal_id, personal_email, personal_phonenumber, created_at)
+VALUES(i, CONCAT('personal_email',i,'@example.com'), CONCAT('010-',i,'-0000'), NOW());
+SET i = i + 1;
+END WHILE;
+END$$
+DELIMITER $$
+
+CALL loopInsert;
+-------------------- resumes -------------------
+DELIMITER $$
+DROP PROCEDURE IF EXISTS loopInsert$$
+CREATE PROCEDURE loopInsert()
+BEGIN
+DECLARE i INT DEFAULT ;	
+WHILE i <= 50 DO	
+INSERT INTO resumes (personal_id, resumes_title, resumes_picture, resumes_introduce, created_at)
+VALUES(i, CONCAT('resumes_title',i), CONCAT(i,"번유저의사진입니다."), CONCAT("안녕하세요 저는 ", i, "입니다."), NOW());
+SET i = i + 1;
+END WHILE;
+END$$
+DELIMITER $$
+
+CALL loopInsert;
+-------------------- job_posting_board -------------------
+DELIMITER $$
+DROP PROCEDURE IF EXISTS loopInsert$$
+CREATE PROCEDURE loopInsert()
+BEGIN
+DECLARE i INT DEFAULT 1;	
+WHILE i <= 50 DO	
+INSERT INTO job_posting_board (company_id, job_posting_board_title, job_posting_board_content, created_at)
+VALUES(i, CONCAT('job_posting_board_title',i), CONCAT(i, "구인합니다."), NOW());
+SET i = i + 1;
+END WHILE;
+END$$
+DELIMITER $$
+CALL loopInsert;

@@ -1,0 +1,28 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="site.metacoding.miniproject.domain.career.CareerDao">
+
+<insert id="insert" useGeneratedKeys="true" keyProperty="careerId" keyColumn="career_id">
+	INSERT INTO career (one_year_less, two_year_over, three_year_over, five_year_over, created_at)
+	VALUES(#{oneYearLess}, #{twoYearOver}, #{threeYearOver}, #{fiveYearOver}, NOW())
+</insert>
+
+<update id="update">
+	UPDATE career 
+	SET one_year_less = #{oneYearLess},
+	 two_year_over =#{twoYearOver},
+	 three_year_over = #{threeYearOver},
+	five_year_over = #{fiveYearOver}
+	WHERE career_id = #{careerId}
+</update>
+
+<update id="jobPostingUpdate">
+	UPDATE career 
+	SET one_year_less = #{oneYearLess},
+	 two_year_over =#{twoYearOver},
+	 three_year_over = #{threeYearOver},
+	five_year_over = #{fiveYearOver}
+	WHERE career_id = #{jobPostingBoardCareerId}
+</update>
+
+</mapper>
