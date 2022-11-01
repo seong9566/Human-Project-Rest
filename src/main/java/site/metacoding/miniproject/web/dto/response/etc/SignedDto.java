@@ -15,9 +15,8 @@ public class SignedDto<T> implements Serializable {
 	private Integer usersId;
 	private String loginId;
 	private String loginPassword;
-	private Integer personalId;
-	private Integer companyId;
+	//AlarmDto 넣기
 	private T Userinfo;
 
-	private static final long serialVersionUID = -242078978525600927L;
+	private static final long serialVersionUID = 7364337982660485087L;
 }

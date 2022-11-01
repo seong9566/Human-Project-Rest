@@ -6,7 +6,7 @@ import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
-import site.metacoding.miniproject.web.dto.request.resume.ResumesInsertDto;
+import site.metacoding.miniproject.dto.resumes.ResumesReqDto.ResumesInsertReqDto;
 import site.metacoding.miniproject.web.dto.request.resume.ResumesUpdateDto;
 
 @AllArgsConstructor
@@ -26,11 +26,11 @@ public class Resumes {
 	private Timestamp createdAt;
 
 	// 이력서 작성
-	public Resumes(ResumesInsertDto insertResumesDto) {
-		this.resumesTitle = insertResumesDto.getResumesTitle();
-		this.resumesPicture = insertResumesDto.getResumesPicture();
-		this.resumesIntroduce = insertResumesDto.getResumesIntroduce();
-		this.resumesPlace = insertResumesDto.getResumesPlace();
+	public Resumes(ResumesInsertReqDto resumesInsertReqDto) {
+		this.resumesTitle = resumesInsertReqDto.getResumesTitle();
+		this.resumesPicture = resumesInsertReqDto.getResumesPicture();
+		this.resumesIntroduce = resumesInsertReqDto.getResumesIntroduce();
+		this.resumesPlace = resumesInsertReqDto.getResumesPlace();
 	}
 
 	// 이력서 수정

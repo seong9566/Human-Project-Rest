@@ -8,7 +8,6 @@ import java.util.UUID;
 
 import javax.servlet.http.HttpSession;
 
-import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -18,19 +17,19 @@ import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestPart;
 import org.springframework.web.bind.annotation.ResponseBody;
+import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.multipart.MultipartFile;
 
 import lombok.RequiredArgsConstructor;
 import site.metacoding.miniproject.domain.like.personalike.PersonalLike;
 import site.metacoding.miniproject.domain.resumes.Resumes;
 import site.metacoding.miniproject.dto.personal.PersonalRespDto.PersonalDetailRespDto;
+import site.metacoding.miniproject.dto.resumes.ResumesReqDto.ResumesInsertReqDto;
 import site.metacoding.miniproject.service.company.CompanyService;
 import site.metacoding.miniproject.service.personal.PersonalLikeService;
 import site.metacoding.miniproject.service.personal.PersonalService;
-import site.metacoding.miniproject.utill.ResumesValidationCheck;
 import site.metacoding.miniproject.utill.ValidationCheckUtil;
 import site.metacoding.miniproject.web.dto.request.personal.PersonalUpdateDto;
-import site.metacoding.miniproject.web.dto.request.resume.ResumesInsertDto;
 import site.metacoding.miniproject.web.dto.request.resume.ResumesUpdateDto;
 import site.metacoding.miniproject.web.dto.response.ResponseDto;
 import site.metacoding.miniproject.web.dto.response.company.CompanyAddressDto;
@@ -41,11 +40,12 @@ import site.metacoding.miniproject.web.dto.response.etc.SignedDto;
 import site.metacoding.miniproject.web.dto.response.jobpostingboard.JobPostingBoardDetailDto;
 import site.metacoding.miniproject.web.dto.response.personal.PersonalAddressDto;
 import site.metacoding.miniproject.web.dto.response.personal.PersonalInfoDto;
+import site.metacoding.miniproject.web.dto.response.personal.PersonalFormDto;
 import site.metacoding.miniproject.web.dto.response.personal.PersonalMainDto;
 import site.metacoding.miniproject.web.dto.response.resume.ResumesDetailDto;
 
 @RequiredArgsConstructor
-@Controller
+@RestController
 public class PersonalController {
 
 	private final HttpSession session;
@@ -54,40 +54,20 @@ public class PersonalController {
 	private final PersonalLikeService personalLikeService;
 
 	// 이력서 작성 하기
-	@GetMapping("/personal/resumesForm")
-	public String resumesForm(Model model) {
-		SignedDto<?> principal = (SignedDto<?>) session.getAttribute("principal");
-		PersonalInfoDto personalInfoPS = personalService.personalInfoById(principal.getPersonalId());
-		model.addAttribute("personalInfoPS", personalInfoPS);
-		return "personal/resumesForm";
-	}
+	// @GetMapping("/resumes/insert")
+	// public String resumesForm(Model model) {
+	// SignedDto<?> principal = (SignedDto<?>) session.getAttribute("principal");
+	// PersonalInfoDto personalInfoPS =
+	// personalService.personalInfoById(principal.getPersonalId());
+	// model.addAttribute("personalInfoPS", personalInfoPS);
+	// return "personal/resumesForm";
+	// }
 
-	@PostMapping(value = "/personal/resumes")
-	public @ResponseBody ResponseDto<?> insertResumes(@RequestPart("file") MultipartFile file,
-			@RequestPart("ResumesInsertDto") ResumesInsertDto resumesInsertDto) throws Exception {
-		int pos = file.getOriginalFilename().lastIndexOf('.');
-		String extension = file.getOriginalFilename().substring(pos + 1);
-		String filePath = "C:\\Temp\\img\\";
-		// String filePath = "/Users/ihyeonseong/Desktop/img";//Mac전용 경로
-		String imgSaveName = UUID.randomUUID().toString();
-		String imgName = imgSaveName + "." + extension;
-		File makeFileFolder = new File(filePath);
-		if (!makeFileFolder.exists()) {
-			if (!makeFileFolder.mkdir()) {
-				throw new Exception("File.mkdir():Fail.");
-			}
-		}
-		File dest = new File(filePath, imgName);
-		try {
-			Files.copy(file.getInputStream(), dest.toPath());
-		} catch (IOException e) {
-			e.printStackTrace();
-			System.out.println("사진 업로드 됨");
-		}
-		resumesInsertDto.setResumesPicture(imgName);
-		ResumesValidationCheck.valCheckToInsertResumes(resumesInsertDto);
+	@PostMapping(value = "/resumes/insert")
+	public ResponseDto<?> resumesInsert(ResumesInsertReqDto resumesInsertReqDto) throws Exception {
+		// ResumesValidationCheck.valCheckToInsertResumes(resumesInsertDto);
 		SignedDto<?> principal = (SignedDto<?>) session.getAttribute("principal");
-		personalService.insertResumes(principal.getPersonalId(), resumesInsertDto);
+		personalService.insertResumes(principal.getPersonalId(), resumesInsertReqDto);
 		return new ResponseDto<>(1, "이력서 등록 성공", null);
 	}
 
@@ -95,7 +75,7 @@ public class PersonalController {
 	@GetMapping("/personal/resumesList")
 	public String resumesList(Model model) {
 		SignedDto<?> principal = (SignedDto<?>) session.getAttribute("principal");
-		List<Resumes> resumesList = personalService.myresumesAll(principal.getPersonalId());
+		//List<Resumes> resumesList = personalService.myresumesAll(principal.getPersonalId());
 		model.addAttribute("resumesList", resumesList);
 		return "personal/resumesList";
 	}
@@ -104,7 +84,7 @@ public class PersonalController {
 	@GetMapping("/personal/resumes/{resumesId}")
 	public String resumesById(@PathVariable Integer resumesId, Model model) {
 		SignedDto<?> signedDto = (SignedDto<?>) session.getAttribute("principal");
-		PersonalLike personalLike = personalLikeService.좋아요확인(resumesId, signedDto.getCompanyId());
+		//PersonalLike personalLike = personalLikeService.좋아요확인(resumesId, signedDto.getCompanyId());
 		model.addAttribute("personalLike", personalLike);
 		ResumesDetailDto detailResumesDtoPS = personalService.resumesById(resumesId);
 		model.addAttribute("detailResumesDtoPS", detailResumesDtoPS);
