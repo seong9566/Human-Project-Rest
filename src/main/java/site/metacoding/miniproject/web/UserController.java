@@ -14,6 +14,7 @@ import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.multipart.MultipartFile;
 
 import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
 import site.metacoding.miniproject.config.SessionConfig;
 import site.metacoding.miniproject.domain.alarm.Alarm;
 import site.metacoding.miniproject.domain.subscribe.Subscribe;
@@ -27,6 +28,7 @@ import site.metacoding.miniproject.web.dto.response.etc.SignedDto;
 
 @RestController
 @RequiredArgsConstructor
+@Slf4j
 public class UserController {
 	private final UsersService userService;
 	private final HttpSession session;
@@ -135,9 +137,9 @@ public class UserController {
 
 	//기업 회원가입
 	@PostMapping(value = "/join/company")
-	public ResponseDto<?> joinCompany(@RequestPart("file") MultipartFile file,
-			@RequestPart("joinDto") CompanyJoinDto joinDto) {
-
+	public ResponseDto<?> joinCompany(@RequestPart(value = "file", required = false) MultipartFile file,
+		@RequestPart("joinDto") CompanyJoinDto joinDto) {
+		
 		joinDto.setFile(file);
 		userService.joinCompany(joinDto);
 
@@ -147,7 +149,7 @@ public class UserController {
 
 		session.setAttribute("principal", signedDto);
 
-		return new ResponseDto<>(1, "계정생성완료", null);
+		return new ResponseDto<>(1, "계정생성완료", signedDto);
 	}
 
 	//유저알람 갱신 해주기
