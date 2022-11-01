@@ -51,7 +51,6 @@ public class PersonalReqDto {
         private String personalPhoneNumber;
         private String personalAddress;
 
-        private String loginId;
         private String loginPassword;
 
         public Personal toEntity() {

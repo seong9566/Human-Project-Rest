@@ -152,7 +152,7 @@ public class PersonalService {
 
 	// 내 정보 수정
 	@Transactional(rollbackFor = Exception.class)
-	public void updatePersonal(Integer userId, Integer personalId, PersonalUpdateDto personalUpdateDto) {
+	public PersonalUpdateDto updatePersonal(PersonalUpdateDto personalUpdateDto) {
 		Users personaluserPS = userDao.findById(userId);
 		personaluserPS.update(personalUpdateDto);
 		userDao.update(personaluserPS);

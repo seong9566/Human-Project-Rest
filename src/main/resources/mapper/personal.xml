@@ -65,7 +65,6 @@
 		personal_education = #{personalEducation},
 		personal_address = #{personalAddress}
 		WHERE personal_id = #{personalId}
-
 	</update>
 
 </mapper>
