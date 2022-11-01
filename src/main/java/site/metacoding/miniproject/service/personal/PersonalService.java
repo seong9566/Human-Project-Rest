@@ -21,6 +21,7 @@ import site.metacoding.miniproject.domain.resumes.ResumesDao;
 import site.metacoding.miniproject.domain.users.Users;
 import site.metacoding.miniproject.domain.users.UsersDao;
 import site.metacoding.miniproject.dto.personal.PersonalRespDto.PersonalDetailRespDto;
+import site.metacoding.miniproject.dto.personal.PersonalRespDto.PersonalFormRespDto;
 import site.metacoding.miniproject.dto.resumes.ResumesReqDto.ResumesInsertReqDto;
 import site.metacoding.miniproject.dto.resumes.ResumesRespDto.ResumesInsertRespDto;
 import site.metacoding.miniproject.web.dto.request.personal.PersonalUpdateDto;
@@ -135,18 +136,16 @@ public class PersonalService {
 	@Transactional(readOnly = true)
 	public PersonalDetailRespDto findByPersonal(Integer personalId) {
 		PersonalDetailRespDto personalDetailRespDto = personalDao.personalformById(personalId);
-		// Personal personal = new Personal();
-		// personal.setPersonalName("ssar");
-		// personal.setPersonalPhoneNumber("010-9459-5116");
-		// personal.setPersonalEmail("cndtjq1248@naver.com");
-		// personal.setPersonalAddress("asdfasdfa");
 		return personalDetailRespDto;
 	}
 
 	// 내 정보 수정에서 데이터 보여주기
-	public PersonalUpdateDto personalUpdateById(Integer personalId) {
-		return personalDao.personalUpdateById(personalId);
-	}
+	// @Transactional(readOnly = true)
+	// public PersonalFormRespDto personalUpdateById(Integer personalId) {
+	// PersonalFormRespDto personalDetailRespDto =
+	// personalDao.personalformById(personalId);
+	// return personalDao.personalUpdateById(personalId);
+	// }
 
 	public PersonalAddressDto personalAddress(Integer personalId) {
 		return personalDao.personalAddressById(personalId);

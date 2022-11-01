@@ -8,6 +8,7 @@ import site.metacoding.miniproject.domain.personal.Personal;
 public class PersonalRespDto {
 
     @Getter
+    @Setter
     @NoArgsConstructor
     public static class PersonalDetailRespDto {
         private Integer personalId;
@@ -26,6 +27,25 @@ public class PersonalRespDto {
             this.personalAddress = personal.getPersonalAddress();
         }
 
+    }
+
+    @Getter
+    @Setter
+    @NoArgsConstructor
+    public static class PersonalUpdateFormRespDto {
+        private Integer personalId;
+        private String personalName;
+        private String personalEmail;
+        private String personalPhoneNumber;
+        private String personalEducation;
+        private String personalAddress;
+
+        private String loginPassword;
+
+        public PersonalUpdateFormRespDto(PersonalUpdateFormRespDto personalUpdateFormRespDto) {
+            //
+
+        }
     }
 
 }

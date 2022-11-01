@@ -21,7 +21,6 @@ import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.multipart.MultipartFile;
 
 import lombok.RequiredArgsConstructor;
-import site.metacoding.miniproject.dto.personal.PersonalRespDto.PersonalDetailRespDto;
 import site.metacoding.miniproject.dto.resumes.ResumesReqDto.ResumesInsertReqDto;
 import site.metacoding.miniproject.dto.user.UserRespDto.SignPersonalDto;
 import site.metacoding.miniproject.dto.user.UserRespDto.SignedDto;
@@ -244,21 +243,19 @@ public class PersonalController {
 	// 내정보 보기
 	@GetMapping("/api/personal/inform")
 	public ResponseDto<?> perosnalDetail() {
-		SignedDto<?> principal = (SignedDto<?>) session.getAttribute("principal");
-		// Integer personalId = (SignPersonalDto)
-		// principal.getUserinfo().getPersonalId();
-		Integer id = 1;
-		return new ResponseDto<>(1, "성공", personalService.findByPersonal(id));
+		SignedDto<SignPersonalDto> principal = (SignedDto<SignPersonalDto>) session.getAttribute("principal");
+		return new ResponseDto<>(1, "성공", personalService.findByPersonal(principal.getUserInfo().getPersonalId()));
+		// principal.getUserinfo().getPersonalId()
+
 	}
 
-	@GetMapping("/personal/personalUpdate")
-	public String update(Model model) {
+	// 내정보 수정 보기
+	@GetMapping("/api/personal/inform/informUpdate")
+	public ResponseDto<?> personalupdate() {
 		SignedDto<?> principal = (SignedDto<?>) session.getAttribute("principal");
 		PersonalUpdateDto personalUpdateFormPS = personalService.personalUpdateById(principal.getPersonalId());
 		PersonalAddressDto personalAddressPS = personalService.personalAddress(principal.getPersonalId());
-		model.addAttribute("personalAddress", personalAddressPS);
-		model.addAttribute("personalUpdateForm", personalUpdateFormPS);
-		return "personal/personalUpdate";
+		return new ResponseDto<>(1, "성공", null);
 	}
 
 	@PutMapping("/personal/personalUpdate")
