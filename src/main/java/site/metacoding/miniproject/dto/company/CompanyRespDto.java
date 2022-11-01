@@ -6,14 +6,6 @@ import lombok.Setter;
 import site.metacoding.miniproject.domain.company.Company;
 
 public class CompanyRespDto {
-    @Setter
-    @Getter
-    public static class CompanyAddressDto { // CompanyAddressDto -> CompanyAddressRespDto
-        private Integer companyId;
-        private String zoneCode;
-        private String roadJibunAddr;
-        private String detailAddress;
-    }
 
     @Setter
     @Getter
@@ -39,14 +31,6 @@ public class CompanyRespDto {
         }
 
         private Integer count;
-    }
-
-    @Setter
-    @Getter
-    public static class CompanyMainDto { // CompanyMainDto -> CompanyMainRespDto
-        private Integer resumesId;
-        private String resumesTitle;
-        private String resumesPlace;
     }
 
 }

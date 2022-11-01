@@ -92,7 +92,7 @@ public class CompanyService {
 	}
 
 	// 채용공고 상세 보기
-	public JobPostingBoardDetailRespDto jobPostingOne(Integer jobPostingBoardId) {
+	public JobPostingBoardDetailRespDto jobPostingBoardDetail(Integer jobPostingBoardId) {
 		JobPostingBoardDetailRespDto jobPostingBoardDetailRespDto = jobPostingBoardDao.findByDetail(jobPostingBoardId);
 		Timestamp ts = jobPostingBoardDetailRespDto.getJobPostingBoardDeadline();
 		Date date = new Date();

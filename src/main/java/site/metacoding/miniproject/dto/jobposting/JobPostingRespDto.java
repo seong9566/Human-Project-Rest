@@ -3,6 +3,7 @@ package site.metacoding.miniproject.dto.jobposting;
 import java.sql.Timestamp;
 
 import lombok.Getter;
+import lombok.NoArgsConstructor;
 import lombok.Setter;
 import site.metacoding.miniproject.domain.jobpostingboard.JobPostingBoard;
 
@@ -10,6 +11,7 @@ public class JobPostingRespDto {
 
     @Getter
     @Setter
+    @NoArgsConstructor
     public class JobPostingBoardDetailRespDto {
 
         // postingBoard 테이블

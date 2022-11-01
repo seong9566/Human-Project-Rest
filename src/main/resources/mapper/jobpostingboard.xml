@@ -1,7 +1,5 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<!DOCTYPE mapper
-  PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
-  "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
 <mapper
 	namespace="site.metacoding.miniproject.domain.jobpostingboard.JobPostingBoardDao">
 
@@ -82,7 +80,7 @@
 	</update>
 
 	<select id="findByDetail"
-		resultType="site.metacoding.miniproject.web.dto.response.jobpostingboard.JobPostingBoardDetailDto">
+		resultType="site.metacoding.miniproject.dto.jobposting.JobPostingRespDto$JobPostingBoardDetailRespDto">
 			SELECT 
 		jpb.job_posting_board_id,
 		jpb.company_id,
@@ -136,7 +134,6 @@
 		job_posting_board_id = #{jobPostingBoardId}
 
 	</delete>
-	
 
 
 	<select id="jobPostingBoardPaging"
@@ -157,8 +154,8 @@
 			WHERE job_posting_board_title like CONCAT('%', #{keyword}, '%')
 		</if>
 		) paging
-	</select>	
-	
+	</select>
+
 	<select id="findAll"
 		resultType="site.metacoding.miniproject.web.dto.response.personal.PersonalMainDto">
 		SELECT job_posting_board_id, job_posting_board_title, job_posting_board_deadline,
@@ -166,7 +163,7 @@
 		FROM job_posting_board
 		OFFSET #{startNum} ROWS FETCH NEXT 5 ROWS ONLY
 	</select>
-	
+
 	<select id="findSearch"
 		resultType="site.metacoding.miniproject.web.dto.response.personal.PersonalMainDto">
 		SELECT job_posting_board_id, job_posting_board_title, job_posting_board_deadline,
@@ -174,8 +171,8 @@
 		FROM job_posting_board
 		WHERE job_posting_board_title like CONCAT('%', #{keyword}, '%')
 		OFFSET #{startNum} ROWS FETCH NEXT 5 ROWS ONLY
-	</select>	
-	
+	</select>
+
 	<select id="findCategory"
 		resultType="site.metacoding.miniproject.web.dto.response.personal.PersonalMainDto">
 		SELECT b.job_posting_board_id, c.category_id, c.category_frontend, 
@@ -203,8 +200,8 @@
 		<if test="id == 5">
 		OFFSET #{startNum} ROWS FETCH NEXT 5 ROWS ONLY
 		</if>
-	</select>	
-	
+	</select>
+
 	<select id="findCategorySearch"
 		resultType="site.metacoding.miniproject.web.dto.response.personal.PersonalMainDto">
 		SELECT b.job_posting_board_id, c.category_id, c.category_frontend, 
@@ -234,6 +231,6 @@
 		WHERE job_posting_board_title like CONCAT('%', #{keyword}, '%')
 		OFFSET #{startNum} ROWS FETCH NEXT 5 ROWS ONLY
 		</if>
-	</select>	
-	
+	</select>
+
 </mapper>

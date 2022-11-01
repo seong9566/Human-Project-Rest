@@ -132,12 +132,6 @@ public class CompanyController {
 	// return "company/jobPostingBoardDetail";
 	// }
 
-	@GetMapping("/api/company/jobPostingBoardDetail/{jobPostingBoardId}")
-	public ResponseDto<?> jobPostingBoardDetail() {
-		SignedDto<?> principal = (SignedDto<?>) session.getAttribute("principal");
-		return new ResponseDto<>(1, "성공", companyService.jobPostingOne(jobPostingBoardId));
-	}
-
 	// 채용 공고 수정 폼
 	@GetMapping("/company/jobPostingBoardUpdate/{jobPostingBoardId}")
 	public String jobPostingBoardUpdate(Model model, @PathVariable Integer jobPostingBoardId) {
