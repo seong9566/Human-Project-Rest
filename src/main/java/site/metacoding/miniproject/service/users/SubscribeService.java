@@ -52,5 +52,6 @@ public class SubscribeService {
         Personal personalInfo = (Personal) signedDto.getUserInfo();
         List<Subscribe> subscribes = subscribeDao.findByPersonalId(personalInfo.getPersonalId());
         return subscribes;
+
     }
 }

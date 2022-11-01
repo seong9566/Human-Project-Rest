@@ -21,6 +21,7 @@ import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.multipart.MultipartFile;
 
 import lombok.RequiredArgsConstructor;
+import site.metacoding.miniproject.dto.personal.PersonalRespDto.PersonalDetailRespDto;
 import site.metacoding.miniproject.dto.resumes.ResumesReqDto.ResumesInsertReqDto;
 import site.metacoding.miniproject.dto.user.UserRespDto.SignPersonalDto;
 import site.metacoding.miniproject.dto.user.UserRespDto.SignedDto;
@@ -37,7 +38,6 @@ import site.metacoding.miniproject.web.dto.response.company.CompanyMainDto;
 import site.metacoding.miniproject.web.dto.response.etc.PagingDto;
 import site.metacoding.miniproject.web.dto.response.jobpostingboard.JobPostingBoardDetailDto;
 import site.metacoding.miniproject.web.dto.response.personal.PersonalAddressDto;
-import site.metacoding.miniproject.web.dto.response.personal.PersonalFormDto;
 import site.metacoding.miniproject.web.dto.response.personal.PersonalMainDto;
 import site.metacoding.miniproject.web.dto.response.resume.ResumesDetailDto;
 
@@ -76,6 +76,7 @@ public class PersonalController {
 	public String resumesById(@PathVariable Integer resumesId, Model model) {
 		SignedDto<?> signedDto = (SignedDto<?>) session.getAttribute("principal");
 		// PersonalLike personalLike = personalLikeService.좋아요확인(resumesId,
+		//
 		// signedDto.getCompanyId());
 		model.addAttribute("personalLike", personalLike);
 		ResumesDetailDto detailResumesDtoPS = personalService.resumesById(resumesId);
@@ -241,14 +242,13 @@ public class PersonalController {
 	}
 
 	// 내정보 보기
-	@GetMapping("/personal/personalInfo")
-	public String form(Model model) {
+	@GetMapping("/api/personal/inform")
+	public ResponseDto<?> perosnalDetail() {
 		SignedDto<?> principal = (SignedDto<?>) session.getAttribute("principal");
-		PersonalFormDto personalformPS = personalService.personalformById(principal.getPersonalId());
-		PersonalAddressDto personalAddressPS = personalService.personalAddress(principal.getPersonalId());
-		model.addAttribute("personalAddress", personalAddressPS);
-		model.addAttribute("personalform", personalformPS);
-		return "personal/personalInfo";
+		// Integer personalId = (SignPersonalDto)
+		// principal.getUserinfo().getPersonalId();
+		Integer id = 1;
+		return new ResponseDto<>(1, "성공", personalService.findByPersonal(id));
 	}
 
 	@GetMapping("/personal/personalUpdate")
