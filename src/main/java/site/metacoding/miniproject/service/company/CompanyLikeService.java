@@ -28,7 +28,7 @@ public class CompanyLikeService {
 	public void 좋아요(SignedDto<?> signedDto, Integer companyId) {
 
 		HashMap<String, Integer> companylikes = new HashMap<>();
-		Personal personalinfo = (Personal) signedDto.getUserinfo();
+		Personal personalinfo = (Personal) signedDto.getUserInfo();
 
 		CompanyLike companyLike = new CompanyLike(companyId, personalinfo.getPersonalId());
 		companyLikesDao.insert(companyLike);

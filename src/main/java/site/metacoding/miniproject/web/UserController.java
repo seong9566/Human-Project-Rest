@@ -90,7 +90,6 @@ public class UserController {
 	public ResponseDto<?> login(@RequestBody LoginDto loginDto) {
 
 		SignedDto<?> signUserDto = userService.login(loginDto);
-		List<Subscribe> subscribes = null;
 
 		// if (signedDto == null)
 		// 	return new ResponseDto<>(-1, "비밀번호 또는 아이디를 확인하여 주세요", null);
@@ -109,7 +108,7 @@ public class UserController {
 		// 	session.setAttribute("personalId", signedDto.getPersonalId());
 		// 	session.setAttribute("subscribe", subscribes);
 		// }
-
+		session.setAttribute("principal", signUserDto);
 		return new ResponseDto<>(1, "로그인완료", signUserDto);
 	}
 
