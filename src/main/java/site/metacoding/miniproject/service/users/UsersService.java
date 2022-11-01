@@ -18,9 +18,11 @@ import site.metacoding.miniproject.domain.subscribe.SubscribeDao;
 import site.metacoding.miniproject.domain.users.Users;
 import site.metacoding.miniproject.domain.users.UsersDao;
 import site.metacoding.miniproject.dto.company.CompanyReqDto.CompanyJoinDto;
+import site.metacoding.miniproject.dto.user.UserRespDto.SignCompanyDto;
+import site.metacoding.miniproject.dto.user.UserRespDto.SignPersonalDto;
+import site.metacoding.miniproject.dto.user.UserRespDto.SignedDto;
 import site.metacoding.miniproject.web.dto.request.etc.LoginDto;
 import site.metacoding.miniproject.web.dto.request.personal.PersonalJoinDto;
-import site.metacoding.miniproject.web.dto.response.etc.SignedDto;
 
 @Service
 @RequiredArgsConstructor
@@ -32,19 +34,35 @@ public class UsersService {
     private final AlarmDao alarmDao;
     private final SubscribeDao subscribeDao;
 
+
     public SignedDto<?> login(LoginDto loginDto) {
 
         String loginId = loginDto.getLoginId();
         String loginPassword = loginDto.getLoginPassword();
+        SignedDto<?> signedDto;
 
         Users userinfo = usersDao.findByIdAndPassword(loginId, loginPassword);
+
         if (userinfo == null) {
-            throw new ApiException("유저정보가 존재하지 않음");
+            throw new ApiException("아이디 또는 패스워드가 틀렸습니다.");
         }
 
-        Company company = companyDao.findById(userinfo.getCompanyId());
-        SignedDto<?> signedDto = new SignedDto<>(userinfo.getUsersId(), userinfo.getLoginId(),
-                userinfo.getLoginPassword(), company);
+        //회사 또는 개인일 경우 Dto생성
+        if (userinfo.getCompanyId() != null) {
+            Company companyPS = companyDao.findById(userinfo.getCompanyId());
+
+            SignCompanyDto signCompanyDto = new SignCompanyDto(companyPS);
+
+            signedDto = new SignedDto<>(userinfo.getUsersId(), userinfo.getLoginId(), signCompanyDto);         
+        } else {
+            Personal personalPS = personalDao.findById(userinfo.getPersonalId());
+
+            SignPersonalDto signPersonalDto = new SignPersonalDto(personalPS);
+
+            signedDto = new SignedDto<>(userinfo.getUsersId(), userinfo.getLoginId(), signPersonalDto);         
+            
+        }
+        
             
         return signedDto;
     }

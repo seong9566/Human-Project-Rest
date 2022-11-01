@@ -62,7 +62,7 @@ public class ValidationCheckUtil {
 		}
 	}
 
-	public static void valCheckToJoinCompany(CompanyJoinDto joinDto) {
+	public static void valCheckToJoinCompany(CompanyJoinDto joinDto){
 
 		if (joinDto == null)
 			throw new NormalException("잘못된 요청입니다.");
