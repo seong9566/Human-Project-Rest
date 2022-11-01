@@ -19,12 +19,11 @@ import site.metacoding.miniproject.config.SessionConfig;
 import site.metacoding.miniproject.domain.alarm.Alarm;
 import site.metacoding.miniproject.domain.subscribe.Subscribe;
 import site.metacoding.miniproject.dto.company.CompanyReqDto.CompanyJoinDto;
+import site.metacoding.miniproject.dto.user.UserRespDto.SignedDto;
 import site.metacoding.miniproject.service.users.UsersService;
-import site.metacoding.miniproject.utill.ValidationCheckUtil;
 import site.metacoding.miniproject.web.dto.request.etc.LoginDto;
 import site.metacoding.miniproject.web.dto.request.personal.PersonalJoinDto;
 import site.metacoding.miniproject.web.dto.response.ResponseDto;
-import site.metacoding.miniproject.web.dto.response.etc.SignedDto;
 
 @RestController
 @RequiredArgsConstructor
@@ -90,7 +89,7 @@ public class UserController {
 	@PostMapping("/login")
 	public ResponseDto<?> login(@RequestBody LoginDto loginDto) {
 
-		SignedDto<?> signedDto = userService.login(loginDto);
+		SignedDto<?> signUserDto = userService.login(loginDto);
 		List<Subscribe> subscribes = null;
 
 		// if (signedDto == null)
@@ -116,8 +115,6 @@ public class UserController {
 
 	@PostMapping("/join/personal")
 	public ResponseDto<?> joinPersonal(@RequestBody PersonalJoinDto joinDto) {
-
-		ValidationCheckUtil.valCheckToJoinPersonal(joinDto);
 
 		userService.joinPersonal(joinDto);
 

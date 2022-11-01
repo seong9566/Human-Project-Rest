@@ -14,8 +14,8 @@ import site.metacoding.miniproject.domain.subscribe.Subscribe;
 import site.metacoding.miniproject.domain.subscribe.SubscribeDao;
 import site.metacoding.miniproject.domain.users.Users;
 import site.metacoding.miniproject.domain.users.UsersDao;
+import site.metacoding.miniproject.dto.user.UserRespDto.SignedDto;
 import site.metacoding.miniproject.utill.AlarmEnum;
-import site.metacoding.miniproject.web.dto.response.etc.SignedDto;
 
 @Service
 @RequiredArgsConstructor
@@ -29,15 +29,15 @@ public class SubscribeService {
     public Subscribe subscribeToCompany(SignedDto<?> signedDto, Integer companyId) {
 
         HashMap<String, Integer> subscribes = new HashMap<>();
-        Personal personalinfo = (Personal) signedDto.getUserinfo();
+        Personal personalInfo = (Personal) signedDto.getUserInfo();
 
-        Subscribe subscribe = new Subscribe(signedDto.getPersonalId(), companyId);
+        Subscribe subscribe = new Subscribe(personalInfo.getPersonalId(), companyId);
         subscribeDao.insert(subscribe);
 
         Users users = usersDao.findByCompanyId(companyId);
         subscribes.put(AlarmEnum.ALARMSUBSCRIBEID.key(), subscribe.getSubscribeId());
 
-        Alarm alarm = new Alarm(users.getUsersId(), subscribes, personalinfo.getPersonalName());
+        Alarm alarm = new Alarm(users.getUsersId(), subscribes, personalInfo.getPersonalName());
         alarmDao.insert(alarm);
 
         subscribe.setAlarmId(alarm.getAlarmId());
@@ -49,7 +49,8 @@ public class SubscribeService {
     @Transactional(rollbackFor = RuntimeException.class)
     public List<Subscribe> subscribeCancelToCompany(Integer subscribeId, SignedDto<?> signedDto) {
         subscribeDao.deleteById(subscribeId);
-        List<Subscribe> subscribes = subscribeDao.findByPersonalId(signedDto.getPersonalId());
+        Personal personalInfo = (Personal) signedDto.getUserInfo();
+        List<Subscribe> subscribes = subscribeDao.findByPersonalId(personalInfo.getPersonalId());
         return subscribes;
     }
 }
