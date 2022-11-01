@@ -56,8 +56,7 @@ public class PersonalController {
 	public ResponseDto<?> resumesInsert(@RequestPart(value = "file", required = false) MultipartFile file,
 			@RequestPart("reqDto") ResumesInsertReqDto resumesInsertReqDto) throws Exception {
 		resumesInsertReqDto.setFile(file);
-		personalService.insertResumes(resumesInsertReqDto);
-		return new ResponseDto<>(1, "이력서 등록 성공", null);
+		return new ResponseDto<>(1, "이력서 등록 성공", personalService.insertResumes(resumesInsertReqDto));
 	}
 
 	// 내가 작성한 이력서 목록 보기
