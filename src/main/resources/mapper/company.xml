@@ -26,7 +26,7 @@
 	</insert>
 
 	<select id="companyInfo"
-		resultType="site.metacoding.miniproject.web.dto.response.company.CompanyInfoDto">
+		resultType="site.metacoding.miniproject.dto.company.CompanyRespDto$CompanyInfoRespDto">
 		SELECT 
 		u.users_id,
 		u.login_id,
@@ -41,9 +41,9 @@
 		FROM company c
 		LEFT OUTER JOIN users u
 		ON c.company_id = u.company_id
-		WHERE c.company_id =#{companyId}
+		WHERE c.company_id = #{companyId}
 	</select>
-	
+
 	<select id="findByAddress" resultType="site.metacoding.miniproject.web.dto.response.company.CompanyAddressDto">
 		SELECT company_id,
 		SUBSTRING_INDEX(SUBSTRING_INDEX(company_address,',',1),',',-1) AS
@@ -55,8 +55,8 @@
 		FROM company
 		WHERE company_id = #{companyId}
 	</select>
-	
-	
+
+
 	<update id="update">
 		UPDATE company
 		SET company_name = #{companyName},

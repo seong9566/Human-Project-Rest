@@ -15,8 +15,9 @@ public class CompanyRespDto {
         private String detailAddress;
     }
 
-    @NoArgsConstructor
+    @Setter
     @Getter
+    @NoArgsConstructor
     public static class CompanyInfoRespDto { // CompanyInfoDto -> CompanyInfoRespDto
         private Integer usersId;
         private Integer companyId;

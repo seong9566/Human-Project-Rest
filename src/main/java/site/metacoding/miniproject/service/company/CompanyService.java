@@ -45,11 +45,6 @@ public class CompanyService {
 
 	@Transactional(readOnly = true)
 	public CompanyInfoRespDto findByCompany(Integer companyId) {
-		Company company = new Company();
-		company.setCompanyName("sopu5555");
-		company.setCompanyPhoneNumber("01024102957");
-		company.setCompanyEmail("sopu55544@gmail.com");
-		company.setCompanyAddress("우리집");
 		CompanyInfoRespDto companyInfoRespDto = companyDao.companyInfo(companyId);
 		return companyInfoRespDto;
 	}

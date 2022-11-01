@@ -21,6 +21,9 @@ import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.multipart.MultipartFile;
 
 import lombok.RequiredArgsConstructor;
+import site.metacoding.miniproject.domain.company.Company;
+import site.metacoding.miniproject.dto.company.CompanyRespDto.CompanyInfoRespDto;
+import site.metacoding.miniproject.dto.user.UserRespDto.SignCompanyDto;
 import site.metacoding.miniproject.dto.user.UserRespDto.SignedDto;
 import site.metacoding.miniproject.service.company.CompanyService;
 import site.metacoding.miniproject.web.dto.request.company.CompanyUpdateDto;
@@ -42,10 +45,9 @@ public class CompanyController {
 	// 회사 정보 보기
 	@GetMapping("/api/company/inform")
 	public ResponseDto<?> CompanyInform() {
-		SignedDto<?> principal = (SignedDto<?>) session.getAttribute("principal");
-		// Integer companyId = (SignCompanyDto) principal.getUserinfo().getCompanyId();
-		Integer id = 1;
-		return new ResponseDto<>(1, "성공", companyService.findByCompany(id));
+		SignedDto<SignCompanyDto> principal = (SignedDto<SignCompanyDto>) session.getAttribute("principal");
+		return new ResponseDto<>(1, "성공",
+				companyService.findByCompany(principal.getUserInfo().getCompanyId()));
 	}
 
 	// 회사 정보 업데이트
