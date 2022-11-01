@@ -23,7 +23,7 @@ public class ResumesRespDto {
         private Boolean categoryDevops;
 
         public ResumesInsertRespDto(Resumes resumes) {
-            this.resumesTitle
+        this.resumesTitle
         }
 
     }
