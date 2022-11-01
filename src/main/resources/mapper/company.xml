@@ -25,8 +25,8 @@
 		#{companyPhoneNumber}, #{companyAddress}, NOW())
 	</insert>
 
-	<select id="companyInfo"
-		resultType="site.metacoding.miniproject.dto.company.CompanyRespDto$CompanyInfoRespDto">
+	<select id="findByCompany"
+		resultType="site.metacoding.miniproject.dto.company.CompanyRespDto$CompanyDetailRespDto">
 		SELECT 
 		u.users_id,
 		u.login_id,
@@ -44,7 +44,7 @@
 		WHERE c.company_id = #{companyId}
 	</select>
 
-	<select id="findByAddress" resultType="site.metacoding.miniproject.web.dto.response.company.CompanyAddressDto">
+	<select id="findByAddress" resultType="site.metacoding.miniproject.dto.company.CompanyRespDto$CompanyAddressRespDto">
 		SELECT company_id,
 		SUBSTRING_INDEX(SUBSTRING_INDEX(company_address,',',1),',',-1) AS
 		zonecode,
@@ -53,7 +53,7 @@
 		SUBSTRING_INDEX(SUBSTRING_INDEX(company_address,',',3),',',-1) AS
 		detail_address
 		FROM company
-		WHERE company_id = #{companyId}
+		WHERE company_id = #{addressForCompanyId}
 	</select>
 
 

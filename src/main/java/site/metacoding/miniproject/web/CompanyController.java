@@ -21,13 +21,12 @@ import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.multipart.MultipartFile;
 
 import lombok.RequiredArgsConstructor;
-import site.metacoding.miniproject.domain.company.Company;
-import site.metacoding.miniproject.dto.company.CompanyRespDto.CompanyInfoRespDto;
+import site.metacoding.miniproject.dto.company.CompanyRespDto.CompanyDetailRespDto;
+import site.metacoding.miniproject.dto.jobpostingboard.JobPostingBoardReqDto.JobPostingBoardInsertReqDto;
 import site.metacoding.miniproject.dto.user.UserRespDto.SignCompanyDto;
 import site.metacoding.miniproject.dto.user.UserRespDto.SignedDto;
 import site.metacoding.miniproject.service.company.CompanyService;
 import site.metacoding.miniproject.web.dto.request.company.CompanyUpdateDto;
-import site.metacoding.miniproject.web.dto.request.jobpostingboard.JobPostingBoardInsertDto;
 import site.metacoding.miniproject.web.dto.request.jobpostingboard.JobPostingBoardUpdateDto;
 import site.metacoding.miniproject.web.dto.response.ResponseDto;
 import site.metacoding.miniproject.web.dto.response.company.CompanyAddressDto;
@@ -41,6 +40,12 @@ public class CompanyController {
 
 	private final HttpSession session;
 	private final CompanyService companyService;
+
+	@GetMapping("/api/address") // 테스트로 임시로 넣어놓음.
+	public ResponseDto<?> address() {
+		SignedDto<SignCompanyDto> principal = (SignedDto<SignCompanyDto>) session.getAttribute("principal");
+		return new ResponseDto<>(1, "성공", companyService.findByAddress(principal.getUserInfo().getCompanyId()));
+	}
 
 	// 회사 정보 보기
 	@GetMapping("/api/company/inform")
@@ -88,23 +93,21 @@ public class CompanyController {
 		return new ResponseDto<>(1, "수정 성공", null);
 	}
 
-	// 채용 공고 작성
-	@GetMapping("/company/insertForm")
-	public String insertjobPostingBoard(Model model) {
+	// 채용 공고 작성 폼
+	@GetMapping("/api/jobpostingboard/insert")
+	public ResponseDto<?> insertjobPostingBoardForm() {
 		SignedDto<?> principal = (SignedDto<?>) session.getAttribute("principal");
-		CompanyInfoDto companyPS = companyService.findCompanyInfo(principal.getCompanyId());
-		CompanyAddressDto addressPS = companyService.findByAddress(principal.getCompanyId());
-		model.addAttribute("address", addressPS);
-		model.addAttribute("companyInfo", companyPS);
-		model.addAttribute("principal", principal);
-		return "company/jobPostingBoardInsert";
+		SignCompanyDto signCompanyDto = (SignCompanyDto) principal.getUserInfo();
+		return new ResponseDto<>(1, "채용 공고 작성 폼 데이터 ", companyService.findByCompany(signCompanyDto.getCompanyId()));
 	}
 
-	@PostMapping("/company/jobPostingBoard/insert")
-	public @ResponseBody ResponseDto<?> insertJobPostingBoard(@RequestBody JobPostingBoardInsertDto insertDto) {
+	@PostMapping("/api/jobpostingboard/insert")
+	public @ResponseBody ResponseDto<?> insertJobPostingBoard(
+			@RequestBody JobPostingBoardInsertReqDto jobPostingBoardInsertReqDto) {
 		SignedDto<?> principal = (SignedDto<?>) session.getAttribute("principal");
-		companyService.insertJobPostingBoard(principal.getCompanyId(), insertDto);
-		return new ResponseDto<>(1, "등록 성공", null);
+		SignCompanyDto signCompanyDto = (SignCompanyDto) principal.getUserInfo();
+		jobPostingBoardInsertReqDto.setCompanyId(signCompanyDto.getCompanyId());
+		return new ResponseDto<>(1, "등록 성공", companyService.insertJobPostingBoard(jobPostingBoardInsertReqDto));
 	}
 
 	// 회사가 작성한 구인 공고 리스트 보기

@@ -4,8 +4,8 @@ import java.sql.Timestamp;
 
 import lombok.Getter;
 import lombok.Setter;
+import site.metacoding.miniproject.dto.jobpostingboard.JobPostingBoardReqDto.JobPostingBoardInsertReqDto;
 import site.metacoding.miniproject.dto.resumes.ResumesReqDto.ResumesInsertReqDto;
-import site.metacoding.miniproject.web.dto.request.jobpostingboard.JobPostingBoardInsertDto;
 import site.metacoding.miniproject.web.dto.request.jobpostingboard.JobPostingBoardUpdateDto;
 import site.metacoding.miniproject.web.dto.request.resume.ResumesUpdateDto;
 
@@ -36,11 +36,11 @@ public class Career {
 		this.fiveYearOver = updateResumesDto.getFiveYearOver();
 	}
 
-	public Career(JobPostingBoardInsertDto joinDto) {
-		this.oneYearLess = joinDto.getOneYearLess();
-		this.twoYearOver = joinDto.getTwoYearOver();
-		this.threeYearOver = joinDto.getThreeYearOver();
-		this.fiveYearOver = joinDto.getFiveYearOver();
+	public Career(JobPostingBoardInsertReqDto jobPostingBoardInsertReqDto) {
+		this.oneYearLess = jobPostingBoardInsertReqDto.getOneYearLess();
+		this.twoYearOver = jobPostingBoardInsertReqDto.getTwoYearOver();
+		this.threeYearOver = jobPostingBoardInsertReqDto.getThreeYearOver();
+		this.fiveYearOver = jobPostingBoardInsertReqDto.getFiveYearOver();
 	}
 
 	private Integer jobPostingBoardCareerId;
