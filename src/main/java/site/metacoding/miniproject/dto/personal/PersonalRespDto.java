@@ -43,7 +43,13 @@ public class PersonalRespDto {
         private String loginPassword;
 
         public PersonalUpdateFormRespDto(PersonalUpdateFormRespDto personalUpdateFormRespDto) {
-            //
+            this.personalId = personalUpdateFormRespDto.getPersonalId();
+            this.personalName = personalUpdateFormRespDto.getPersonalName();
+            this.personalEmail = personalUpdateFormRespDto.getPersonalEmail();
+            this.personalPhoneNumber = personalUpdateFormRespDto.getPersonalPhoneNumber();
+            this.personalAddress = personalUpdateFormRespDto.getPersonalAddress();
+
+            this.loginPassword = personalUpdateFormRespDto.getLoginPassword();
 
         }
     }

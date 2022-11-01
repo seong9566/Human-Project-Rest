@@ -251,11 +251,9 @@ public class PersonalController {
 
 	// 내정보 수정 보기
 	@GetMapping("/api/personal/inform/informUpdate")
-	public ResponseDto<?> personalupdate() {
-		SignedDto<?> principal = (SignedDto<?>) session.getAttribute("principal");
-		PersonalUpdateDto personalUpdateFormPS = personalService.personalUpdateById(principal.getPersonalId());
-		PersonalAddressDto personalAddressPS = personalService.personalAddress(principal.getPersonalId());
-		return new ResponseDto<>(1, "성공", null);
+	public ResponseDto<?> personalInformUpdate() {
+		SignedDto<SignPersonalDto> principal = (SignedDto<SignPersonalDto>) session.getAttribute("principal");
+		return new ResponseDto<>(1, "성공", personalService.personalUpdateById(principal.getUserInfo().getPersonalId()));
 	}
 
 	@PutMapping("/personal/personalUpdate")

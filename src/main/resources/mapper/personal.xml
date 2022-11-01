@@ -45,17 +45,17 @@
 		where personal_id = #{personalId}
 	</select>
 
-	<!-- <select id="personalUpdateById"
-		resultType="site.metacoding.miniproject.web.dto.request.personal.PersonalUpdateDto">
-		SELECT personal_id, personal_name, personal_email, personal_education, personal_phone_number,personal_address,
-		login_password
-		FROM personal
-		left OUTER JOIN users
+	<select id="personalUpdateById"
+		resultType="site.metacoding.miniproject.dto.personal.PersonalRespDto$PersonalUpdateFormRespDto">
+		SELECT p.personal_id, p.personal_name, p.personal_email, p.personal_education, p.personal_phone_number, p.personal_address,
+		u.login_password
+		FROM personal p
+		left OUTER JOIN users u
 		ON
-		personal.personal_id = users.personal_id
-		WHERE personal.personal_id =
+		p.personal_id = u.personal_id
+		WHERE p.personal_id =
 		#{personalId}
-	</select> -->
+	</select>
 
 	<update id="update">
 		UPDATE personal
