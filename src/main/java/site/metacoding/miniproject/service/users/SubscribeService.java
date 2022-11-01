@@ -51,5 +51,6 @@ public class SubscribeService {
         subscribeDao.deleteById(subscribeId);
         List<Subscribe> subscribes = subscribeDao.findByPersonalId(signedDto.getPersonalId());
         return subscribes;
+
     }
 }

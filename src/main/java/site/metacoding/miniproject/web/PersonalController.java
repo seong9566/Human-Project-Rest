@@ -21,8 +21,6 @@ import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.multipart.MultipartFile;
 
 import lombok.RequiredArgsConstructor;
-import site.metacoding.miniproject.domain.like.personalike.PersonalLike;
-import site.metacoding.miniproject.domain.resumes.Resumes;
 import site.metacoding.miniproject.dto.personal.PersonalRespDto.PersonalDetailRespDto;
 import site.metacoding.miniproject.dto.resumes.ResumesReqDto.ResumesInsertReqDto;
 import site.metacoding.miniproject.service.company.CompanyService;
@@ -39,8 +37,6 @@ import site.metacoding.miniproject.web.dto.response.etc.PagingDto;
 import site.metacoding.miniproject.web.dto.response.etc.SignedDto;
 import site.metacoding.miniproject.web.dto.response.jobpostingboard.JobPostingBoardDetailDto;
 import site.metacoding.miniproject.web.dto.response.personal.PersonalAddressDto;
-import site.metacoding.miniproject.web.dto.response.personal.PersonalInfoDto;
-import site.metacoding.miniproject.web.dto.response.personal.PersonalFormDto;
 import site.metacoding.miniproject.web.dto.response.personal.PersonalMainDto;
 import site.metacoding.miniproject.web.dto.response.resume.ResumesDetailDto;
 
@@ -75,7 +71,8 @@ public class PersonalController {
 	@GetMapping("/personal/resumesList")
 	public String resumesList(Model model) {
 		SignedDto<?> principal = (SignedDto<?>) session.getAttribute("principal");
-		//List<Resumes> resumesList = personalService.myresumesAll(principal.getPersonalId());
+		// List<Resumes> resumesList =
+		// personalService.myresumesAll(principal.getPersonalId());
 		model.addAttribute("resumesList", resumesList);
 		return "personal/resumesList";
 	}
@@ -84,7 +81,8 @@ public class PersonalController {
 	@GetMapping("/personal/resumes/{resumesId}")
 	public String resumesById(@PathVariable Integer resumesId, Model model) {
 		SignedDto<?> signedDto = (SignedDto<?>) session.getAttribute("principal");
-		//PersonalLike personalLike = personalLikeService.좋아요확인(resumesId, signedDto.getCompanyId());
+		// PersonalLike personalLike = personalLikeService.좋아요확인(resumesId,
+		// signedDto.getCompanyId());
 		model.addAttribute("personalLike", personalLike);
 		ResumesDetailDto detailResumesDtoPS = personalService.resumesById(resumesId);
 		model.addAttribute("detailResumesDtoPS", detailResumesDtoPS);
@@ -249,12 +247,13 @@ public class PersonalController {
 	}
 
 	// 내정보 보기
-	@GetMapping("/personal/personalInfo")
-	public ResponseDto<?> form(Model model) {
+	@GetMapping("/api/personal/inform")
+	public ResponseDto<?> perosnalDetail() {
 		SignedDto<?> principal = (SignedDto<?>) session.getAttribute("principal");
-		PersonalDetailRespDto personalformPS = personalService.findByPersonal(principal.getPersonalId());
-		PersonalAddressDto personalAddressPS = personalService.personalAddress(principal.getPersonalId());
-		return new ResponseDto<>(1, "성공", personalService.findByPersonal(principal.getPersonalId()));
+		// Integer personalId = (SignPersonalDto)
+		// principal.getUserinfo().getPersonalId();
+		Integer id = 1;
+		return new ResponseDto<>(1, "성공", personalService.findByPersonal(id));
 	}
 
 	@GetMapping("/personal/personalUpdate")

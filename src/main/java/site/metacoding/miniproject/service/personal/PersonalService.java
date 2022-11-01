@@ -27,7 +27,6 @@ import site.metacoding.miniproject.web.dto.request.resume.ResumesUpdateDto;
 import site.metacoding.miniproject.web.dto.response.company.CompanyMainDto;
 import site.metacoding.miniproject.web.dto.response.etc.PagingDto;
 import site.metacoding.miniproject.web.dto.response.personal.PersonalAddressDto;
-import site.metacoding.miniproject.web.dto.response.personal.PersonalFormDto;
 import site.metacoding.miniproject.web.dto.response.resume.ResumesDetailDto;
 
 @Service
@@ -157,8 +156,12 @@ public class PersonalService {
 	@Transactional(readOnly = true)
 	public PersonalDetailRespDto findByPersonal(Integer personalId) {
 		PersonalDetailRespDto personalDetailRespDto = personalDao.personalformById(personalId);
+		// Personal personal = new Personal();
+		// personal.setPersonalName("ssar");
+		// personal.setPersonalPhoneNumber("010-9459-5116");
+		// personal.setPersonalEmail("cndtjq1248@naver.com");
+		// personal.setPersonalAddress("asdfasdfa");
 		return personalDetailRespDto;
-
 	}
 
 	// 내 정보 수정에서 데이터 보여주기
@@ -170,7 +173,7 @@ public class PersonalService {
 		return personalDao.personalAddressById(personalId);
 	}
 
-	// 개 정보 수정
+	// 내 정보 수정
 	@Transactional(rollbackFor = Exception.class)
 	public void updatePersonal(Integer userId, Integer personalId, PersonalUpdateDto personalUpdateDto) {
 		Users personaluserPS = userDao.findById(userId);
