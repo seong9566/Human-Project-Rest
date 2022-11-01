@@ -23,6 +23,7 @@ import org.springframework.web.multipart.MultipartFile;
 import lombok.RequiredArgsConstructor;
 import site.metacoding.miniproject.domain.like.personalike.PersonalLike;
 import site.metacoding.miniproject.domain.resumes.Resumes;
+import site.metacoding.miniproject.dto.personal.PersonalRespDto.PersonalDetailRespDto;
 import site.metacoding.miniproject.service.company.CompanyService;
 import site.metacoding.miniproject.service.personal.PersonalLikeService;
 import site.metacoding.miniproject.service.personal.PersonalService;
@@ -39,7 +40,6 @@ import site.metacoding.miniproject.web.dto.response.etc.PagingDto;
 import site.metacoding.miniproject.web.dto.response.etc.SignedDto;
 import site.metacoding.miniproject.web.dto.response.jobpostingboard.JobPostingBoardDetailDto;
 import site.metacoding.miniproject.web.dto.response.personal.PersonalAddressDto;
-import site.metacoding.miniproject.web.dto.response.personal.PersonalFormDto;
 import site.metacoding.miniproject.web.dto.response.personal.PersonalInfoDto;
 import site.metacoding.miniproject.web.dto.response.personal.PersonalMainDto;
 import site.metacoding.miniproject.web.dto.response.resume.ResumesDetailDto;
@@ -270,13 +270,11 @@ public class PersonalController {
 
 	// 내정보 보기
 	@GetMapping("/personal/personalInfo")
-	public String form(Model model) {
+	public ResponseDto<?> form(Model model) {
 		SignedDto<?> principal = (SignedDto<?>) session.getAttribute("principal");
-		PersonalFormDto personalformPS = personalService.personalformById(principal.getPersonalId());
+		PersonalDetailRespDto personalformPS = personalService.findByPersonal(principal.getPersonalId());
 		PersonalAddressDto personalAddressPS = personalService.personalAddress(principal.getPersonalId());
-		model.addAttribute("personalAddress", personalAddressPS);
-		model.addAttribute("personalform", personalformPS);
-		return "personal/personalInfo";
+		return new ResponseDto<>(1, "성공", personalService.findByPersonal(principal.getPersonalId()));
 	}
 
 	@GetMapping("/personal/personalUpdate")

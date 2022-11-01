@@ -25,7 +25,7 @@
 	</select>
 	
 	<select id="personalformById"
-		resultType="site.metacoding.miniproject.web.dto.response.personal.PersonalFormDto">
+		resultType="site.metacoding.miniproject.dto.personal.PersonalRespDto$PersonalDetailRespDto">
 		SELECT personal_name, personal_email, personal_phone_number
 		, personal_education
 		from personal
@@ -33,7 +33,7 @@
 	</select>
 
 	<select id="personalAddressById"
-		resultType="site.metacoding.miniproject.web.dto.response.personal.PersonalAddressDto">
+		resultType="site.metacoding.miniproject.dto.personal.PersonalRespDto$PersonalDetailRespDto">
 		SELECT personal_id,
 		SUBSTRING_INDEX(SUBSTRING_INDEX(personal_address,',',1),',',-1) AS
 		zonecode,

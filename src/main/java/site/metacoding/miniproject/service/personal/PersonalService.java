@@ -19,6 +19,7 @@ import site.metacoding.miniproject.domain.resumes.Resumes;
 import site.metacoding.miniproject.domain.resumes.ResumesDao;
 import site.metacoding.miniproject.domain.users.Users;
 import site.metacoding.miniproject.domain.users.UsersDao;
+import site.metacoding.miniproject.dto.personal.PersonalRespDto.PersonalDetailRespDto;
 import site.metacoding.miniproject.web.dto.request.personal.PersonalUpdateDto;
 import site.metacoding.miniproject.web.dto.request.resume.ResumesInsertDto;
 import site.metacoding.miniproject.web.dto.request.resume.ResumesUpdateDto;
@@ -124,8 +125,11 @@ public class PersonalService {
 	}
 
 	// 개인 정보에 보기
-	public PersonalFormDto personalformById(Integer personalId) {
-		return personalDao.personalformById(personalId);
+	@Transactional(readOnly = true)
+	public PersonalDetailRespDto findByPersonal(Integer personalId) {
+		PersonalDetailRespDto personalDetailRespDto = personalDao.personalformById(personalId);
+		return personalDetailRespDto;
+
 	}
 
 	// 내 정보 수정에서 데이터 보여주기
