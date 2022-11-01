@@ -19,13 +19,13 @@ import site.metacoding.miniproject.domain.jobpostingboard.JobPostingBoard;
 import site.metacoding.miniproject.domain.jobpostingboard.JobPostingBoardDao;
 import site.metacoding.miniproject.domain.users.Users;
 import site.metacoding.miniproject.domain.users.UsersDao;
+import site.metacoding.miniproject.dto.company.CompanyRespDto.CompanyInfoRespDto;
+import site.metacoding.miniproject.dto.jobposting.JobPostingRespDto.JobPostingBoardDetailRespDto;
 import site.metacoding.miniproject.web.dto.request.company.CompanyUpdateDto;
 import site.metacoding.miniproject.web.dto.request.jobpostingboard.JobPostingBoardInsertDto;
 import site.metacoding.miniproject.web.dto.request.jobpostingboard.JobPostingBoardUpdateDto;
 import site.metacoding.miniproject.web.dto.response.company.CompanyAddressDto;
-import site.metacoding.miniproject.web.dto.response.company.CompanyInfoDto;
 import site.metacoding.miniproject.web.dto.response.etc.PagingDto;
-import site.metacoding.miniproject.web.dto.response.jobpostingboard.JobPostingBoardDetailDto;
 import site.metacoding.miniproject.web.dto.response.jobpostingboard.JobPostingBoardListDto;
 import site.metacoding.miniproject.web.dto.response.personal.PersonalMainDto;
 
@@ -43,8 +43,10 @@ public class CompanyService {
 		return companyDao.findByAddress(companyId);
 	}
 
-	public CompanyInfoDto findCompanyInfo(Integer companyId) {
-		return companyDao.companyInfo(companyId);
+	@Transactional(readOnly = true)
+	public CompanyInfoRespDto findByCompany(Integer companyId) {
+		CompanyInfoRespDto companyInfoRespDto = companyDao.companyInfo(companyId);
+		return companyInfoRespDto;
 	}
 
 	// 회사정보변경 (user, company)
@@ -90,14 +92,14 @@ public class CompanyService {
 	}
 
 	// 채용공고 상세 보기
-	public JobPostingBoardDetailDto jobPostingOne(Integer jobPostingBoardId) {
-		JobPostingBoardDetailDto jobPostingPS = jobPostingBoardDao.findByDetail(jobPostingBoardId);
-		Timestamp ts = jobPostingPS.getJobPostingBoardDeadline();
+	public JobPostingBoardDetailRespDto jobPostingBoardDetail(Integer jobPostingBoardId) {
+		JobPostingBoardDetailRespDto jobPostingBoardDetailRespDto = jobPostingBoardDao.findByDetail(jobPostingBoardId);
+		Timestamp ts = jobPostingBoardDetailRespDto.getJobPostingBoardDeadline();
 		Date date = new Date();
 		date.setTime(ts.getTime());
 		String formattedDate = new SimpleDateFormat("yyyy년MM월dd일").format(date);
-		jobPostingPS.setFormatDeadLine(formattedDate);
-		return jobPostingPS;
+		jobPostingBoardDetailRespDto.setFormatDeadLine(formattedDate);
+		return jobPostingBoardDetailRespDto;
 	}
 
 	// 채용공고 수정 (jobpostingboard,career,Category)
