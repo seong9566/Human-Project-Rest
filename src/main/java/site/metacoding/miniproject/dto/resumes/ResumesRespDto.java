@@ -46,4 +46,19 @@ public class ResumesRespDto {
 
     }
 
+    @NoArgsConstructor
+    @Setter
+    @Getter
+    public static class ResumesAllRespDto {
+        private String resumesTitle;
+        private String resumesPlace;
+
+        private Integer personalId;
+
+        public ResumesAllRespDto(Resumes resumes) {
+            this.resumesTitle = resumes.getResumesTitle();
+            this.resumesPlace = resumes.getResumesPlace();
+        }
+    }
+
 }

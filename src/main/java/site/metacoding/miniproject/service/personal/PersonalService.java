@@ -21,6 +21,7 @@ import site.metacoding.miniproject.domain.resumes.ResumesDao;
 import site.metacoding.miniproject.domain.users.Users;
 import site.metacoding.miniproject.domain.users.UsersDao;
 import site.metacoding.miniproject.dto.resumes.ResumesReqDto.ResumesInsertReqDto;
+import site.metacoding.miniproject.dto.resumes.ResumesRespDto.ResumesAllRespDto;
 import site.metacoding.miniproject.dto.resumes.ResumesRespDto.ResumesInsertRespDto;
 import site.metacoding.miniproject.web.dto.request.personal.PersonalUpdateDto;
 import site.metacoding.miniproject.web.dto.request.resume.ResumesUpdateDto;
@@ -74,8 +75,9 @@ public class PersonalService {
 	}
 
 	// 내가 작성한 이력서 목록 보기
-	public List<Resumes> myresumesAll(Integer personalId) {
-		return resumesDao.findMyresumesAll(personalId);
+	public List<ResumesAllRespDto> findAllMyResumes(ResumesAllRespDto resumesAllRespDto) {
+		List<ResumesAllRespDto> resumesList = resumesDao.findAllMyResumes(resumesAllRespDto.getPersonalId());
+		return resumesList;
 	}
 
 	// 이력서 상세 보기

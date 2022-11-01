@@ -22,6 +22,7 @@ import org.springframework.web.multipart.MultipartFile;
 
 import lombok.RequiredArgsConstructor;
 import site.metacoding.miniproject.dto.resumes.ResumesReqDto.ResumesInsertReqDto;
+import site.metacoding.miniproject.dto.resumes.ResumesRespDto.ResumesAllRespDto;
 import site.metacoding.miniproject.dto.user.UserRespDto.SignPersonalDto;
 import site.metacoding.miniproject.dto.user.UserRespDto.SignedDto;
 import site.metacoding.miniproject.service.company.CompanyService;
@@ -62,13 +63,12 @@ public class PersonalController {
 	}
 
 	// 내가 작성한 이력서 목록 보기
-	@GetMapping("/personal/resumesList")
-	public String resumesList(Model model) {
+	@GetMapping("/resumes/myList")
+	public ResponseDto<?> resumesList(ResumesAllRespDto resumesAllRespDto) {
 		SignedDto<?> principal = (SignedDto<?>) session.getAttribute("principal");
-		// List<Resumes> resumesList =
-		// personalService.myresumesAll(principal.getPersonalId());
-		model.addAttribute("resumesList", resumesList);
-		return "personal/resumesList";
+		SignPersonalDto signPersonalDto = (SignPersonalDto) principal.getUserInfo();
+		resumesAllRespDto.setPersonalId(signPersonalDto.getPersonalId());
+		return new ResponseDto<>(1, "내 이력서 목록 보기 성공", null);
 	}
 
 	// 이력서 상세 보기
