@@ -3,7 +3,7 @@ package site.metacoding.miniproject.web.dto.request.etc;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import site.metacoding.miniproject.dto.company.CompanyReqDto.CompanyJoinDto;
-import site.metacoding.miniproject.web.dto.request.personal.PersonalJoinDto;
+import site.metacoding.miniproject.dto.personal.PersonalReqDto.PersonalJoinDto;
 
 @Getter
 @NoArgsConstructor

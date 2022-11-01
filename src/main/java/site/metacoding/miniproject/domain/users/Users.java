@@ -6,9 +6,7 @@ import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
-import site.metacoding.miniproject.dto.company.CompanyReqDto.CompanyJoinDto;
 import site.metacoding.miniproject.web.dto.request.company.CompanyUpdateDto;
-import site.metacoding.miniproject.web.dto.request.personal.PersonalJoinDto;
 import site.metacoding.miniproject.web.dto.request.personal.PersonalUpdateDto;
 
 @Getter
@@ -35,17 +33,6 @@ public class Users {
 		this.createdAt = createdAt;
 	}
 
-	public Users(PersonalJoinDto joinDto) {
-		this.loginId = joinDto.getLoginId();
-		this.loginPassword = joinDto.getLoginPassword();
-		this.personalId = joinDto.getPersonalId();
-	}
-
-	public Users(CompanyJoinDto joinDto) {
-		this.loginId = joinDto.getLoginId();
-		this.loginPassword = joinDto.getLoginPassword();
-		this.companyId = joinDto.getCompanyId();
-	}
 
 	public void update(CompanyUpdateDto companyUpdateDto) {
 		this.loginPassword = companyUpdateDto.getLoginPassword();
