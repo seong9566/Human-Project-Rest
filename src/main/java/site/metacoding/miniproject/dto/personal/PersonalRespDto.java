@@ -1,14 +1,13 @@
 package site.metacoding.miniproject.dto.personal;
 
 import lombok.Getter;
-import lombok.NoArgsConstructor;
 import lombok.Setter;
 import site.metacoding.miniproject.domain.personal.Personal;
 
 public class PersonalRespDto {
 
     @Getter
-    @NoArgsConstructor
+    @Setter
     public static class PersonalDetailRespDto {
         private Integer personalId;
         private String personalName;

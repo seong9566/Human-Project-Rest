@@ -21,7 +21,6 @@ import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.multipart.MultipartFile;
 
 import lombok.RequiredArgsConstructor;
-import site.metacoding.miniproject.dto.personal.PersonalRespDto.PersonalDetailRespDto;
 import site.metacoding.miniproject.dto.resumes.ResumesReqDto.ResumesInsertReqDto;
 import site.metacoding.miniproject.dto.user.UserRespDto.SignPersonalDto;
 import site.metacoding.miniproject.dto.user.UserRespDto.SignedDto;
@@ -245,10 +244,8 @@ public class PersonalController {
 	@GetMapping("/api/personal/inform")
 	public ResponseDto<?> perosnalDetail() {
 		SignedDto<?> principal = (SignedDto<?>) session.getAttribute("principal");
-		// Integer personalId = (SignPersonalDto)
-		// principal.getUserinfo().getPersonalId();
-		Integer id = 1;
-		return new ResponseDto<>(1, "성공", personalService.findByPersonal(id));
+		SignPersonalDto signPersonalDto = (SignPersonalDto) principal.getUserInfo();
+		return new ResponseDto<>(1, "성공", personalService.findByPersonal(signPersonalDto.getPersonalId()));
 	}
 
 	@GetMapping("/personal/personalUpdate")
