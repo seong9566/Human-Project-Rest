@@ -1,0 +1,26 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="site.metacoding.miniproject.domain.subscribe.SubscribeDao">
+
+	<select id="findById" resultType="site.metacoding.miniproject.domain.subscribe.Subscribe">
+		SELECT * from subscribe WHERE subscribe_id = #{subscribeId}
+	</select>
+
+	<select id="findByPersonalId" resultType="site.metacoding.miniproject.domain.subscribe.Subscribe">
+		SELECT * from subscribe WHERE personal_id = #{personalId}
+	</select>
+
+	<insert id="insert" useGeneratedKeys="true" keyProperty="subscribeId" keyColumn="subscribe_id">
+		INSERT INTO subscribe (personal_id, company_id, created_at)
+		VALUES(#{personalId}, #{companyId}, NOW())
+	</insert>
+
+	<update id="update">
+		UPDATE subscribe 
+		SET personal_id = #{personalId}, company_id = #{companyId}, alarm_id = #{alarmId} WHERE subscribe_id = #{subscribeId}
+	</update>
+
+	<delete id="deleteById">
+		DELETE FROM subscribe WHERE subscribe_id = #{subscribeId}
+	</delete>
+</mapper>

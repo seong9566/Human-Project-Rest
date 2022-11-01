@@ -1,0 +1,30 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="site.metacoding.miniproject.domain.category.CategoryDao">
+
+<select id="findAll" resultType="site.metacoding.miniproject.domain.category.Category">
+	SELECT * FROM category
+</select>
+
+<insert id="insert" useGeneratedKeys="true" keyProperty="categoryId" keyColumn="category_id">
+	INSERT INTO category(category_frontend, category_backend, category_devops, created_at)
+	VALUES(#{categoryFrontend}, #{categoryBackend},#{categoryDevops}, NOW())
+</insert>
+
+<update id="update">
+	UPDATE category 
+	SET category_frontend = #{categoryFrontend},
+	 category_Backend =#{categoryBackend},
+	 category_devops = #{categoryDevops}
+	WHERE category_id = #{categoryId}
+</update>
+
+<update id="jobPostingUpdate">
+	UPDATE category 
+	SET category_frontend = #{categoryFrontend},
+	 category_Backend =#{categoryBackend},
+	 category_devops = #{categoryDevops}
+	WHERE category_id = #{jobPostingBoardCategoryId}
+</update>
+
+</mapper>

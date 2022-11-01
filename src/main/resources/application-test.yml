@@ -1,0 +1,31 @@
+server:
+  port: 8001
+  servlet:
+    context-path: /
+    encoding:
+      charset: utf-8
+
+spring:
+  datasource:
+    url: jdbc:h2:mem:test;MODE=MYSQL # MariaDB 가 안됨
+    driver-class-name: org.h2.Driver
+    username: sa
+    password: 
+  h2:
+    console:
+      enabled: true
+  jpa:
+    open-in-view: false
+    hibernate:
+      ddl-auto: create
+    properties:
+      '[hibernate.format_sql]': true
+
+  output:
+    ansi:
+      enabled: always
+
+logging:
+  level:
+    '[org.springframework.web]': DEBUG
+    '[org.hibernate]': DEBUG

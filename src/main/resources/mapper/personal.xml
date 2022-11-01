@@ -1,0 +1,70 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="site.metacoding.miniproject.domain.personal.PersonalDao">
+
+	<select id="findAll" resultType="site.metacoding.miniproject.domain.personal.Personal">
+		SELECT * FROM users
+	</select>
+
+	<select id="findById" resultType="site.metacoding.miniproject.domain.personal.Personal">
+	SELECT *
+	FROM personal
+	WHERE personal_id = #{personalId}
+
+	</select>
+	
+	<insert id="insert" useGeneratedKeys="true" keyProperty="personalId" keyColumn="personal_id">
+		INSERT INTO personal (personal_name, personal_email, personal_education, personal_phone_number, personal_address, created_at)
+		VALUES(#{personalName},#{personalEmail}, #{personalEducation}, #{personalPhoneNumber}, #{personalAddress}, NOW())
+	</insert>
+
+	<select id="personalInfoById" resultType="site.metacoding.miniproject.web.dto.response.personal.PersonalInfoDto">
+		SELECT personal_name, personal_email, personal_education, personal_phone_number, personal_address
+		FROM personal
+		WHERE personal_id = #{personalId}
+	</select>
+	
+	<select id="personalformById"
+		resultType="site.metacoding.miniproject.web.dto.response.personal.PersonalFormDto">
+		SELECT personal_name, personal_email, personal_phone_number
+		, personal_education
+		from personal
+		WHERE personal_id = #{personalId}
+	</select>
+
+	<select id="personalAddressById"
+		resultType="site.metacoding.miniproject.web.dto.response.personal.PersonalAddressDto">
+		SELECT personal_id,
+		SUBSTRING_INDEX(SUBSTRING_INDEX(personal_address,',',1),',',-1) AS
+		zonecode,
+		SUBSTRING_INDEX(SUBSTRING_INDEX(personal_address,',',2),',',-1) AS
+		road_jibunAddr,
+		SUBSTRING_INDEX(SUBSTRING_INDEX(personal_address,',',3),',',-1) AS
+		detail_address
+		FROM personal
+		where personal_id = #{personalId}
+	</select>
+
+	<select id="personalUpdateById"
+		resultType="site.metacoding.miniproject.web.dto.request.personal.PersonalUpdateDto">
+		SELECT * FROM personal
+		left OUTER JOIN users
+		ON
+		personal.personal_id = users.personal_id
+		WHERE personal.personal_id =
+		#{personalId}
+	</select>
+
+
+	<update id="update">
+		UPDATE personal
+		SET personal_name = #{personalName},
+		personal_email = #{personalEmail},
+		personal_phone_number = #{personalPhoneNumber},
+		personal_education = #{personalEducation},
+		personal_address = #{personalAddress}
+		WHERE personal_id = #{personalId}
+
+	</update>
+
+</mapper>

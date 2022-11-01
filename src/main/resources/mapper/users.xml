@@ -1,0 +1,49 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="site.metacoding.miniproject.domain.users.UsersDao">
+
+	<select id="findAll" resultType="site.metacoding.miniproject.domain.users.Users">
+		SELECT * FROM users
+	</select>
+
+	<select id="findById" resultType="site.metacoding.miniproject.domain.users.Users">
+		SELECT * FROM users WHERE users_id = #{usersId}
+	</select>
+
+	<select id="findByResumesId" resultType="site.metacoding.miniproject.domain.users.Users">
+		SELECT u.users_id
+		FROM users u
+		WHERE u.personal_id = (SELECT r.personal_id 
+		FROM resumes r 
+		WHERE r.resumes_id = #{resumesId});
+	</select>
+
+	<select id="findByCompanyId" resultType="site.metacoding.miniproject.domain.users.Users">
+		SELECT *
+		FROM users
+		WHERE company_id = #{companyId}
+	</select>
+
+	<select id="findByLoginId" resultType="Integer">
+		SELECT users_id FROM users
+		WHERE login_id = #{loginId}
+	</select>
+
+	<select id="findByIdAndPassword" resultType="site.metacoding.miniproject.domain.users.Users">
+		SELECT users_id, login_id, login_password, personal_id, company_id
+		FROM users
+		WHERE login_id = #{loginId} AND login_password=#{loginPassword}
+	</select>
+
+	<insert id="insert">
+		INSERT INTO users(login_id, login_password, personal_id, company_id,
+		created_at)
+		VALUES(#{loginId}, #{loginPassword}, #{personalId}, #{companyId}, NOW())
+	</insert>
+
+	<update id="update">
+		UPDATE users
+		SET login_password = #{loginPassword}
+		WHERE users_id = #{usersId}
+	</update>
+</mapper>

@@ -1,0 +1,153 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper
+	namespace="site.metacoding.miniproject.domain.resumes.ResumesDao">
+
+	<insert id="insert">
+		INSERT INTO resumes (personal_id, career_id,
+		portfolio_id, resumes_title, resumes_picture,
+		resumes_introduce,
+		resumes_category_id, resumes_place, created_at)
+		VALUES(#{personalId},
+		#{careerId}, #{portfolioId}, #{resumesTitle}, #{resumesPicture},
+		#{resumesIntroduce}, #{resumesCategoryId}, #{resumesPlace}, NOW())
+	</insert>
+
+	<select id="findMyresumesAll"
+		resultType="site.metacoding.miniproject.domain.resumes.Resumes">
+		SELECT * FROM resumes
+		WHERE personal_id = #{personalId}
+	</select>
+
+	<select id="resumesById"
+		resultType="site.metacoding.miniproject.web.dto.response.resume.ResumesDetailDto">
+		SELECT p.personal_name, p.personal_email,
+		p.personal_education, p.personal_phone_number,
+		r.resumes_id, r.resumes_title, r.resumes_picture, r.resumes_introduce,
+		r.resumes_place, r.resumes_category_id,
+		r.career_id, r.portfolio_id,
+		c.one_year_less, c.two_year_over, c.three_year_over, c.five_year_over,
+		ct.category_frontend, ct.category_backend, ct.category_devops,
+		pf.portfolio_source, pf.portfolio_file
+		FROM resumes r
+		INNER JOIN
+		personal p
+		ON r.personal_id = p.personal_id
+		INNER JOIN career c
+		ON
+		r.career_id = c.career_id
+		INNER JOIN category ct
+		ON
+		r.resumes_category_id = ct.category_id
+		INNER JOIN portfolio pf
+		ON
+		r.portfolio_id = pf.portfolio_id
+		where r.resumes_id = #{resumesId}
+	</select>
+
+	<update id="update">
+		UPDATE resumes
+		SET resumes_title = #{resumesTitle},
+		resumes_picture =#{resumesPicture},
+		resumes_introduce = #{resumesIntroduce},
+		resumes_place = #{resumesPlace}
+		WHERE resumes_id
+		= #{resumesId}
+	</update>
+
+	<delete id="deleteById">
+		DELETE FROM resumes WHERE resumes_id=#{resumesId}
+	</delete>
+
+	<select id="findAll"
+		resultType="site.metacoding.miniproject.web.dto.response.company.CompanyMainDto">
+		SELECT * FROM resumes
+		ORDER BY resumes_id DESC
+		OFFSET
+		#{startNum} ROWS FETCH NEXT 5 ROWS ONLY
+	</select>
+
+	<select id="resumesPaging"
+		resultType="site.metacoding.miniproject.web.dto.response.etc.PagingDto">
+		SELECT totalCount, totalPage, currentPage,
+		if(currentPage=0, 1, 0)
+		FIRST,
+		if(currentPage=totalPage-1, 1, 0) LAST
+		FROM(
+		SELECT count(*)
+		totalCount,
+		ceil(count(*)/5) totalPage,
+		#{page} currentPage,
+		0 first,
+		0 last
+		FROM resumes
+		<if test="keyword != null">
+			WHERE resumes_title like CONCAT('%', #{keyword}, '%')
+		</if>
+		) paging
+	</select>	
+	<select id="findSearch"
+		resultType="site.metacoding.miniproject.web.dto.response.company.CompanyMainDto">
+		SELECT resumes_id, resumes_title, resumes_place
+		FROM resumes
+		WHERE resumes_title like CONCAT('%', #{keyword}, '%')
+		OFFSET #{startNum} ROWS FETCH NEXT 5 ROWS ONLY
+	</select>
+	
+	<insert id="insertLike">
+		INSERT INTO resumes(personal_like_id,resumes_id,company_id,created_at) 
+		VALUES(#{personalLikeId},#{resumesId},#{companyId},now())
+	</insert>
+	
+		<select id="findCategory"
+		resultType="site.metacoding.miniproject.web.dto.response.company.CompanyMainDto">
+		SELECT r.resumes_id, c.category_id, c.category_frontend, 
+		c.category_backend, c.category_devops, r.resumes_category_id,
+		r.resumes_title, r.resumes_place
+		FROM category c
+		INNER JOIN resumes r
+		ON r.resumes_category_id = c.category_id
+		<if test="id == 1">
+		WHERE category_frontend = 1
+		OFFSET #{startNum} ROWS FETCH NEXT 5 ROWS ONLY
+		</if>
+		<if test="id == 2">
+		WHERE category_backend = 1
+		OFFSET #{startNum} ROWS FETCH NEXT 5 ROWS ONLY
+		</if>
+		<if test="id == 3">
+		WHERE category_devops = 1
+		OFFSET #{startNum} ROWS FETCH NEXT 5 ROWS ONLY
+		</if>
+		<if test="id == 4">
+		OFFSET #{startNum} ROWS FETCH NEXT 5 ROWS ONLY
+		</if>
+	</select>	
+	
+	<select id="findCategorySearch"
+		resultType="site.metacoding.miniproject.web.dto.response.company.CompanyMainDto">
+		SELECT r.resumes_id, c.category_id, c.category_frontend, 
+		c.category_backend, c.category_devops, r.resumes_category_id,
+		r.resumes_title, r.resumes_place
+		FROM category c
+		INNER JOIN resumes r
+		ON r.resumes_category_id = c.category_id
+		<if test="id == 1">
+		WHERE category_frontend = 1 AND resumes_title like CONCAT('%', #{keyword}, '%')
+		OFFSET #{startNum} ROWS FETCH NEXT 5 ROWS ONLY
+		</if>
+		<if test="id == 2">
+		WHERE category_backend = 1 AND resumes_title like CONCAT('%', #{keyword}, '%')
+		OFFSET #{startNum} ROWS FETCH NEXT 5 ROWS ONLY
+		</if>
+		<if test="id == 3">
+		WHERE category_devops = 1 AND resumes_title like CONCAT('%', #{keyword}, '%')
+		OFFSET #{startNum} ROWS FETCH NEXT 5 ROWS ONLY
+		</if>
+		<if test="id == 4">
+		WHERE resumes_title like CONCAT('%', #{keyword}, '%')
+		OFFSET #{startNum} ROWS FETCH NEXT 5 ROWS ONLY
+		</if>
+	</select>	
+
+</mapper>
