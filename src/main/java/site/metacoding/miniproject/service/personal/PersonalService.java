@@ -61,7 +61,6 @@ public class PersonalService {
 		careerDao.insert(career);
 
 		Resumes resumes = new Resumes(resumesInsertReqDto);
-		resumes.setPersonalId(1); // 추후 personalId 받을 예정
 		resumes.setCareerId(career.getCareerId());
 		resumes.setPortfolioId(portfolio.getPortfolioId());
 		resumes.setResumesCategoryId(category.getCategoryId());

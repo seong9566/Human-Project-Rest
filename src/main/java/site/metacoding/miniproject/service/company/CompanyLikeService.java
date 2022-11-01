@@ -13,8 +13,8 @@ import site.metacoding.miniproject.domain.like.companylike.CompanyLikesDao;
 import site.metacoding.miniproject.domain.personal.Personal;
 import site.metacoding.miniproject.domain.users.Users;
 import site.metacoding.miniproject.domain.users.UsersDao;
+import site.metacoding.miniproject.dto.user.UserRespDto.SignedDto;
 import site.metacoding.miniproject.utill.AlarmEnum;
-import site.metacoding.miniproject.web.dto.response.etc.SignedDto;
 
 @RequiredArgsConstructor
 @Service
@@ -28,7 +28,7 @@ public class CompanyLikeService {
 	public void 좋아요(SignedDto<?> signedDto, Integer companyId) {
 
 		HashMap<String, Integer> companylikes = new HashMap<>();
-		Personal personalinfo = (Personal) signedDto.getUserinfo();
+		Personal personalinfo = (Personal) signedDto.getUserInfo();
 
 		CompanyLike companyLike = new CompanyLike(companyId, personalinfo.getPersonalId());
 		companyLikesDao.insert(companyLike);

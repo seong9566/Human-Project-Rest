@@ -21,9 +21,9 @@ import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.multipart.MultipartFile;
 
 import lombok.RequiredArgsConstructor;
-import site.metacoding.miniproject.domain.like.personalike.PersonalLike;
-import site.metacoding.miniproject.domain.resumes.Resumes;
 import site.metacoding.miniproject.dto.resumes.ResumesReqDto.ResumesInsertReqDto;
+import site.metacoding.miniproject.dto.user.UserRespDto.SignPersonalDto;
+import site.metacoding.miniproject.dto.user.UserRespDto.SignedDto;
 import site.metacoding.miniproject.service.company.CompanyService;
 import site.metacoding.miniproject.service.personal.PersonalLikeService;
 import site.metacoding.miniproject.service.personal.PersonalService;
@@ -35,7 +35,6 @@ import site.metacoding.miniproject.web.dto.response.company.CompanyAddressDto;
 import site.metacoding.miniproject.web.dto.response.company.CompanyInfoDto;
 import site.metacoding.miniproject.web.dto.response.company.CompanyMainDto;
 import site.metacoding.miniproject.web.dto.response.etc.PagingDto;
-import site.metacoding.miniproject.web.dto.response.etc.SignedDto;
 import site.metacoding.miniproject.web.dto.response.jobpostingboard.JobPostingBoardDetailDto;
 import site.metacoding.miniproject.web.dto.response.personal.PersonalAddressDto;
 import site.metacoding.miniproject.web.dto.response.personal.PersonalFormDto;
@@ -55,6 +54,9 @@ public class PersonalController {
 	@PostMapping(value = "/resumes/insert")
 	public ResponseDto<?> resumesInsert(@RequestPart(value = "file", required = false) MultipartFile file,
 			@RequestPart("reqDto") ResumesInsertReqDto resumesInsertReqDto) throws Exception {
+		SignedDto<?> principal = (SignedDto<?>) session.getAttribute("principal");
+		SignPersonalDto signPersonalDto = (SignPersonalDto) principal.getUserInfo();
+		resumesInsertReqDto.setPersonalId(signPersonalDto.getPersonalId());
 		resumesInsertReqDto.setFile(file);
 		return new ResponseDto<>(1, "이력서 등록 성공", personalService.insertResumes(resumesInsertReqDto));
 	}

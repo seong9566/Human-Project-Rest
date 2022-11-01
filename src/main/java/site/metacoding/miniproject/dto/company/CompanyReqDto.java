@@ -9,6 +9,7 @@ import org.springframework.web.multipart.MultipartFile;
 
 import lombok.Getter;
 import lombok.Setter;
+import site.metacoding.miniproject.config.handler.exception.ApiException;
 import site.metacoding.miniproject.domain.company.Company;
 import site.metacoding.miniproject.domain.users.Users;
 
@@ -57,7 +58,7 @@ public static class CompanyJoinDto {
 		File makeFileFolder = new File(filePath);
 		if (!makeFileFolder.exists()) {
 			if (!makeFileFolder.mkdir()) {
-				throw new RuntimeException("File.mkdir():Fail.");
+				throw new ApiException("File.mkdir():Fail.");
 			}
 		}
 		File dest = new File(filePath, imgName);
