@@ -16,7 +16,7 @@ import site.metacoding.miniproject.domain.subscribe.Subscribe;
 import site.metacoding.miniproject.domain.subscribe.SubscribeDao;
 import site.metacoding.miniproject.domain.users.Users;
 import site.metacoding.miniproject.domain.users.UsersDao;
-import site.metacoding.miniproject.web.dto.request.company.CompanyJoinDto;
+import site.metacoding.miniproject.dto.company.CompanyReqDto.CompanyJoinDto;
 import site.metacoding.miniproject.web.dto.request.etc.LoginDto;
 import site.metacoding.miniproject.web.dto.request.personal.PersonalJoinDto;
 import site.metacoding.miniproject.web.dto.response.etc.SignedDto;
@@ -69,13 +69,13 @@ public class UsersService {
     @Transactional(rollbackFor = RuntimeException.class)
     public void joinCompany(CompanyJoinDto joinDto) {
 
-        Company company = new Company(joinDto);
+        Company company = joinDto.companyJoinDtoToCompanyEntity();
         companyDao.insert(company);
 
         Integer companyId = company.getCompanyId();
         joinDto.setCompanyId(companyId);
 
-        Users users = new Users(joinDto);
+        Users users = joinDto.companyJoinDtoToUserEntity();
         usersDao.insert(users);
 
     }

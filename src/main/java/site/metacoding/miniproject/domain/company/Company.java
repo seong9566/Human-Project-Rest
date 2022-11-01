@@ -3,10 +3,11 @@ package site.metacoding.miniproject.domain.company;
 import java.io.Serializable;
 import java.sql.Timestamp;
 
+import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
-import site.metacoding.miniproject.web.dto.request.company.CompanyJoinDto;
+import site.metacoding.miniproject.dto.company.CompanyReqDto.CompanyJoinDto;
 import site.metacoding.miniproject.web.dto.request.company.CompanyUpdateDto;
 
 @Getter
@@ -23,13 +24,19 @@ public class Company implements Serializable {
 
 	private static final long serialVersionUID = 7364337982660485087L;
 
-	public Company(CompanyJoinDto joinDto) {
-		this.companyName = joinDto.getCompanyName();
-		this.companyEmail = joinDto.getCompanyEmail();
-		this.companyPicture = joinDto.getCompanyPicture();
-		this.companyAddress = joinDto.getCompanyAddress();
-		this.companyPhoneNumber = joinDto.getCompanyPhoneNumber();
+	
+	@Builder
+	public Company(Integer companyId, String companyName, String companyPicture, String companyEmail,
+			String companyPhoneNumber, String companyAddress, Timestamp createdAt) {
+		this.companyId = companyId;
+		this.companyName = companyName;
+		this.companyPicture = companyPicture;
+		this.companyEmail = companyEmail;
+		this.companyPhoneNumber = companyPhoneNumber;
+		this.companyAddress = companyAddress;
+		this.createdAt = createdAt;
 	}
+
 
 	public void updateCompany(CompanyUpdateDto companyInformUpdateDto) {
 		this.companyName = companyInformUpdateDto.getCompanyName();

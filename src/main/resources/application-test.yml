@@ -28,4 +28,4 @@ spring:
 logging:
   level:
     '[org.springframework.web]': DEBUG
-    '[org.hibernate]': DEBUG
+    #'[org.hibernate]': DEBUG - 하이버네이트 사용 안함

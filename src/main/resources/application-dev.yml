@@ -27,7 +27,7 @@ spring:
 
 logging:
   level:
-    '[org.hibernate.SQL]': DEBUG
+    '[org.springframework.web]': DEBUG
     #root: DEBUG
 
 
