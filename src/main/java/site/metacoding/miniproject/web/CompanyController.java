@@ -8,7 +8,6 @@ import java.util.UUID;
 
 import javax.servlet.http.HttpSession;
 
-import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -18,9 +17,13 @@ import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestPart;
 import org.springframework.web.bind.annotation.ResponseBody;
+import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.multipart.MultipartFile;
 
 import lombok.RequiredArgsConstructor;
+import site.metacoding.miniproject.domain.company.Company;
+import site.metacoding.miniproject.dto.company.CompanyRespDto.CompanyInfoRespDto;
+import site.metacoding.miniproject.dto.user.UserRespDto.SignCompanyDto;
 import site.metacoding.miniproject.dto.user.UserRespDto.SignedDto;
 import site.metacoding.miniproject.service.company.CompanyService;
 import site.metacoding.miniproject.web.dto.request.company.CompanyUpdateDto;
@@ -32,7 +35,7 @@ import site.metacoding.miniproject.web.dto.response.company.CompanyInfoDto;
 import site.metacoding.miniproject.web.dto.response.jobpostingboard.JobPostingBoardDetailDto;
 import site.metacoding.miniproject.web.dto.response.jobpostingboard.JobPostingBoardListDto;
 
-@Controller
+@RestController
 @RequiredArgsConstructor
 public class CompanyController {
 
@@ -40,14 +43,11 @@ public class CompanyController {
 	private final CompanyService companyService;
 
 	// 회사 정보 보기
-	@GetMapping("/company/companyInform")
-	public String inform(Model model) {
-		SignedDto<?> principal = (SignedDto<?>) session.getAttribute("principal");
-		CompanyInfoDto companyPS = companyService.findCompanyInfo(principal.getCompanyId());
-		CompanyAddressDto addressPS = companyService.findByAddress(principal.getCompanyId());
-		model.addAttribute("address", addressPS);
-		model.addAttribute("companyInfo", companyPS);
-		return "company/companyInform";
+	@GetMapping("/api/company/inform")
+	public ResponseDto<?> CompanyInform() {
+		SignedDto<SignCompanyDto> principal = (SignedDto<SignCompanyDto>) session.getAttribute("principal");
+		return new ResponseDto<>(1, "성공",
+				companyService.findByCompany(principal.getUserInfo().getCompanyId()));
 	}
 
 	// 회사 정보 업데이트
@@ -117,15 +117,20 @@ public class CompanyController {
 	}
 
 	// 채용 공고 상세보기
-	@GetMapping("/company/jobPostingBoardDetail/{jobPostingBoardId}")
-	public String jobPostingBoardDetail(Model model, @PathVariable Integer jobPostingBoardId) {
-		JobPostingBoardDetailDto jobPostingPS = companyService.jobPostingOne(jobPostingBoardId);
-		SignedDto<?> principal = (SignedDto<?>) session.getAttribute("principal");
-		CompanyAddressDto addressPS = companyService.findByAddress(principal.getCompanyId());
-		model.addAttribute("address", addressPS);
-		model.addAttribute("jobPostingPS", jobPostingPS);
-		return "company/jobPostingBoardDetail";
-	}
+	// @GetMapping("/api/company/jobPostingBoardDetail/{jobPostingBoardId}")
+	// public String jobPostingBoardDetail(Model model, @PathVariable Integer
+	// jobPostingBoardId) {
+	// return new ResponseDto<>(1, "성공",
+	// companyService.findByCompany(principal.getCompanyId()));
+	// JobPostingBoardDetailDto jobPostingPS =
+	// companyService.jobPostingOne(jobPostingBoardId);
+	// SignedDto<?> principal = (SignedDto<?>) session.getAttribute("principal");
+	// CompanyAddressDto addressPS =
+	// companyService.findByAddress(principal.getCompanyId());
+	// model.addAttribute("address", addressPS);
+	// model.addAttribute("jobPostingPS", jobPostingPS);
+	// return "company/jobPostingBoardDetail";
+	// }
 
 	// 채용 공고 수정 폼
 	@GetMapping("/company/jobPostingBoardUpdate/{jobPostingBoardId}")

@@ -36,7 +36,7 @@ public class UserController {
 		ResponseDto<?> responseDto;
 		if (session.getAttribute("principal") == null) {
 			responseDto = new ResponseDto<>(-1, "이미 로그인 되어 있음", null);
-		}else{
+		} else {
 			responseDto = new ResponseDto<>(-1, "성공", null);
 		}
 		return responseDto;
@@ -91,27 +91,28 @@ public class UserController {
 		SignedDto<?> signUserDto = userService.login(loginDto);
 
 		// if (signedDto == null)
-		// 	return new ResponseDto<>(-1, "비밀번호 또는 아이디를 확인하여 주세요", null);
+		// return new ResponseDto<>(-1, "비밀번호 또는 아이디를 확인하여 주세요", null);
 
 		// if (SessionConfig.getSessionidCheck(signedDto.getUsersId()) != null) {
-		// 	return new ResponseDto<>(-2, "중복 로그인 확인됨", null);
+		// return new ResponseDto<>(-2, "중복 로그인 확인됨", null);
 		// }
 
 		// session.setAttribute("principal", signedDto);
 		// SessionConfig.login(session.getId(), signedDto.getUsersId());
 
 		// if (signedDto.getCompanyId() != null) {
-		// 	session.setAttribute("companyId", signedDto.getCompanyId());
+		// session.setAttribute("companyId", signedDto.getCompanyId());
 		// } else {
-		// 	subscribes = userService.findSubscribeinfoByPersonalId(signedDto.getPersonalId());
-		// 	session.setAttribute("personalId", signedDto.getPersonalId());
-		// 	session.setAttribute("subscribe", subscribes);
+		// subscribes =
+		// userService.findSubscribeinfoByPersonalId(signedDto.getPersonalId());
+		// session.setAttribute("personalId", signedDto.getPersonalId());
+		// session.setAttribute("subscribe", subscribes);
 		// }
 		session.setAttribute("principal", signUserDto);
 		return new ResponseDto<>(1, "로그인완료", signUserDto);
 	}
 
-	//개인 회원가입
+	// 개인 회원가입
 	@PostMapping("/join/personal")
 	public ResponseDto<?> joinPersonal(@RequestBody PersonalJoinDto joinDto) {
 
@@ -123,19 +124,19 @@ public class UserController {
 		session.setAttribute("principal", signedDto);
 
 		// if (signedDto.getCompanyId() != null) {
-		// 	session.setAttribute("companyId", signedDto.getCompanyId());
+		// session.setAttribute("companyId", signedDto.getCompanyId());
 		// } else {
-		// 	session.setAttribute("personalId", signedDto.getPersonalId());
+		// session.setAttribute("personalId", signedDto.getPersonalId());
 		// }
 
 		return new ResponseDto<>(1, "계정생성완료", signedDto);
 	}
 
-	//기업 회원가입
+	// 기업 회원가입
 	@PostMapping(value = "/join/company")
 	public ResponseDto<?> joinCompany(@RequestPart(value = "file", required = false) MultipartFile file,
-		@RequestPart("joinDto") CompanyJoinDto joinDto) {
-		
+			@RequestPart("joinDto") CompanyJoinDto joinDto) {
+
 		joinDto.setFile(file);
 		userService.joinCompany(joinDto);
 
@@ -148,7 +149,7 @@ public class UserController {
 		return new ResponseDto<>(1, "계정생성완료", signedDto);
 	}
 
-	//유저알람 갱신 해주기
+	// 유저알람 갱신 해주기
 	@GetMapping("/user/alarm/{usersId}")
 	public ResponseDto<?> refreshUserAlarm(@PathVariable Integer usersId) {
 		ResponseDto<?> responseDto = null;
@@ -158,7 +159,7 @@ public class UserController {
 		return responseDto;
 	}
 
-	//알람지우기
+	// 알람지우기
 	@DeleteMapping("/user/alarm/{alarmId}")
 	public ResponseDto<?> deleteUserAlarm(@PathVariable Integer alarmId) {
 		userService.deleteAlarm(alarmId);

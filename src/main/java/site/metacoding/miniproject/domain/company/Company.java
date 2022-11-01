@@ -23,7 +23,6 @@ public class Company implements Serializable {
 
 	private static final long serialVersionUID = 7364337982660485087L;
 
-	
 	@Builder
 	public Company(Integer companyId, String companyName, String companyPicture, String companyEmail,
 			String companyPhoneNumber, String companyAddress, Timestamp createdAt) {
@@ -35,7 +34,6 @@ public class Company implements Serializable {
 		this.companyAddress = companyAddress;
 		this.createdAt = createdAt;
 	}
-
 
 	public void updateCompany(CompanyUpdateDto companyInformUpdateDto) {
 		this.companyName = companyInformUpdateDto.getCompanyName();
