@@ -110,7 +110,7 @@ public class UserController {
 		// 	session.setAttribute("subscribe", subscribes);
 		// }
 
-		return new ResponseDto<>(1, "로그인완료", subscribes);
+		return new ResponseDto<>(1, "로그인완료", signUserDto);
 	}
 
 	@PostMapping("/join/personal")

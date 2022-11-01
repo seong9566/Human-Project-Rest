@@ -13,6 +13,7 @@ public class UserRespDto {
     public static class SignedDto<T> {
         private Integer usersId;
         private String loginId;
+        //
         private T userInfo;
 
         public SignedDto(Integer usersId, String loginId, T userInfo) {
@@ -20,8 +21,6 @@ public class UserRespDto {
             this.loginId = loginId;
             this.userInfo = userInfo;
         }
-
-        
     }
 
     @Getter
