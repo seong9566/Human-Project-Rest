@@ -135,15 +135,11 @@ public class PersonalService {
 	@Transactional(readOnly = true)
 	public PersonalDetailRespDto findByPersonal(Integer personalId) {
 		PersonalDetailRespDto personalDetailRespDto = personalDao.personalformById(personalId);
-		// Personal personal = new Personal();
-		// personal.setPersonalName("ssar");
-		// personal.setPersonalPhoneNumber("010-9459-5116");
-		// personal.setPersonalEmail("cndtjq1248@naver.com");
-		// personal.setPersonalAddress("asdfasdfa");
 		return personalDetailRespDto;
 	}
 
 	// 내 정보 수정에서 데이터 보여주기
+	@Transactional(readOnly = true)
 	public PersonalUpdateDto personalUpdateById(Integer personalId) {
 		return personalDao.personalUpdateById(personalId);
 	}

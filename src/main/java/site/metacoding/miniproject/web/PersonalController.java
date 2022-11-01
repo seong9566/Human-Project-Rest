@@ -244,22 +244,20 @@ public class PersonalController {
 	@GetMapping("/api/personal/inform")
 	public ResponseDto<?> perosnalDetail() {
 		SignedDto<?> principal = (SignedDto<?>) session.getAttribute("principal");
-		SignPersonalDto signPersonalDto = (SignPersonalDto) principal.getUserInfo();
-		// Integer personalId = (SignPersonalDto)
-		// principal.getUserinfo().getPersonalId();
-		Integer id = 1;
-		return new ResponseDto<>(1, "성공", personalService.findByPersonal(id));
+
+		return new ResponseDto<>(1, "성공", personalService.findByPersonal(principal.getUserInfo().getPersonalId()));
+		// principal.getUserinfo().getPersonalId()
 
 	}
 
-	@GetMapping("/personal/personalUpdate")
-	public String update(Model model) {
+	// 내정보 수정 보기
+	@GetMapping("/api/personal/inform/informUpdate")
+	public ResponseDto<?> personalupdate() {
 		SignedDto<?> principal = (SignedDto<?>) session.getAttribute("principal");
 		PersonalUpdateDto personalUpdateFormPS = personalService.personalUpdateById(principal.getPersonalId());
 		PersonalAddressDto personalAddressPS = personalService.personalAddress(principal.getPersonalId());
-		model.addAttribute("personalAddress", personalAddressPS);
-		model.addAttribute("personalUpdateForm", personalUpdateFormPS);
-		return "personal/personalUpdate";
+
+		return new ResponseDto<>(1, "성공", null);
 	}
 
 	@PutMapping("/personal/personalUpdate")
