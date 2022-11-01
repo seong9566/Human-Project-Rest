@@ -52,20 +52,11 @@ public class PersonalController {
 	private final PersonalLikeService personalLikeService;
 
 	// 이력서 작성 하기
-	// @GetMapping("/resumes/insert")
-	// public String resumesForm(Model model) {
-	// SignedDto<?> principal = (SignedDto<?>) session.getAttribute("principal");
-	// PersonalInfoDto personalInfoPS =
-	// personalService.personalInfoById(principal.getPersonalId());
-	// model.addAttribute("personalInfoPS", personalInfoPS);
-	// return "personal/resumesForm";
-	// }
-
 	@PostMapping(value = "/resumes/insert")
-	public ResponseDto<?> resumesInsert(ResumesInsertReqDto resumesInsertReqDto) throws Exception {
-		// ResumesValidationCheck.valCheckToInsertResumes(resumesInsertDto);
-		SignedDto<?> principal = (SignedDto<?>) session.getAttribute("principal");
-		personalService.insertResumes(principal.getPersonalId(), resumesInsertReqDto);
+	public ResponseDto<?> resumesInsert(@RequestPart(value = "file", required = false) MultipartFile file,
+			@RequestPart("reqDto") ResumesInsertReqDto resumesInsertReqDto) throws Exception {
+		resumesInsertReqDto.setFile(file);
+		personalService.insertResumes(resumesInsertReqDto);
 		return new ResponseDto<>(1, "이력서 등록 성공", null);
 	}
 
@@ -73,7 +64,8 @@ public class PersonalController {
 	@GetMapping("/personal/resumesList")
 	public String resumesList(Model model) {
 		SignedDto<?> principal = (SignedDto<?>) session.getAttribute("principal");
-		//List<Resumes> resumesList = personalService.myresumesAll(principal.getPersonalId());
+		// List<Resumes> resumesList =
+		// personalService.myresumesAll(principal.getPersonalId());
 		model.addAttribute("resumesList", resumesList);
 		return "personal/resumesList";
 	}
@@ -82,7 +74,8 @@ public class PersonalController {
 	@GetMapping("/personal/resumes/{resumesId}")
 	public String resumesById(@PathVariable Integer resumesId, Model model) {
 		SignedDto<?> signedDto = (SignedDto<?>) session.getAttribute("principal");
-		//PersonalLike personalLike = personalLikeService.좋아요확인(resumesId, signedDto.getCompanyId());
+		// PersonalLike personalLike = personalLikeService.좋아요확인(resumesId,
+		// signedDto.getCompanyId());
 		model.addAttribute("personalLike", personalLike);
 		ResumesDetailDto detailResumesDtoPS = personalService.resumesById(resumesId);
 		model.addAttribute("detailResumesDtoPS", detailResumesDtoPS);

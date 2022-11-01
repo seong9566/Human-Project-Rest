@@ -7,6 +7,7 @@ import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.bind.annotation.PathVariable;
 
 import lombok.RequiredArgsConstructor;
+import site.metacoding.miniproject.config.handler.exception.ApiException;
 import site.metacoding.miniproject.domain.career.Career;
 import site.metacoding.miniproject.domain.career.CareerDao;
 import site.metacoding.miniproject.domain.category.Category;
@@ -44,55 +45,34 @@ public class PersonalService {
 	@Transactional(rollbackFor = RuntimeException.class)
 	public ResumesInsertRespDto insertResumes(ResumesInsertReqDto resumesInsertReqDto) {
 
+		try {
+			resumesInsertReqDto.ResumesInsertDtoPictureSet();
+		} catch (Exception e) {
+			throw new ApiException("멀티파트 폼 에러");
+		}
+
 		Category category = new Category(resumesInsertReqDto);
-		Category categoryPS = categoryDao.insert(category);
+		categoryDao.insert(category);
 
 		Portfolio portfolio = new Portfolio(resumesInsertReqDto);
-		Portfolio portfolioPS = portfolioDao.insert(portfolio);
+		portfolioDao.insert(portfolio);
 
 		Career career = new Career(resumesInsertReqDto);
-		Career careerPS = careerDao.insert(career);
+		careerDao.insert(career);
 
 		Resumes resumes = new Resumes(resumesInsertReqDto);
-		resumes.setPersonalId(personalId);
+		resumes.setPersonalId(1); // 추후 personalId 받을 예정
 		resumes.setCareerId(career.getCareerId());
 		resumes.setPortfolioId(portfolio.getPortfolioId());
 		resumes.setResumesCategoryId(category.getCategoryId());
-		Resumes resumesPS = resumesDao.insert(resumes);
+		resumesDao.insert(resumes);
 
-		ResumesInsertRespDto resumesInsertRespDto = new ResumesInsertRespDto();
-		resumesInsertRespDto.get
+		ResumesInsertRespDto resumesInsertRespDto = new ResumesInsertRespDto(resumes, category, career,
+				portfolio);
 
 		return resumesInsertRespDto;
 
 	}
-
-	// public PersonalInfoDto personalInfoById(Integer personalId) {
-	// return personalDao.personalInfoById(personalId);
-	// }
-
-	// 사진
-	// @RequestPart("file") MultipartFile file,
-	// int pos = file.getOriginalFilename().lastIndexOf('.');
-	// String extension = file.getOriginalFilename().substring(pos + 1);
-	// String filePath = "C:\\Temp\\img\\";
-	// // String filePath = "/Users/ihyeonseong/Desktop/img";//Mac전용 경로
-	// String imgSaveName = UUID.randomUUID().toString();
-	// String imgName = imgSaveName + "." + extension;
-	// File makeFileFolder = new File(filePath);
-	// if (!makeFileFolder.exists()) {
-	// if (!makeFileFolder.mkdir()) {
-	// throw new Exception("File.mkdir():Fail.");
-	// }
-	// }
-	// File dest = new File(filePath, imgName);
-	// try {
-	// Files.copy(file.getInputStream(), dest.toPath());
-	// } catch (IOException e) {
-	// e.printStackTrace();
-	// System.out.println("사진 업로드 됨");
-	// }
-	// resumesInsertDto.setResumesPicture(imgName);
 
 	// 내가 작성한 이력서 목록 보기
 	public List<Resumes> myresumesAll(Integer personalId) {

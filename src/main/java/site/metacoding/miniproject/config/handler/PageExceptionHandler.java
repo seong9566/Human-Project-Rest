@@ -13,10 +13,10 @@ import site.metacoding.miniproject.web.dto.response.ResponseDto;
 @ControllerAdvice
 public class PageExceptionHandler {
 
-	@ExceptionHandler(RuntimeException.class)
-	public @ResponseBody String RuntimeError(Exception e) {
-		return Script.back("잘못된 요청입니다.");
-	}
+	// @ExceptionHandler(RuntimeException.class)
+	// public @ResponseBody String RuntimeError(Exception e) {
+	// return Script.back("잘못된 요청입니다.");
+	// }
 
 	@ExceptionHandler(ApiException.class)
 	public @ResponseBody ResponseDto<?> apiError(Exception e) {
