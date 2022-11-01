@@ -22,6 +22,7 @@ import org.springframework.web.multipart.MultipartFile;
 
 import lombok.RequiredArgsConstructor;
 import site.metacoding.miniproject.dto.resumes.ResumesReqDto.ResumesInsertReqDto;
+import site.metacoding.miniproject.dto.user.UserRespDto.SignPersonalDto;
 import site.metacoding.miniproject.dto.user.UserRespDto.SignedDto;
 import site.metacoding.miniproject.service.company.CompanyService;
 import site.metacoding.miniproject.service.personal.PersonalLikeService;
@@ -50,28 +51,22 @@ public class PersonalController {
 	private final PersonalLikeService personalLikeService;
 
 	// 이력서 작성 하기
-	// @GetMapping("/resumes/insert")
-	// public String resumesForm(Model model) {
-	// SignedDto<?> principal = (SignedDto<?>) session.getAttribute("principal");
-	// PersonalInfoDto personalInfoPS =
-	// personalService.personalInfoById(principal.getPersonalId());
-	// model.addAttribute("personalInfoPS", personalInfoPS);
-	// return "personal/resumesForm";
-	// }
-
 	@PostMapping(value = "/resumes/insert")
-	public ResponseDto<?> resumesInsert(ResumesInsertReqDto resumesInsertReqDto) throws Exception {
-		// ResumesValidationCheck.valCheckToInsertResumes(resumesInsertDto);
+	public ResponseDto<?> resumesInsert(@RequestPart(value = "file", required = false) MultipartFile file,
+			@RequestPart("reqDto") ResumesInsertReqDto resumesInsertReqDto) throws Exception {
 		SignedDto<?> principal = (SignedDto<?>) session.getAttribute("principal");
-		personalService.insertResumes(principal.getPersonalId(), resumesInsertReqDto);
-		return new ResponseDto<>(1, "이력서 등록 성공", null);
+		SignPersonalDto signPersonalDto = (SignPersonalDto) principal.getUserInfo();
+		resumesInsertReqDto.setPersonalId(signPersonalDto.getPersonalId());
+		resumesInsertReqDto.setFile(file);
+		return new ResponseDto<>(1, "이력서 등록 성공", personalService.insertResumes(resumesInsertReqDto));
 	}
 
 	// 내가 작성한 이력서 목록 보기
 	@GetMapping("/personal/resumesList")
 	public String resumesList(Model model) {
 		SignedDto<?> principal = (SignedDto<?>) session.getAttribute("principal");
-		//List<Resumes> resumesList = personalService.myresumesAll(principal.getPersonalId());
+		// List<Resumes> resumesList =
+		// personalService.myresumesAll(principal.getPersonalId());
 		model.addAttribute("resumesList", resumesList);
 		return "personal/resumesList";
 	}
@@ -80,7 +75,8 @@ public class PersonalController {
 	@GetMapping("/personal/resumes/{resumesId}")
 	public String resumesById(@PathVariable Integer resumesId, Model model) {
 		SignedDto<?> signedDto = (SignedDto<?>) session.getAttribute("principal");
-		//PersonalLike personalLike = personalLikeService.좋아요확인(resumesId, signedDto.getCompanyId());
+		// PersonalLike personalLike = personalLikeService.좋아요확인(resumesId,
+		// signedDto.getCompanyId());
 		model.addAttribute("personalLike", personalLike);
 		ResumesDetailDto detailResumesDtoPS = personalService.resumesById(resumesId);
 		model.addAttribute("detailResumesDtoPS", detailResumesDtoPS);

@@ -112,6 +112,7 @@ public class UserController {
 		return new ResponseDto<>(1, "로그인완료", signUserDto);
 	}
 
+	//개인 회원가입
 	@PostMapping("/join/personal")
 	public ResponseDto<?> joinPersonal(@RequestBody PersonalJoinDto joinDto) {
 
