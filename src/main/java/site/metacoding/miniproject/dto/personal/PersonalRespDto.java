@@ -12,8 +12,7 @@ public class PersonalRespDto {
     @Getter
     @Setter
     @NoArgsConstructor
-
-    public static class PersonalDetailRespDto {
+    public static class PersonalFormRespDto {
         private Integer personalId;
         private String personalName;
         private String personalEmail;
@@ -21,7 +20,7 @@ public class PersonalRespDto {
         private String personalEducation;
         private String personalAddress;
 
-        public PersonalDetailRespDto(Personal personal) {
+        public PersonalFormRespDto(Personal personal) {
             this.personalId = personal.getPersonalId();
             this.personalName = personal.getPersonalName();
             this.personalEmail = personal.getPersonalEmail();
