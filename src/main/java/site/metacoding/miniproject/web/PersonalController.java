@@ -245,7 +245,11 @@ public class PersonalController {
 	public ResponseDto<?> perosnalDetail() {
 		SignedDto<?> principal = (SignedDto<?>) session.getAttribute("principal");
 		SignPersonalDto signPersonalDto = (SignPersonalDto) principal.getUserInfo();
-		return new ResponseDto<>(1, "성공", personalService.findByPersonal(signPersonalDto.getPersonalId()));
+		// Integer personalId = (SignPersonalDto)
+		// principal.getUserinfo().getPersonalId();
+		Integer id = 1;
+		return new ResponseDto<>(1, "성공", personalService.findByPersonal(id));
+
 	}
 
 	@GetMapping("/personal/personalUpdate")

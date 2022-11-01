@@ -17,12 +17,11 @@ import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import site.metacoding.miniproject.config.SessionConfig;
 import site.metacoding.miniproject.domain.alarm.Alarm;
-import site.metacoding.miniproject.domain.subscribe.Subscribe;
 import site.metacoding.miniproject.dto.company.CompanyReqDto.CompanyJoinDto;
+import site.metacoding.miniproject.dto.personal.PersonalReqDto.PersonalJoinDto;
 import site.metacoding.miniproject.dto.user.UserRespDto.SignedDto;
 import site.metacoding.miniproject.service.users.UsersService;
 import site.metacoding.miniproject.web.dto.request.etc.LoginDto;
-import site.metacoding.miniproject.web.dto.request.personal.PersonalJoinDto;
 import site.metacoding.miniproject.web.dto.response.ResponseDto;
 
 @RestController
@@ -112,6 +111,7 @@ public class UserController {
 		return new ResponseDto<>(1, "로그인완료", signUserDto);
 	}
 
+	//개인 회원가입
 	@PostMapping("/join/personal")
 	public ResponseDto<?> joinPersonal(@RequestBody PersonalJoinDto joinDto) {
 
@@ -128,7 +128,7 @@ public class UserController {
 		// 	session.setAttribute("personalId", signedDto.getPersonalId());
 		// }
 
-		return new ResponseDto<>(1, "계정생성완료", null);
+		return new ResponseDto<>(1, "계정생성완료", signedDto);
 	}
 
 	//기업 회원가입
