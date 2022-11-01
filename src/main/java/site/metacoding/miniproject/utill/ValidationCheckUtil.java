@@ -8,7 +8,7 @@ import org.springframework.util.ObjectUtils;
 
 import site.metacoding.miniproject.config.handler.exception.NormalException;
 import site.metacoding.miniproject.config.handler.exception.ValCheckException;
-import site.metacoding.miniproject.web.dto.request.company.CompanyJoinDto;
+import site.metacoding.miniproject.dto.company.CompanyReqDto.CompanyJoinDto;
 import site.metacoding.miniproject.web.dto.request.personal.PersonalJoinDto;
 import site.metacoding.miniproject.web.dto.request.personal.PersonalUpdateDto;
 
