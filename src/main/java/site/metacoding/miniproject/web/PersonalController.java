@@ -255,7 +255,6 @@ public class PersonalController {
 		SignedDto<?> principal = (SignedDto<?>) session.getAttribute("principal");
 		PersonalUpdateDto personalUpdateFormPS = personalService.personalUpdateById(principal.getPersonalId());
 		PersonalAddressDto personalAddressPS = personalService.personalAddress(principal.getPersonalId());
-
 		return new ResponseDto<>(1, "성공", null);
 	}
 
