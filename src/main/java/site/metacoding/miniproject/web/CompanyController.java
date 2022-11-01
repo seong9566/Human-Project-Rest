@@ -21,6 +21,7 @@ import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.multipart.MultipartFile;
 
 import lombok.RequiredArgsConstructor;
+import site.metacoding.miniproject.dto.user.UserRespDto.SignedDto;
 import site.metacoding.miniproject.service.company.CompanyService;
 import site.metacoding.miniproject.web.dto.request.company.CompanyUpdateDto;
 import site.metacoding.miniproject.web.dto.request.jobpostingboard.JobPostingBoardInsertDto;
@@ -28,7 +29,6 @@ import site.metacoding.miniproject.web.dto.request.jobpostingboard.JobPostingBoa
 import site.metacoding.miniproject.web.dto.response.ResponseDto;
 import site.metacoding.miniproject.web.dto.response.company.CompanyAddressDto;
 import site.metacoding.miniproject.web.dto.response.company.CompanyInfoDto;
-import site.metacoding.miniproject.web.dto.response.etc.SignedDto;
 import site.metacoding.miniproject.web.dto.response.jobpostingboard.JobPostingBoardDetailDto;
 import site.metacoding.miniproject.web.dto.response.jobpostingboard.JobPostingBoardListDto;
 
