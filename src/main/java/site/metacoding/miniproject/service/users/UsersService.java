@@ -6,6 +6,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import lombok.RequiredArgsConstructor;
+import site.metacoding.miniproject.config.handler.exception.ApiException;
 import site.metacoding.miniproject.domain.alarm.Alarm;
 import site.metacoding.miniproject.domain.alarm.AlarmDao;
 import site.metacoding.miniproject.domain.company.Company;
@@ -32,23 +33,19 @@ public class UsersService {
     private final SubscribeDao subscribeDao;
 
     public SignedDto<?> login(LoginDto loginDto) {
+
         String loginId = loginDto.getLoginId();
         String loginPassword = loginDto.getLoginPassword();
-        SignedDto<?> signedDto;
+
         Users userinfo = usersDao.findByIdAndPassword(loginId, loginPassword);
         if (userinfo == null) {
-            return null;
-        }
-        if (userinfo.getPersonalId() != null) {
-            Personal personal = personalDao.findById(userinfo.getPersonalId());
-            signedDto = new SignedDto<>(userinfo.getUsersId(), userinfo.getLoginId(), userinfo.getLoginPassword(),
-                    personal.getPersonalId(), null, personal);
-        } else {
-            Company company = companyDao.findById(userinfo.getCompanyId());
-            signedDto = new SignedDto<>(userinfo.getUsersId(), userinfo.getLoginId(), userinfo.getLoginPassword(), null,
-                    company.getCompanyId(), company);
+            throw new ApiException("유저정보가 존재하지 않음");
         }
 
+        Company company = companyDao.findById(userinfo.getCompanyId());
+        SignedDto<?> signedDto = new SignedDto<>(userinfo.getUsersId(), userinfo.getLoginId(),
+                userinfo.getLoginPassword(), company);
+            
         return signedDto;
     }
 
@@ -68,6 +65,12 @@ public class UsersService {
 
     @Transactional(rollbackFor = RuntimeException.class)
     public void joinCompany(CompanyJoinDto joinDto) {
+
+        try {
+            joinDto.companyJoinDtoPictureSet();
+        } catch (Exception e) {
+            throw new ApiException("멀티파트 폼 에러");
+        }
 
         Company company = joinDto.companyJoinDtoToCompanyEntity();
         companyDao.insert(company);

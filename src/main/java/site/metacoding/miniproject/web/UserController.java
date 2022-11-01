@@ -1,21 +1,15 @@
 package site.metacoding.miniproject.web;
 
-import java.io.File;
-import java.io.IOException;
-import java.nio.file.Files;
 import java.util.List;
-import java.util.UUID;
 
 import javax.servlet.http.HttpSession;
 
-import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestPart;
-import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.multipart.MultipartFile;
 
@@ -139,15 +133,16 @@ public class UserController {
 		return new ResponseDto<>(1, "계정생성완료", null);
 	}
 
+	//기업 회원가입
 	@PostMapping(value = "/join/company")
 	public ResponseDto<?> joinCompany(@RequestPart("file") MultipartFile file,
-			@RequestPart("joinDto") CompanyJoinDto joinDto) throws Exception {
-		
-		joinDto.companyJoinDtoPictureSet(file);
+			@RequestPart("joinDto") CompanyJoinDto joinDto) {
+
+		joinDto.setFile(file);
 		userService.joinCompany(joinDto);
 
 		LoginDto loginDto = new LoginDto(joinDto);
-		
+
 		SignedDto<?> signedDto = userService.login(loginDto);
 
 		session.setAttribute("principal", signedDto);
@@ -155,6 +150,7 @@ public class UserController {
 		return new ResponseDto<>(1, "계정생성완료", null);
 	}
 
+	//유저알람 갱신 해주기
 	@GetMapping("/user/alarm/{usersId}")
 	public ResponseDto<?> refreshUserAlarm(@PathVariable Integer usersId) {
 		ResponseDto<?> responseDto = null;
@@ -164,6 +160,7 @@ public class UserController {
 		return responseDto;
 	}
 
+	//알람지우기
 	@DeleteMapping("/user/alarm/{alarmId}")
 	public ResponseDto<?> deleteUserAlarm(@PathVariable Integer alarmId) {
 		userService.deleteAlarm(alarmId);

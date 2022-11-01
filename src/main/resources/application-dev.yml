@@ -27,7 +27,8 @@ spring:
 
 logging:
   level:
-    '[org.springframework.web]': DEBUG
-    #root: DEBUG
+    root: DEBUG
+    #'[org.springframework.web]': DEBUG
+    
 
 

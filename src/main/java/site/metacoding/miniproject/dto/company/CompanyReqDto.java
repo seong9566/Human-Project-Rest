@@ -24,9 +24,11 @@ public static class CompanyJoinDto {
     private String companyPicture;
     private String companyAddress;
     private String companyPhoneNumber;
+    
     // 계정생성용
     private Integer companyId;
     private Integer categoryId;
+    private MultipartFile file;
 
     public Users companyJoinDtoToUserEntity() {
         return Users.builder().loginId(loginId)
@@ -45,7 +47,7 @@ public static class CompanyJoinDto {
                 .build();
     }
     
-    public void companyJoinDtoPictureSet(MultipartFile file) {
+    public void companyJoinDtoPictureSet() throws Exception {
         int pos = file.getOriginalFilename().lastIndexOf('.');
 		String extension = file.getOriginalFilename().substring(pos + 1);
 		String filePath = "C:\\Temp\\img\\";
@@ -59,12 +61,7 @@ public static class CompanyJoinDto {
 			}
 		}
 		File dest = new File(filePath, imgName);
-		try {
-			Files.copy(file.getInputStream(), dest.toPath());
-        } catch (IOException e) {
-            e.printStackTrace();
-            System.out.println("사진 업로드 됨");
-        }
+		Files.copy(file.getInputStream(), dest.toPath());
         this.companyPicture = imgName;
     }
 
