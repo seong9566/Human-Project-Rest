@@ -21,6 +21,7 @@ import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.multipart.MultipartFile;
 
 import lombok.RequiredArgsConstructor;
+import site.metacoding.miniproject.dto.company.CompanyRespDto.CompanyInfoRespDto;
 import site.metacoding.miniproject.service.company.CompanyService;
 import site.metacoding.miniproject.web.dto.request.company.CompanyUpdateDto;
 import site.metacoding.miniproject.web.dto.request.jobpostingboard.JobPostingBoardInsertDto;
@@ -40,14 +41,10 @@ public class CompanyController {
 	private final CompanyService companyService;
 
 	// 회사 정보 보기
-	@GetMapping("/company/companyInform")
-	public String inform(Model model) {
+	@GetMapping("/api/company/inform")
+	public ResponseDto<?> inform() {
 		SignedDto<?> principal = (SignedDto<?>) session.getAttribute("principal");
-		CompanyInfoDto companyPS = companyService.findCompanyInfo(principal.getCompanyId());
-		CompanyAddressDto addressPS = companyService.findByAddress(principal.getCompanyId());
-		model.addAttribute("address", addressPS);
-		model.addAttribute("companyInfo", companyPS);
-		return "company/companyInform";
+		return new ResponseDto<>(1, "성공", companyService.findByCompany(principal.getCompanyId()));
 	}
 
 	// 회사 정보 업데이트
@@ -117,14 +114,25 @@ public class CompanyController {
 	}
 
 	// 채용 공고 상세보기
-	@GetMapping("/company/jobPostingBoardDetail/{jobPostingBoardId}")
-	public String jobPostingBoardDetail(Model model, @PathVariable Integer jobPostingBoardId) {
-		JobPostingBoardDetailDto jobPostingPS = companyService.jobPostingOne(jobPostingBoardId);
+	// @GetMapping("/api/company/jobPostingBoardDetail/{jobPostingBoardId}")
+	// public String jobPostingBoardDetail(Model model, @PathVariable Integer
+	// jobPostingBoardId) {
+	// return new ResponseDto<>(1, "성공",
+	// companyService.findByCompany(principal.getCompanyId()));
+	// JobPostingBoardDetailDto jobPostingPS =
+	// companyService.jobPostingOne(jobPostingBoardId);
+	// SignedDto<?> principal = (SignedDto<?>) session.getAttribute("principal");
+	// CompanyAddressDto addressPS =
+	// companyService.findByAddress(principal.getCompanyId());
+	// model.addAttribute("address", addressPS);
+	// model.addAttribute("jobPostingPS", jobPostingPS);
+	// return "company/jobPostingBoardDetail";
+	// }
+
+	@GetMapping("/api/company/jobPostingBoardDetail/{jobPostingBoardId}")
+	public ResponseDto<?> jobPostingBoardDetail() {
 		SignedDto<?> principal = (SignedDto<?>) session.getAttribute("principal");
-		CompanyAddressDto addressPS = companyService.findByAddress(principal.getCompanyId());
-		model.addAttribute("address", addressPS);
-		model.addAttribute("jobPostingPS", jobPostingPS);
-		return "company/jobPostingBoardDetail";
+		return new ResponseDto<>(1, "성공", companyService.jobPostingOne(jobPostingBoardId));
 	}
 
 	// 채용 공고 수정 폼
