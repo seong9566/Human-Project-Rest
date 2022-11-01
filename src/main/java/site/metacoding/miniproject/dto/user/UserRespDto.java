@@ -1,5 +1,7 @@
 package site.metacoding.miniproject.dto.user;
 
+import java.io.Serializable;
+
 import lombok.Getter;
 import lombok.Setter;
 import site.metacoding.miniproject.domain.company.Company;
@@ -10,7 +12,7 @@ public class UserRespDto {
 
     @Getter
     @Setter
-    public static class SignedDto<T> {
+    public static class SignedDto<T> implements Serializable{
         private Integer usersId;
         private String loginId;
         //
@@ -25,7 +27,7 @@ public class UserRespDto {
 
     @Getter
     @Setter
-    public static class SignCompanyDto {
+    public static class SignCompanyDto implements Serializable{
         private Integer companyId;
 
         public SignCompanyDto(Company company) {
@@ -35,7 +37,7 @@ public class UserRespDto {
 
     @Getter
     @Setter
-    public static class SignPersonalDto {
+    public static class SignPersonalDto implements Serializable{
         private Integer personalId;
 
         public SignPersonalDto(Personal personal) {

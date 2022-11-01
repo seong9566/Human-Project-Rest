@@ -18,11 +18,11 @@ import site.metacoding.miniproject.domain.subscribe.SubscribeDao;
 import site.metacoding.miniproject.domain.users.Users;
 import site.metacoding.miniproject.domain.users.UsersDao;
 import site.metacoding.miniproject.dto.company.CompanyReqDto.CompanyJoinDto;
+import site.metacoding.miniproject.dto.personal.PersonalReqDto.PersonalJoinDto;
 import site.metacoding.miniproject.dto.user.UserRespDto.SignCompanyDto;
 import site.metacoding.miniproject.dto.user.UserRespDto.SignPersonalDto;
 import site.metacoding.miniproject.dto.user.UserRespDto.SignedDto;
 import site.metacoding.miniproject.web.dto.request.etc.LoginDto;
-import site.metacoding.miniproject.web.dto.request.personal.PersonalJoinDto;
 
 @Service
 @RequiredArgsConstructor
@@ -53,33 +53,36 @@ public class UsersService {
 
             SignCompanyDto signCompanyDto = new SignCompanyDto(companyPS);
 
-            signedDto = new SignedDto<>(userinfo.getUsersId(), userinfo.getLoginId(), signCompanyDto);         
+            signedDto = new SignedDto<>(userinfo.getUsersId(), userinfo.getLoginId(), signCompanyDto);
         } else {
             Personal personalPS = personalDao.findById(userinfo.getPersonalId());
 
             SignPersonalDto signPersonalDto = new SignPersonalDto(personalPS);
 
-            signedDto = new SignedDto<>(userinfo.getUsersId(), userinfo.getLoginId(), signPersonalDto);         
-            
+            signedDto = new SignedDto<>(userinfo.getUsersId(), userinfo.getLoginId(), signPersonalDto);
+
         }
-        
+
         return signedDto;
     }
 
+    //개인 회원가입
     @Transactional(rollbackFor = RuntimeException.class)
     public void joinPersonal(PersonalJoinDto joinDto) {
 
-        Personal personal = new Personal(joinDto);
-        personalDao.insert(personal);
+        Personal personalBeforePS = joinDto.personalJoinDtoToPersonalEntity();
 
-        Integer personalId = personal.getPersonalId();
-        joinDto.setPersonalId(personalId);
+        personalDao.insert(personalBeforePS);
 
-        Users users = new Users(joinDto);
-        usersDao.insert(users);
+        joinDto.setPersonalId(personalBeforePS.getPersonalId());
+
+        Users usersBeforePS = joinDto.personalJoinDtoToUserEntity();
+
+        usersDao.insert(usersBeforePS);
 
     }
-
+    
+    //기업 회원가입
     @Transactional(rollbackFor = RuntimeException.class)
     public void joinCompany(CompanyJoinDto joinDto) {
 
@@ -92,8 +95,7 @@ public class UsersService {
         Company company = joinDto.companyJoinDtoToCompanyEntity();
         companyDao.insert(company);
 
-        Integer companyId = company.getCompanyId();
-        joinDto.setCompanyId(companyId);
+        joinDto.setCompanyId(company.getCompanyId());
 
         Users users = joinDto.companyJoinDtoToUserEntity();
         usersDao.insert(users);
