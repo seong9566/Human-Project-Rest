@@ -19,14 +19,14 @@ import site.metacoding.miniproject.domain.resumes.Resumes;
 import site.metacoding.miniproject.domain.resumes.ResumesDao;
 import site.metacoding.miniproject.domain.users.Users;
 import site.metacoding.miniproject.domain.users.UsersDao;
+import site.metacoding.miniproject.dto.resumes.ResumesReqDto.ResumesInsertReqDto;
+import site.metacoding.miniproject.dto.resumes.ResumesRespDto.ResumesInsertRespDto;
 import site.metacoding.miniproject.web.dto.request.personal.PersonalUpdateDto;
-import site.metacoding.miniproject.web.dto.request.resume.ResumesInsertDto;
 import site.metacoding.miniproject.web.dto.request.resume.ResumesUpdateDto;
 import site.metacoding.miniproject.web.dto.response.company.CompanyMainDto;
 import site.metacoding.miniproject.web.dto.response.etc.PagingDto;
 import site.metacoding.miniproject.web.dto.response.personal.PersonalAddressDto;
 import site.metacoding.miniproject.web.dto.response.personal.PersonalFormDto;
-import site.metacoding.miniproject.web.dto.response.personal.PersonalInfoDto;
 import site.metacoding.miniproject.web.dto.response.resume.ResumesDetailDto;
 
 @Service
@@ -42,28 +42,57 @@ public class PersonalService {
 
 	// 이력서 작성 하기
 	@Transactional(rollbackFor = RuntimeException.class)
-	public void insertResumes(Integer personalId, ResumesInsertDto insertResumesDto) {
+	public ResumesInsertRespDto insertResumes(ResumesInsertReqDto resumesInsertReqDto) {
 
-		Category category = new Category(insertResumesDto);
-		categoryDao.insert(category);
+		Category category = new Category(resumesInsertReqDto);
+		Category categoryPS = categoryDao.insert(category);
 
-		Portfolio portfolio = new Portfolio(insertResumesDto);
-		portfolioDao.insert(portfolio);
+		Portfolio portfolio = new Portfolio(resumesInsertReqDto);
+		Portfolio portfolioPS = portfolioDao.insert(portfolio);
 
-		Career career = new Career(insertResumesDto);
-		careerDao.insert(career);
+		Career career = new Career(resumesInsertReqDto);
+		Career careerPS = careerDao.insert(career);
 
-		Resumes resumes = new Resumes(insertResumesDto);
+		Resumes resumes = new Resumes(resumesInsertReqDto);
 		resumes.setPersonalId(personalId);
 		resumes.setCareerId(career.getCareerId());
 		resumes.setPortfolioId(portfolio.getPortfolioId());
 		resumes.setResumesCategoryId(category.getCategoryId());
-		resumesDao.insert(resumes);
+		Resumes resumesPS = resumesDao.insert(resumes);
+
+		ResumesInsertRespDto resumesInsertRespDto = new ResumesInsertRespDto();
+		resumesInsertRespDto.get
+
+		return resumesInsertRespDto;
+
 	}
 
-	public PersonalInfoDto personalInfoById(Integer personalId) {
-		return personalDao.personalInfoById(personalId);
-	}
+	// public PersonalInfoDto personalInfoById(Integer personalId) {
+	// return personalDao.personalInfoById(personalId);
+	// }
+
+	// 사진
+	// @RequestPart("file") MultipartFile file,
+	// int pos = file.getOriginalFilename().lastIndexOf('.');
+	// String extension = file.getOriginalFilename().substring(pos + 1);
+	// String filePath = "C:\\Temp\\img\\";
+	// // String filePath = "/Users/ihyeonseong/Desktop/img";//Mac전용 경로
+	// String imgSaveName = UUID.randomUUID().toString();
+	// String imgName = imgSaveName + "." + extension;
+	// File makeFileFolder = new File(filePath);
+	// if (!makeFileFolder.exists()) {
+	// if (!makeFileFolder.mkdir()) {
+	// throw new Exception("File.mkdir():Fail.");
+	// }
+	// }
+	// File dest = new File(filePath, imgName);
+	// try {
+	// Files.copy(file.getInputStream(), dest.toPath());
+	// } catch (IOException e) {
+	// e.printStackTrace();
+	// System.out.println("사진 업로드 됨");
+	// }
+	// resumesInsertDto.setResumesPicture(imgName);
 
 	// 내가 작성한 이력서 목록 보기
 	public List<Resumes> myresumesAll(Integer personalId) {
