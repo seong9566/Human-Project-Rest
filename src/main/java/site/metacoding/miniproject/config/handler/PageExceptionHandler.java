@@ -20,7 +20,7 @@ public class PageExceptionHandler {
 
 	@ExceptionHandler(ApiException.class)
 	public @ResponseBody ResponseDto<?> apiError(Exception e) {
-		return new ResponseDto<>(-1, e.getMessage(), null);
+		return new ResponseDto<>(-1, e.getMessage(), e.getStackTrace());
 	}
 
 	@ExceptionHandler(NormalException.class)
