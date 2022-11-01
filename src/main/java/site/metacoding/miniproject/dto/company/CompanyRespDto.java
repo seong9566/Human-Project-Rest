@@ -1,6 +1,7 @@
 package site.metacoding.miniproject.dto.company;
 
 import lombok.Getter;
+import lombok.NoArgsConstructor;
 import lombok.Setter;
 import site.metacoding.miniproject.domain.company.Company;
 
@@ -14,7 +15,7 @@ public class CompanyRespDto {
         private String detailAddress;
     }
 
-    @Setter
+    @NoArgsConstructor
     @Getter
     public static class CompanyInfoRespDto { // CompanyInfoDto -> CompanyInfoRespDto
         private Integer usersId;

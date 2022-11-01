@@ -15,7 +15,7 @@ public class PageExceptionHandler {
 
 	// @ExceptionHandler(RuntimeException.class)
 	// public @ResponseBody String RuntimeError(Exception e) {
-	// 	return Script.back("잘못된 요청입니다.");
+	// return Script.back("잘못된 요청입니다.");
 	// }
 
 	@ExceptionHandler(ApiException.class)

@@ -8,7 +8,6 @@ import java.util.UUID;
 
 import javax.servlet.http.HttpSession;
 
-import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -18,11 +17,11 @@ import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestPart;
 import org.springframework.web.bind.annotation.ResponseBody;
+import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.multipart.MultipartFile;
 
 import lombok.RequiredArgsConstructor;
 import site.metacoding.miniproject.dto.user.UserRespDto.SignedDto;
-import site.metacoding.miniproject.dto.company.CompanyRespDto.CompanyInfoRespDto;
 import site.metacoding.miniproject.service.company.CompanyService;
 import site.metacoding.miniproject.web.dto.request.company.CompanyUpdateDto;
 import site.metacoding.miniproject.web.dto.request.jobpostingboard.JobPostingBoardInsertDto;
@@ -33,7 +32,7 @@ import site.metacoding.miniproject.web.dto.response.company.CompanyInfoDto;
 import site.metacoding.miniproject.web.dto.response.jobpostingboard.JobPostingBoardDetailDto;
 import site.metacoding.miniproject.web.dto.response.jobpostingboard.JobPostingBoardListDto;
 
-@Controller
+@RestController
 @RequiredArgsConstructor
 public class CompanyController {
 
@@ -42,9 +41,11 @@ public class CompanyController {
 
 	// 회사 정보 보기
 	@GetMapping("/api/company/inform")
-	public ResponseDto<?> inform() {
+	public ResponseDto<?> CompanyInform() {
 		SignedDto<?> principal = (SignedDto<?>) session.getAttribute("principal");
-		return new ResponseDto<>(1, "성공", companyService.findByCompany(principal.getCompanyId()));
+		// Integer companyId = (SignCompanyDto) principal.getUserinfo().getCompanyId();
+		Integer id = 1;
+		return new ResponseDto<>(1, "성공", companyService.findByCompany(id));
 	}
 
 	// 회사 정보 업데이트
