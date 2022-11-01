@@ -4,11 +4,15 @@ import java.util.List;
 
 public interface CategoryDao {
 	public void insert(Category category);
+
 	public List<Category> findAll();
+
 	public Category findById(Integer categoryId);
+
 	public void update(Category category);
+
 	public void deleteById(Integer categoryId);
-	
-	public void jobPostingUpdate(Category category);	
+
+	public void jobPostingUpdate(Category category);
 
 }
