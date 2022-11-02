@@ -8,7 +8,7 @@ CREATE database jobs;
 CREATE TABLE users (
   users_id INTEGER auto_increment PRIMARY KEY,
   login_id varchar(20),
-  login_password varchar(50),
+  login_password varchar(100),
   personal_id integer,
   company_id integer,
   created_at timestamp
