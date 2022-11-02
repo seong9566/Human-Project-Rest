@@ -7,10 +7,16 @@ import java.util.UUID;
 import org.springframework.web.multipart.MultipartFile;
 
 import lombok.Getter;
+import lombok.NoArgsConstructor;
 import lombok.Setter;
+import site.metacoding.miniproject.domain.career.Career;
+import site.metacoding.miniproject.domain.category.Category;
+import site.metacoding.miniproject.domain.portfolio.Portfolio;
+import site.metacoding.miniproject.domain.resumes.Resumes;
 
 public class ResumesReqDto {
 
+    @NoArgsConstructor
     @Setter
     @Getter
     public static class ResumesInsertReqDto {
@@ -51,6 +57,39 @@ public class ResumesReqDto {
             File dest = new File(filePath, imgName);
             Files.copy(file.getInputStream(), dest.toPath());
             this.resumesPicture = imgName;
+        }
+
+        public Resumes ResumesInsertRespDtoToResumesEntity() {
+            return Resumes.builder()
+                    .resumesTitle(resumesTitle)
+                    .resumesPicture(resumesPicture)
+                    .resumesIntroduce(resumesIntroduce)
+                    .resumesPlace(resumesPlace)
+                    .build();
+        }
+
+        public Category ResumesInsertRespDtoToCategoryEntity() {
+            return Category.builder()
+                    .categoryFrontend(categoryFrontend)
+                    .categoryBackend(categoryBackend)
+                    .categoryDevops(categoryDevops)
+                    .build();
+        }
+
+        public Career ResumesInsertRespDtoToCareerEntity() {
+            return Career.builder()
+                    .oneYearLess(oneYearLess)
+                    .twoYearOver(twoYearOver)
+                    .threeYearOver(threeYearOver)
+                    .fiveYearOver(fiveYearOver)
+                    .build();
+        }
+
+        public Portfolio ResumesInsertRespDtoToPortfolioEntity() {
+            return Portfolio.builder()
+                    .portfolioFile(portfolioFile)
+                    .portfolioSource(portfolioSource)
+                    .build();
         }
 
     }

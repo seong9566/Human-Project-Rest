@@ -3,10 +3,10 @@ package site.metacoding.miniproject.domain.resumes;
 import java.sql.Timestamp;
 
 import lombok.AllArgsConstructor;
+import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
-import site.metacoding.miniproject.dto.resumes.ResumesReqDto.ResumesInsertReqDto;
 import site.metacoding.miniproject.web.dto.request.resume.ResumesUpdateDto;
 
 @AllArgsConstructor
@@ -26,11 +26,12 @@ public class Resumes {
 	private Timestamp createdAt;
 
 	// 이력서 작성
-	public Resumes(ResumesInsertReqDto resumesInsertReqDto) {
-		this.resumesTitle = resumesInsertReqDto.getResumesTitle();
-		this.resumesPicture = resumesInsertReqDto.getResumesPicture();
-		this.resumesIntroduce = resumesInsertReqDto.getResumesIntroduce();
-		this.resumesPlace = resumesInsertReqDto.getResumesPlace();
+	@Builder
+	public Resumes(String resumesTitle, String resumesPicture, String resumesIntroduce, String resumesPlace) {
+		this.resumesTitle = resumesTitle;
+		this.resumesPicture = resumesPicture;
+		this.resumesIntroduce = resumesIntroduce;
+		this.resumesPlace = resumesPlace;
 	}
 
 	// 이력서 수정
