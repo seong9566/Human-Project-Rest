@@ -40,7 +40,9 @@ public class JWTToken {
 
             public static String cookieToToken(Cookie[] cookies) {
                 String token = null;
-
+                if (cookies == null) {
+                    return null;
+                }
                 //쿠키내의 토큰 찾기
                 for (Cookie cookie : cookies) {
                     if (cookie.getName().equals("Authorization"))
@@ -53,7 +55,7 @@ public class JWTToken {
 
 
         
-        public static class TokenVerificationForCookie {
+        public static class TokenVerification {
 
             public Boolean Verification(String token) {
 
@@ -64,9 +66,6 @@ public class JWTToken {
                 // 토큰 검증 - 검증전 공백제거
                 token = token.replace("Authorization=", "");
                 token = token.trim();
-
-
-
                 try {
 
                     log.debug("디버그 : 토큰확인 - " + token);

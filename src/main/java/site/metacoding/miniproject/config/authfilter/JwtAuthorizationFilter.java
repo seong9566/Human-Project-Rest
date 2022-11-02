@@ -11,6 +11,10 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import javax.servlet.http.HttpSession;
 
+import lombok.extern.slf4j.Slf4j;
+import site.metacoding.miniproject.utill.JWTToken.CookieForToken;
+
+@Slf4j
 public class JwtAuthorizationFilter implements Filter{
 
     @Override
@@ -19,6 +23,9 @@ public class JwtAuthorizationFilter implements Filter{
         HttpServletRequest req = (HttpServletRequest) request;
         HttpServletResponse resp = (HttpServletResponse) response;
         
+        String token = CookieForToken.cookieToToken(req.getCookies());
+
+        log.debug("디버그 :  토큰 - " + token);
         
     }
     

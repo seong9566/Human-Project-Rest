@@ -139,7 +139,7 @@ public class UserController {
 	}
 
 	// 유저알람 갱신 해주기
-	@GetMapping("/user/alarm/{usersId}")
+	@GetMapping("/s/user/alarm/{usersId}")
 	public ResponseDto<?> refreshUserAlarm(@PathVariable Integer usersId) {
 		ResponseDto<?> responseDto = null;
 		List<Alarm> usersAlarm = userService.userAlarm(usersId);
