@@ -4,9 +4,9 @@ import java.util.List;
 
 import org.apache.ibatis.annotations.Param;
 
+import site.metacoding.miniproject.dto.resumes.ResumesRespDto.ResumesDetailRespDto;
 import site.metacoding.miniproject.web.dto.response.company.CompanyMainDto;
 import site.metacoding.miniproject.web.dto.response.etc.PagingDto;
-import site.metacoding.miniproject.web.dto.response.resume.ResumesDetailDto;
 
 public interface ResumesDao {
 
@@ -17,7 +17,7 @@ public interface ResumesDao {
 	public List<Resumes> findAllMyResumes(Integer personalId);
 
 	// 이력서 상세 보기
-	public ResumesDetailDto resumesById(Integer resumesId);
+	public ResumesDetailRespDto resumesById(Integer resumesId);
 
 	// 이력서 수정
 	public Resumes findById(Integer resumesId);

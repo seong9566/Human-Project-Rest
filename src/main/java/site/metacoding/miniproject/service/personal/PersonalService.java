@@ -24,13 +24,13 @@ import site.metacoding.miniproject.domain.users.UsersDao;
 import site.metacoding.miniproject.dto.personal.PersonalRespDto.PersonalDetailRespDto;
 import site.metacoding.miniproject.dto.resumes.ResumesReqDto.ResumesInsertReqDto;
 import site.metacoding.miniproject.dto.resumes.ResumesRespDto.ResumesAllRespDto;
+import site.metacoding.miniproject.dto.resumes.ResumesRespDto.ResumesDetailRespDto;
 import site.metacoding.miniproject.dto.resumes.ResumesRespDto.ResumesInsertRespDto;
 import site.metacoding.miniproject.web.dto.request.personal.PersonalUpdateDto;
 import site.metacoding.miniproject.web.dto.request.resume.ResumesUpdateDto;
 import site.metacoding.miniproject.web.dto.response.company.CompanyMainDto;
 import site.metacoding.miniproject.web.dto.response.etc.PagingDto;
 import site.metacoding.miniproject.web.dto.response.personal.PersonalAddressDto;
-import site.metacoding.miniproject.web.dto.response.resume.ResumesDetailDto;
 
 @Service
 @RequiredArgsConstructor
@@ -86,8 +86,11 @@ public class PersonalService {
 	}
 
 	// 이력서 상세 보기
-	public ResumesDetailDto resumesById(Integer resumesId) {
-		return resumesDao.resumesById(resumesId);
+	@Transactional(readOnly = true)
+	public ResumesDetailRespDto resumesById(Integer resumesId) {
+		Resumes resumesPS = resumesDao.findById(resumesId);
+		ResumesDetailRespDto resumesDetailRespDto = new ResumesDetailRespDto(resumesPS);
+		return resumesDetailRespDto;
 	}
 
 	// 이력서 수정 하기
