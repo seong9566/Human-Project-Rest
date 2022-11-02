@@ -7,17 +7,16 @@ import java.util.Map;
 import org.junit.jupiter.api.Test;
 
 import site.metacoding.miniproject.utill.ValidationCheckUtil;
-import site.metacoding.miniproject.web.dto.request.personal.PersonalJoinDto;
 
 public class UserControllerTest {
 
 	@Test
 	public void joinPersonal_test() {
-		PersonalJoinDto joinDto = new PersonalJoinDto();
-		joinDto.setLoginId("user1");
-		joinDto.setLoginPassword("Qwer1234!!!");
-		joinDto.setPersonalPhoneNumber("000-1111-4444");
-		joinDto.setPersonalEmail("example@dddd.com");
+		// PersonalJoinDto joinDto = new PersonalJoinDto();
+		// joinDto.setLoginId("user1");
+		// joinDto.setLoginPassword("Qwer1234!!!");
+		// joinDto.setPersonalPhoneNumber("000-1111-4444");
+		// joinDto.setPersonalEmail("example@dddd.com");
 
 		// Map<String, String> map =
 		// ValidationCheckUtil.valCheckToJoinPersonal(joinDto);
@@ -28,7 +27,7 @@ public class UserControllerTest {
 		// System.out.println(str);
 		// }
 
-		assertEquals(null, joinDto);
+		//assertEquals(null, joinDto);
 
 	}
 

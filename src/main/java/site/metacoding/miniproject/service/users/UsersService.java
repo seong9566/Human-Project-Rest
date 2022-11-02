@@ -22,6 +22,7 @@ import site.metacoding.miniproject.dto.personal.PersonalReqDto.PersonalJoinDto;
 import site.metacoding.miniproject.dto.user.UserRespDto.SignCompanyDto;
 import site.metacoding.miniproject.dto.user.UserRespDto.SignPersonalDto;
 import site.metacoding.miniproject.dto.user.UserRespDto.SignedDto;
+import site.metacoding.miniproject.utill.SHA256;
 import site.metacoding.miniproject.web.dto.request.etc.LoginDto;
 
 @Service
@@ -33,12 +34,12 @@ public class UsersService {
     private final PersonalDao personalDao;
     private final AlarmDao alarmDao;
     private final SubscribeDao subscribeDao;
+    private final SHA256 sha256;
 
-
+    //로그인
     public SignedDto<?> login(LoginDto loginDto) {
-
         String loginId = loginDto.getLoginId();
-        String loginPassword = loginDto.getLoginPassword();
+        String loginPassword = sha256.encrypt(loginDto.getLoginPassword());
         SignedDto<?> signedDto;
 
         Users userinfo = usersDao.findByIdAndPassword(loginId, loginPassword);
@@ -46,6 +47,26 @@ public class UsersService {
         if (userinfo == null) {
             throw new ApiException("아이디 또는 패스워드가 틀렸습니다.");
         }
+
+        
+		// if (signedDto == null)
+		// return new ResponseDto<>(-1, "비밀번호 또는 아이디를 확인하여 주세요", null);
+
+		// if (SessionConfig.getSessionidCheck(signedDto.getUsersId()) != null) {
+		// return new ResponseDto<>(-2, "중복 로그인 확인됨", null);
+		// }
+
+		// session.setAttribute("principal", signedDto);
+		// SessionConfig.login(session.getId(), signedDto.getUsersId());
+
+		// if (signedDto.getCompanyId() != null) {
+		// session.setAttribute("companyId", signedDto.getCompanyId());
+		// } else {
+		// subscribes =
+		// userService.findSubscribeinfoByPersonalId(signedDto.getPersonalId());
+		// session.setAttribute("personalId", signedDto.getPersonalId());
+		// session.setAttribute("subscribe", subscribes);
+		// }
 
         //회사 또는 개인일 경우 Dto생성
         if (userinfo.getCompanyId() != null) {
