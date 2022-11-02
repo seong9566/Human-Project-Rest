@@ -2,6 +2,7 @@ package site.metacoding.miniproject.domain.category;
 
 import java.sql.Timestamp;
 
+import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
@@ -21,10 +22,11 @@ public class Category {
 	private Timestamp createdAt;
 
 	// 이력서 작성
-	public Category(ResumesInsertReqDto resumesInsertReqDto) {
-		this.categoryFrontend = resumesInsertReqDto.getCategoryFrontend();
-		this.categoryBackend = resumesInsertReqDto.getCategoryBackend();
-		this.categoryDevops = resumesInsertReqDto.getCategoryDevops();
+	@Builder
+	public Category(Boolean categoryFrontend, Boolean categoryBackend, Boolean categoryDevops) {
+		this.categoryFrontend = categoryFrontend;
+		this.categoryBackend = categoryBackend;
+		this.categoryDevops = categoryDevops;
 	}
 
 	// 이력서 수정

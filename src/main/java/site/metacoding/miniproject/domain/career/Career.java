@@ -2,6 +2,7 @@ package site.metacoding.miniproject.domain.career;
 
 import java.sql.Timestamp;
 
+import lombok.Builder;
 import lombok.Getter;
 import lombok.Setter;
 import site.metacoding.miniproject.dto.jobpostingboard.JobPostingBoardReqDto.JobPostingBoardInsertReqDto;
@@ -20,11 +21,12 @@ public class Career {
 	private Timestamp createdAt;
 
 	// 이력서 작성
-	public Career(ResumesInsertReqDto resumesInsertReqDto) {
-		this.oneYearLess = resumesInsertReqDto.getOneYearLess();
-		this.twoYearOver = resumesInsertReqDto.getTwoYearOver();
-		this.threeYearOver = resumesInsertReqDto.getThreeYearOver();
-		this.fiveYearOver = resumesInsertReqDto.getFiveYearOver();
+	@Builder
+	public Career(Boolean oneYearLess, Boolean twoYearOver, Boolean threeYearOver, Boolean fiveYearOver) {
+		this.oneYearLess = oneYearLess;
+		this.twoYearOver = twoYearOver;
+		this.threeYearOver = threeYearOver;
+		this.fiveYearOver = fiveYearOver;
 	}
 
 	// 이력서 수정
