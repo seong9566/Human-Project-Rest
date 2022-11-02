@@ -24,6 +24,7 @@ import site.metacoding.miniproject.dto.company.CompanyReqDto.CompanyJoinDto;
 import site.metacoding.miniproject.dto.personal.PersonalReqDto.PersonalJoinDto;
 import site.metacoding.miniproject.dto.user.UserRespDto.SignedDto;
 import site.metacoding.miniproject.service.users.UsersService;
+import site.metacoding.miniproject.utill.JWTToken.CookieForToken;
 import site.metacoding.miniproject.utill.JWTToken.CreateJWTToken;
 import site.metacoding.miniproject.web.dto.request.etc.LoginDto;
 import site.metacoding.miniproject.web.dto.response.ResponseDto;
@@ -108,7 +109,7 @@ public class UserController {
 		
 
 		resp.addHeader("Authorization", "Bearer " + token);
-		resp.addCookie(CreateJWTToken.setCookie(token));
+		resp.addCookie(CookieForToken.setCookie(token));
 
 		return new ResponseDto<>(1, "로그인완료", signUserDto);
 	}
@@ -117,10 +118,7 @@ public class UserController {
 	@PostMapping("/join/personal")
 	public ResponseDto<?> joinPersonal(@RequestBody PersonalJoinDto joinDto) {
 
-		userService.joinPersonal(joinDto);
-
-		LoginDto loginDto = new LoginDto(joinDto);
-		SignedDto<?> signedDto = userService.login(loginDto);
+		SignedDto<?> signedDto = userService.joinPersonal(joinDto);
 
 		session.setAttribute("principal", signedDto);
 
@@ -133,11 +131,7 @@ public class UserController {
 			@RequestPart("joinDto") CompanyJoinDto joinDto) {
 
 		joinDto.setFile(file);
-		userService.joinCompany(joinDto);
-
-		LoginDto loginDto = new LoginDto(joinDto);
-
-		SignedDto<?> signedDto = userService.login(loginDto);
+		SignedDto<?> signedDto = userService.joinCompany(joinDto);
 
 		session.setAttribute("principal", signedDto);
 

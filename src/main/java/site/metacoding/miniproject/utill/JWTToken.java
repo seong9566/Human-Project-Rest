@@ -28,17 +28,17 @@ public class JWTToken {
                     .sign(Algorithm.HMAC512(SecretKey.SECRETKEY.key()));
             return jwtToken;
         }
+    }
 
-        public static Cookie setCookie(String token) {
-            Cookie cookie = new Cookie("Authorization", token); // Cookie에 Bearer 추가하면 안됨 - 최대 공간 초과....
+        public static class CookieForToken {
 
-            return cookie;
-        }
-        
-        public static class TokenVerificationForCookie {
+            public static Cookie setCookie(String token) {
+                Cookie cookie = new Cookie("Authorization", token); // Cookie에 Bearer 추가하면 안됨 - 최대 공간 초과....
 
-            public Boolean Verification(Cookie[] cookies) {
+                return cookie;
+            }
 
+            public static String cookieToToken(Cookie[] cookies) {
                 String token = null;
 
                 //쿠키내의 토큰 찾기
@@ -46,7 +46,17 @@ public class JWTToken {
                     if (cookie.getName().equals("Authorization"))
                         token = cookie.getValue();
                 }
-                
+                return token;
+            }
+            
+        }
+
+
+        
+        public static class TokenVerificationForCookie {
+
+            public Boolean Verification(String token) {
+
                 if (token == null) {
                     return false;
                 }
@@ -54,6 +64,8 @@ public class JWTToken {
                 // 토큰 검증 - 검증전 공백제거
                 token = token.replace("Authorization=", "");
                 token = token.trim();
+
+
 
                 try {
 
@@ -79,7 +91,5 @@ public class JWTToken {
                 
             }
         }
-
-    }
     
 }
