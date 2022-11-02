@@ -21,14 +21,14 @@ import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.multipart.MultipartFile;
 
 import lombok.RequiredArgsConstructor;
+import site.metacoding.miniproject.dto.personal.PersonalReqDto.PersonalUpdatReqDto;
+import site.metacoding.miniproject.dto.personal.PersonalRespDto.PersonalUpdateRespDto;
 import site.metacoding.miniproject.dto.resumes.ResumesReqDto.ResumesInsertReqDto;
 import site.metacoding.miniproject.dto.user.UserRespDto.SignPersonalDto;
 import site.metacoding.miniproject.dto.user.UserRespDto.SignedDto;
 import site.metacoding.miniproject.service.company.CompanyService;
 import site.metacoding.miniproject.service.personal.PersonalLikeService;
 import site.metacoding.miniproject.service.personal.PersonalService;
-import site.metacoding.miniproject.utill.ValidationCheckUtil;
-import site.metacoding.miniproject.web.dto.request.personal.PersonalUpdateDto;
 import site.metacoding.miniproject.web.dto.request.resume.ResumesUpdateDto;
 import site.metacoding.miniproject.web.dto.response.ResponseDto;
 import site.metacoding.miniproject.web.dto.response.company.CompanyAddressDto;
@@ -36,7 +36,6 @@ import site.metacoding.miniproject.web.dto.response.company.CompanyInfoDto;
 import site.metacoding.miniproject.web.dto.response.company.CompanyMainDto;
 import site.metacoding.miniproject.web.dto.response.etc.PagingDto;
 import site.metacoding.miniproject.web.dto.response.jobpostingboard.JobPostingBoardDetailDto;
-import site.metacoding.miniproject.web.dto.response.personal.PersonalAddressDto;
 import site.metacoding.miniproject.web.dto.response.personal.PersonalMainDto;
 import site.metacoding.miniproject.web.dto.response.resume.ResumesDetailDto;
 
@@ -256,12 +255,15 @@ public class PersonalController {
 		return new ResponseDto<>(1, "성공", personalService.personalUpdateById(principal.getUserInfo().getPersonalId()));
 	}
 
-	@PutMapping("/personal/personalUpdate")
-	public @ResponseBody ResponseDto<?> personalUpdate(@RequestBody PersonalUpdateDto personalUpdateDto) {
-		ValidationCheckUtil.valCheckToUpdatePersonal(personalUpdateDto);
-		SignedDto<?> principal = (SignedDto<?>) session.getAttribute("principal");
-		personalService.updatePersonal(principal.getUsersId(), principal.getPersonalId(), personalUpdateDto);
-		return new ResponseDto<>(1, "수정 성공", null);
+	@PutMapping("/api/personal/update")
+	public @ResponseBody ResponseDto<?> personalUpdate(@RequestBody PersonalUpdatReqDto personalUpdatReqDto) {
+		// ValidationCheckUtil.valCheckToUpdatePersonal(personalUpdatReqDto);
+		SignedDto<SignPersonalDto> principal = (SignedDto<SignPersonalDto>) session.getAttribute("principal");
+
+		PersonalUpdateRespDto personalUpdateRespDto = personalService.updatePersonal(principal.getUsersId(),
+				principal.getUserInfo().getPersonalId(),
+				personalUpdatReqDto);
+		return new ResponseDto<>(1, "수정 성공", personalUpdateRespDto);
 	}
 
 	// 채용공고 상세 보기 (개인)

@@ -20,11 +20,12 @@ import site.metacoding.miniproject.domain.resumes.Resumes;
 import site.metacoding.miniproject.domain.resumes.ResumesDao;
 import site.metacoding.miniproject.domain.users.Users;
 import site.metacoding.miniproject.domain.users.UsersDao;
+import site.metacoding.miniproject.dto.personal.PersonalReqDto.PersonalUpdatReqDto;
 import site.metacoding.miniproject.dto.personal.PersonalRespDto.PersonalDetailRespDto;
 import site.metacoding.miniproject.dto.personal.PersonalRespDto.PersonalUpdateFormRespDto;
+import site.metacoding.miniproject.dto.personal.PersonalRespDto.PersonalUpdateRespDto;
 import site.metacoding.miniproject.dto.resumes.ResumesReqDto.ResumesInsertReqDto;
 import site.metacoding.miniproject.dto.resumes.ResumesRespDto.ResumesInsertRespDto;
-import site.metacoding.miniproject.web.dto.request.personal.PersonalUpdateDto;
 import site.metacoding.miniproject.web.dto.request.resume.ResumesUpdateDto;
 import site.metacoding.miniproject.web.dto.response.company.CompanyMainDto;
 import site.metacoding.miniproject.web.dto.response.etc.PagingDto;
@@ -152,14 +153,21 @@ public class PersonalService {
 
 	// 내 정보 수정
 	@Transactional(rollbackFor = Exception.class)
-	public PersonalUpdateDto updatePersonal(PersonalUpdateDto personalUpdateDto) {
-		Users personaluserPS = userDao.findById(userId);
-		personaluserPS.update(personalUpdateDto);
-		userDao.update(personaluserPS);
+	public PersonalUpdateRespDto updatePersonal(Integer userId, Integer perosnalId,
+			PersonalUpdatReqDto personalUpdatReqDto) {
 
-		Personal personalPS = personalDao.findById(personalId);
-		personalPS.updatePersonal(personalUpdateDto);
+		// user패스워드 수정
+		Users personalUserPS = userDao.findById(userId);
+		personalUserPS.update(personalUpdatReqDto);
+		userDao.update(personalUserPS);
+
+		// personal 개인정보 수정
+		Personal personalPS = personalDao.findById(perosnalId);
+		personalPS.updatePersonal(personalUpdatReqDto);
 		personalDao.update(personalPS);
+		PersonalUpdateRespDto personalUpdateRespDto = new PersonalUpdateRespDto(personalPS, personalUserPS);
+		System.out.println("ssss" + personalPS.getPersonalAddress());
 
+		return personalUpdateRespDto;
 	}
 }

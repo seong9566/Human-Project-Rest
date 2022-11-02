@@ -10,7 +10,7 @@ import site.metacoding.miniproject.config.handler.exception.NormalException;
 import site.metacoding.miniproject.config.handler.exception.ValCheckException;
 import site.metacoding.miniproject.dto.company.CompanyReqDto.CompanyJoinDto;
 import site.metacoding.miniproject.dto.personal.PersonalReqDto.PersonalJoinDto;
-import site.metacoding.miniproject.web.dto.request.personal.PersonalUpdateDto;
+import site.metacoding.miniproject.dto.personal.PersonalReqDto.PersonalUpdatReqDto;
 
 public class ValidationCheckUtil {
 
@@ -62,7 +62,7 @@ public class ValidationCheckUtil {
 		}
 	}
 
-	public static void valCheckToJoinCompany(CompanyJoinDto joinDto){
+	public static void valCheckToJoinCompany(CompanyJoinDto joinDto) {
 
 		if (joinDto == null)
 			throw new NormalException("잘못된 요청입니다.");
@@ -110,7 +110,7 @@ public class ValidationCheckUtil {
 		}
 	}
 
-	public static void valCheckToUpdatePersonal(PersonalUpdateDto personalUpdateDto) {
+	public static void valCheckToUpdatePersonal(PersonalUpdatReqDto personalUplaReqDto) {
 
 		// 검증 오류 결과 보관
 		Map<String, String> errors = new HashMap<>();

@@ -4,6 +4,7 @@ import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
 import site.metacoding.miniproject.domain.personal.Personal;
+import site.metacoding.miniproject.domain.users.Users;
 
 public class PersonalRespDto {
 
@@ -52,6 +53,33 @@ public class PersonalRespDto {
             this.loginPassword = personalUpdateFormRespDto.getLoginPassword();
 
         }
+
+    }
+
+    @Getter
+    @Setter
+    @NoArgsConstructor
+    public static class PersonalUpdateRespDto {
+        private Integer personalId;
+        private String personalName;
+        private String personalEmail;
+        private String personalPhoneNumber;
+        private String personalEducation;
+        private String personalAddress;
+
+        private String loginPassword;
+
+        public PersonalUpdateRespDto(Personal personal, Users users) {
+            this.personalId = personal.getPersonalId();
+            this.personalName = personal.getPersonalName();
+            this.personalEmail = personal.getPersonalEmail();
+            this.personalPhoneNumber = personal.getPersonalPhoneNumber();
+            this.personalAddress = personal.getPersonalAddress();
+            this.personalEducation = personal.getPersonalEducation();
+
+            this.loginPassword = users.getLoginPassword();
+        }
+
     }
 
 }

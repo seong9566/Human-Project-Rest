@@ -7,7 +7,7 @@ import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
-import site.metacoding.miniproject.web.dto.request.personal.PersonalUpdateDto;
+import site.metacoding.miniproject.dto.personal.PersonalReqDto.PersonalUpdatReqDto;
 
 @Getter
 @Setter
@@ -23,7 +23,6 @@ public class Personal implements Serializable {
 
 	private static final long serialVersionUID = 7364337982660485087L; // 시리얼 아이디 - 레디스 서버와 통신을 위함
 
-	
 	@Builder
 	public Personal(Integer personalId, String personalName, String personalEmail, String personalEducation,
 			String personalPhoneNumber, String personalAddress, Timestamp createdAt) {
@@ -36,14 +35,12 @@ public class Personal implements Serializable {
 		this.createdAt = createdAt;
 	}
 
-
-
-	public void updatePersonal(PersonalUpdateDto personalUpdateDto) {
-		this.personalName = personalUpdateDto.getPersonalName();
-		this.personalPhoneNumber = personalUpdateDto.getPersonalPhoneNumber();
-		this.personalEmail = personalUpdateDto.getPersonalEmail();
-		this.personalEducation = personalUpdateDto.getPersonalEducation();
-		this.personalAddress = personalUpdateDto.getPersonalAddress();
+	public void updatePersonal(PersonalUpdatReqDto personalUpdatReqDto) {
+		this.personalName = personalUpdatReqDto.getPersonalName();
+		this.personalPhoneNumber = personalUpdatReqDto.getPersonalPhoneNumber();
+		this.personalEmail = personalUpdatReqDto.getPersonalEmail();
+		this.personalEducation = personalUpdatReqDto.getPersonalEducation();
+		this.personalAddress = personalUpdatReqDto.getPersonalAddress();
 	}
 
 }
