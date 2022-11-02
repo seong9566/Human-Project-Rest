@@ -13,7 +13,7 @@
 		#{resumesIntroduce}, #{resumesCategoryId}, #{resumesPlace}, NOW())
 	</insert>
 
-	<select id="findMyresumesAll"
+	<select id="findAllMyResumes"
 		resultType="site.metacoding.miniproject.domain.resumes.Resumes">
 		SELECT * FROM resumes
 		WHERE personal_id = #{personalId}
@@ -85,7 +85,7 @@
 			WHERE resumes_title like CONCAT('%', #{keyword}, '%')
 		</if>
 		) paging
-	</select>	
+	</select>
 	<select id="findSearch"
 		resultType="site.metacoding.miniproject.web.dto.response.company.CompanyMainDto">
 		SELECT resumes_id, resumes_title, resumes_place
@@ -93,13 +93,13 @@
 		WHERE resumes_title like CONCAT('%', #{keyword}, '%')
 		OFFSET #{startNum} ROWS FETCH NEXT 5 ROWS ONLY
 	</select>
-	
+
 	<insert id="insertLike">
 		INSERT INTO resumes(personal_like_id,resumes_id,company_id,created_at) 
 		VALUES(#{personalLikeId},#{resumesId},#{companyId},now())
 	</insert>
-	
-		<select id="findCategory"
+
+	<select id="findCategory"
 		resultType="site.metacoding.miniproject.web.dto.response.company.CompanyMainDto">
 		SELECT r.resumes_id, c.category_id, c.category_frontend, 
 		c.category_backend, c.category_devops, r.resumes_category_id,
@@ -122,8 +122,8 @@
 		<if test="id == 4">
 		OFFSET #{startNum} ROWS FETCH NEXT 5 ROWS ONLY
 		</if>
-	</select>	
-	
+	</select>
+
 	<select id="findCategorySearch"
 		resultType="site.metacoding.miniproject.web.dto.response.company.CompanyMainDto">
 		SELECT r.resumes_id, c.category_id, c.category_frontend, 
@@ -148,6 +148,6 @@
 		WHERE resumes_title like CONCAT('%', #{keyword}, '%')
 		OFFSET #{startNum} ROWS FETCH NEXT 5 ROWS ONLY
 		</if>
-	</select>	
+	</select>
 
 </mapper>

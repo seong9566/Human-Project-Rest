@@ -1,5 +1,6 @@
 package site.metacoding.miniproject.service.personal;
 
+import java.util.ArrayList;
 import java.util.List;
 
 import org.springframework.stereotype.Service;
@@ -22,13 +23,14 @@ import site.metacoding.miniproject.domain.users.Users;
 import site.metacoding.miniproject.domain.users.UsersDao;
 import site.metacoding.miniproject.dto.personal.PersonalRespDto.PersonalDetailRespDto;
 import site.metacoding.miniproject.dto.resumes.ResumesReqDto.ResumesInsertReqDto;
+import site.metacoding.miniproject.dto.resumes.ResumesRespDto.ResumesAllRespDto;
+import site.metacoding.miniproject.dto.resumes.ResumesRespDto.ResumesDetailRespDto;
 import site.metacoding.miniproject.dto.resumes.ResumesRespDto.ResumesInsertRespDto;
 import site.metacoding.miniproject.web.dto.request.personal.PersonalUpdateDto;
 import site.metacoding.miniproject.web.dto.request.resume.ResumesUpdateDto;
 import site.metacoding.miniproject.web.dto.response.company.CompanyMainDto;
 import site.metacoding.miniproject.web.dto.response.etc.PagingDto;
 import site.metacoding.miniproject.web.dto.response.personal.PersonalAddressDto;
-import site.metacoding.miniproject.web.dto.response.resume.ResumesDetailDto;
 
 @Service
 @RequiredArgsConstructor
@@ -51,36 +53,50 @@ public class PersonalService {
 			throw new ApiException("멀티파트 폼 에러");
 		}
 
-		Category category = new Category(resumesInsertReqDto);
-		categoryDao.insert(category);
+		Category categoryPS = resumesInsertReqDto.ResumesInsertRespDtoToCategoryEntity();
+		categoryDao.insert(categoryPS);
 
-		Portfolio portfolio = new Portfolio(resumesInsertReqDto);
-		portfolioDao.insert(portfolio);
+		Portfolio portfolioPS = resumesInsertReqDto.ResumesInsertRespDtoToPortfolioEntity();
+		portfolioDao.insert(portfolioPS);
 
-		Career career = new Career(resumesInsertReqDto);
-		careerDao.insert(career);
+		Career careerPS = resumesInsertReqDto.ResumesInsertRespDtoToCareerEntity();
+		careerDao.insert(careerPS);
 
-		Resumes resumes = new Resumes(resumesInsertReqDto);
-		resumes.setCareerId(career.getCareerId());
-		resumes.setPortfolioId(portfolio.getPortfolioId());
-		resumes.setResumesCategoryId(category.getCategoryId());
-		resumesDao.insert(resumes);
+		// if 체크
+		if (!(categoryPS.getCategoryId() != null && portfolioPS.getPortfolioId() != null
+				&& careerPS.getCareerId() != null)) {
+			throw new ApiException("이력서 작성 에러");
+		}
 
-		ResumesInsertRespDto resumesInsertRespDto = new ResumesInsertRespDto(resumes, category, career,
-				portfolio);
+		Resumes resumesPS = resumesInsertReqDto.ResumesInsertRespDtoToResumesEntity();
+		resumesPS.setCareerId(careerPS.getCareerId());
+		resumesPS.setPortfolioId(portfolioPS.getPortfolioId());
+		resumesPS.setResumesCategoryId(categoryPS.getCategoryId());
+		resumesDao.insert(resumesPS);
+
+		ResumesInsertRespDto resumesInsertRespDto = new ResumesInsertRespDto(resumesPS, categoryPS, careerPS,
+				portfolioPS);
 
 		return resumesInsertRespDto;
 
 	}
 
 	// 내가 작성한 이력서 목록 보기
-	public List<Resumes> myresumesAll(Integer personalId) {
-		return resumesDao.findMyresumesAll(personalId);
+	public List<ResumesAllRespDto> findAllMyResumes(ResumesAllRespDto resumesAllRespDto) {
+		List<Resumes> resumesList = resumesDao.findAllMyResumes(resumesAllRespDto.getPersonalId());
+		List<ResumesAllRespDto> resumesAllRespDtoList = new ArrayList<>();
+		for (Resumes resumes : resumesList) {
+			resumesAllRespDtoList.add(new ResumesAllRespDto(resumes));
+		}
+		return resumesAllRespDtoList;
 	}
 
 	// 이력서 상세 보기
-	public ResumesDetailDto resumesById(Integer resumesId) {
-		return resumesDao.resumesById(resumesId);
+	@Transactional(readOnly = true)
+	public ResumesDetailRespDto resumesById(Integer resumesId) {
+		Resumes resumesPS = resumesDao.findById(resumesId);
+		ResumesDetailRespDto resumesDetailRespDto = new ResumesDetailRespDto(resumesPS);
+		return resumesDetailRespDto;
 	}
 
 	// 이력서 수정 하기

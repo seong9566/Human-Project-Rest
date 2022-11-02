@@ -22,6 +22,8 @@ import org.springframework.web.multipart.MultipartFile;
 
 import lombok.RequiredArgsConstructor;
 import site.metacoding.miniproject.dto.resumes.ResumesReqDto.ResumesInsertReqDto;
+import site.metacoding.miniproject.dto.resumes.ResumesRespDto.ResumesAllRespDto;
+import site.metacoding.miniproject.dto.resumes.ResumesRespDto.ResumesDetailRespDto;
 import site.metacoding.miniproject.dto.user.UserRespDto.SignPersonalDto;
 import site.metacoding.miniproject.dto.user.UserRespDto.SignedDto;
 import site.metacoding.miniproject.service.company.CompanyService;
@@ -61,26 +63,24 @@ public class PersonalController {
 	}
 
 	// 내가 작성한 이력서 목록 보기
-	@GetMapping("/personal/resumesList")
-	public String resumesList(Model model) {
+	@GetMapping("/resumes/myList")
+	public ResponseDto<?> resumesList(ResumesAllRespDto resumesAllRespDto) {
 		SignedDto<?> principal = (SignedDto<?>) session.getAttribute("principal");
-		// List<Resumes> resumesList =
-		// personalService.myresumesAll(principal.getPersonalId());
-		model.addAttribute("resumesList", resumesList);
-		return "personal/resumesList";
+		SignPersonalDto signPersonalDto = (SignPersonalDto) principal.getUserInfo();
+		resumesAllRespDto.setPersonalId(signPersonalDto.getPersonalId());
+		return new ResponseDto<>(1, "내 이력서 목록 보기 성공", personalService.findAllMyResumes(resumesAllRespDto));
 	}
 
 	// 이력서 상세 보기
-	@GetMapping("/personal/resumes/{resumesId}")
-	public String resumesById(@PathVariable Integer resumesId, Model model) {
-		SignedDto<?> signedDto = (SignedDto<?>) session.getAttribute("principal");
+	@GetMapping("/resumes/{resumesId}")
+	public ResponseDto<?> resumesById(@PathVariable Integer resumesId) {
+		SignedDto<?> principal = (SignedDto<?>) session.getAttribute("principal");
+
 		// PersonalLike personalLike = personalLikeService.좋아요확인(resumesId,
-		//
 		// signedDto.getCompanyId());
-		model.addAttribute("personalLike", personalLike);
-		ResumesDetailDto detailResumesDtoPS = personalService.resumesById(resumesId);
-		model.addAttribute("detailResumesDtoPS", detailResumesDtoPS);
-		return "personal/resumesDetail";
+		// model.addAttribute("personalLike", personalLike);
+
+		return new ResponseDto<>(1, "내 이력서 목록 보기 성공", personalService.resumesById(resumesId));
 	}
 
 	// 이력서 수정

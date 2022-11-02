@@ -2,9 +2,9 @@ package site.metacoding.miniproject.domain.portfolio;
 
 import java.sql.Timestamp;
 
+import lombok.Builder;
 import lombok.Getter;
 import lombok.Setter;
-import site.metacoding.miniproject.dto.resumes.ResumesReqDto.ResumesInsertReqDto;
 import site.metacoding.miniproject.web.dto.request.resume.ResumesUpdateDto;
 
 @Getter
@@ -16,9 +16,10 @@ public class Portfolio {
 	private Timestamp createdAt;
 
 	// 이력서 작성
-	public Portfolio(ResumesInsertReqDto resumesInsertReqDto) {
-		this.portfolioSource = resumesInsertReqDto.getPortfolioSource();
-		this.portfolioFile = resumesInsertReqDto.getPortfolioFile();
+	@Builder
+	public Portfolio(String portfolioSource, String portfolioFile) {
+		this.portfolioSource = portfolioSource;
+		this.portfolioFile = portfolioFile;
 	}
 
 	// 이력서 수정
