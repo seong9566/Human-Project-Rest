@@ -53,23 +53,29 @@ public class PersonalService {
 			throw new ApiException("멀티파트 폼 에러");
 		}
 
-		Category category = new Category(resumesInsertReqDto);
-		categoryDao.insert(category);
+		Category categoryPS = resumesInsertReqDto.ResumesInsertRespDtoToCategoryEntity();
+		categoryDao.insert(categoryPS);
 
-		Portfolio portfolio = new Portfolio(resumesInsertReqDto);
-		portfolioDao.insert(portfolio);
+		Portfolio portfolioPS = resumesInsertReqDto.ResumesInsertRespDtoToPortfolioEntity();
+		portfolioDao.insert(portfolioPS);
 
-		Career career = new Career(resumesInsertReqDto);
-		careerDao.insert(career);
+		Career careerPS = resumesInsertReqDto.ResumesInsertRespDtoToCareerEntity();
+		careerDao.insert(careerPS);
 
-		Resumes resumes = new Resumes(resumesInsertReqDto);
-		resumes.setCareerId(career.getCareerId());
-		resumes.setPortfolioId(portfolio.getPortfolioId());
-		resumes.setResumesCategoryId(category.getCategoryId());
-		resumesDao.insert(resumes);
+		// if 체크
+		if (!(categoryPS.getCategoryId() != null && portfolioPS.getPortfolioId() != null
+				&& careerPS.getCareerId() != null)) {
+			throw new ApiException("이력서 작성 에러");
+		}
 
-		ResumesInsertRespDto resumesInsertRespDto = new ResumesInsertRespDto(resumes, category, career,
-				portfolio);
+		Resumes resumesPS = resumesInsertReqDto.ResumesInsertRespDtoToResumesEntity();
+		resumesPS.setCareerId(careerPS.getCareerId());
+		resumesPS.setPortfolioId(portfolioPS.getPortfolioId());
+		resumesPS.setResumesCategoryId(categoryPS.getCategoryId());
+		resumesDao.insert(resumesPS);
+
+		ResumesInsertRespDto resumesInsertRespDto = new ResumesInsertRespDto(resumesPS, categoryPS, careerPS,
+				portfolioPS);
 
 		return resumesInsertRespDto;
 
