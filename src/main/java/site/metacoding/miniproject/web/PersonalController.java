@@ -67,8 +67,7 @@ public class PersonalController {
 		SignedDto<?> principal = (SignedDto<?>) session.getAttribute("principal");
 		SignPersonalDto signPersonalDto = (SignPersonalDto) principal.getUserInfo();
 		resumesAllRespDto.setPersonalId(signPersonalDto.getPersonalId());
-		return new ResponseDto<>(1, "내 이력서 목록 보기 성공", null);
-
+		return new ResponseDto<>(1, "내 이력서 목록 보기 성공", personalService.findAllMyResumes(resumesAllRespDto));
 	}
 
 	// 이력서 상세 보기
@@ -76,12 +75,8 @@ public class PersonalController {
 	public String resumesById(@PathVariable Integer resumesId, Model model) {
 		SignedDto<?> signedDto = (SignedDto<?>) session.getAttribute("principal");
 		// PersonalLike personalLike = personalLikeService.좋아요확인(resumesId,
-<<<<<<< HEAD
-=======
-		//
->>>>>>> 9a4053b327de71b7053f2977ba81226a9c68054a
 		// signedDto.getCompanyId());
-		model.addAttribute("personalLike", personalLike);
+		// model.addAttribute("personalLike", personalLike);
 		ResumesDetailDto detailResumesDtoPS = personalService.resumesById(resumesId);
 		model.addAttribute("detailResumesDtoPS", detailResumesDtoPS);
 		return "personal/resumesDetail";

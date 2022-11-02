@@ -1,5 +1,6 @@
 package site.metacoding.miniproject.service.personal;
 
+import java.util.ArrayList;
 import java.util.List;
 
 import org.springframework.stereotype.Service;
@@ -21,7 +22,6 @@ import site.metacoding.miniproject.domain.resumes.ResumesDao;
 import site.metacoding.miniproject.domain.users.Users;
 import site.metacoding.miniproject.domain.users.UsersDao;
 import site.metacoding.miniproject.dto.personal.PersonalRespDto.PersonalDetailRespDto;
-import site.metacoding.miniproject.dto.personal.PersonalRespDto.PersonalFormRespDto;
 import site.metacoding.miniproject.dto.resumes.ResumesReqDto.ResumesInsertReqDto;
 import site.metacoding.miniproject.dto.resumes.ResumesRespDto.ResumesAllRespDto;
 import site.metacoding.miniproject.dto.resumes.ResumesRespDto.ResumesInsertRespDto;
@@ -77,8 +77,12 @@ public class PersonalService {
 
 	// 내가 작성한 이력서 목록 보기
 	public List<ResumesAllRespDto> findAllMyResumes(ResumesAllRespDto resumesAllRespDto) {
-		List<ResumesAllRespDto> resumesList = resumesDao.findAllMyResumes(resumesAllRespDto.getPersonalId());
-		return resumesList;
+		List<Resumes> resumesList = resumesDao.findAllMyResumes(resumesAllRespDto.getPersonalId());
+		List<ResumesAllRespDto> resumesAllRespDtoList = new ArrayList<>();
+		for (Resumes resumes : resumesList) {
+			resumesAllRespDtoList.add(new ResumesAllRespDto(resumes));
+		}
+		return resumesAllRespDtoList;
 	}
 
 	// 이력서 상세 보기
