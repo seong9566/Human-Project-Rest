@@ -6,9 +6,8 @@ import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
-import site.metacoding.miniproject.web.dto.request.jobpostingboard.JobPostingBoardInsertDto;
+import site.metacoding.miniproject.dto.jobpostingboard.JobPostingBoardReqDto.JobPostingBoardInsertReqDto;
 import site.metacoding.miniproject.web.dto.request.jobpostingboard.JobPostingBoardUpdateDto;
-import site.metacoding.miniproject.web.dto.request.resume.ResumesUpdateDto;
 
 @Getter
 @Setter
@@ -29,18 +28,19 @@ public class Category {
 	}
 
 	// 이력서 수정
-	public Category(Integer categoryId, ResumesUpdateDto updateResumesDto) {
+	@Builder
+	public Category(Integer categoryId, Boolean categoryFrontend, Boolean categoryBackend, Boolean categoryDevops) {
 		this.categoryId = categoryId;
-		this.categoryFrontend = updateResumesDto.getCategoryFrontend();
-		this.categoryBackend = updateResumesDto.getCategoryBackend();
-		this.categoryDevops = updateResumesDto.getCategoryDevops();
+		this.categoryFrontend = categoryFrontend;
+		this.categoryBackend = categoryBackend;
+		this.categoryDevops = categoryDevops;
 	}
 
 	// 채용 공고 작성
-	public Category(JobPostingBoardInsertDto insertDto) {
-		this.categoryFrontend = insertDto.getCategoryFrontend();
-		this.categoryBackend = insertDto.getCategoryBackend();
-		this.categoryDevops = insertDto.getCategoryDevops();
+	public Category(JobPostingBoardInsertReqDto jobPostingBoardInsertReqDto) {
+		this.categoryFrontend = jobPostingBoardInsertReqDto.getCategoryFrontend();
+		this.categoryBackend = jobPostingBoardInsertReqDto.getCategoryBackend();
+		this.categoryDevops = jobPostingBoardInsertReqDto.getCategoryDevops();
 	}
 
 	private Integer jobPostingBoardCategoryId;

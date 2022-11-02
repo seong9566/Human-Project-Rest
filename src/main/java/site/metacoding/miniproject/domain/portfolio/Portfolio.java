@@ -23,10 +23,10 @@ public class Portfolio {
 	}
 
 	// 이력서 수정
-	public Portfolio(Integer portfolioId, ResumesUpdateDto updateResumesDto) {
+	public Portfolio(Integer portfolioId, String portfolioSource, String portfolioFile) {
 		this.portfolioId = portfolioId;
-		this.portfolioSource = updateResumesDto.getPortfolioSource();
-		this.portfolioFile = updateResumesDto.getPortfolioFile();
+		this.portfolioSource = portfolioSource;
+		this.portfolioFile = portfolioFile;
 	}
 
 }

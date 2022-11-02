@@ -2,6 +2,9 @@ package site.metacoding.miniproject.web;
 
 import java.util.List;
 
+import javax.servlet.http.Cookie;
+import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpServletResponse;
 import javax.servlet.http.HttpSession;
 
 import org.springframework.web.bind.annotation.DeleteMapping;
@@ -21,6 +24,7 @@ import site.metacoding.miniproject.dto.company.CompanyReqDto.CompanyJoinDto;
 import site.metacoding.miniproject.dto.personal.PersonalReqDto.PersonalJoinDto;
 import site.metacoding.miniproject.dto.user.UserRespDto.SignedDto;
 import site.metacoding.miniproject.service.users.UsersService;
+import site.metacoding.miniproject.utill.JWTToken.CreateJWTToken;
 import site.metacoding.miniproject.web.dto.request.etc.LoginDto;
 import site.metacoding.miniproject.web.dto.response.ResponseDto;
 
@@ -43,12 +47,19 @@ public class UserController {
 	}
 
 	@GetMapping("/logout")
-	public ResponseDto<?> logout() {
+	public ResponseDto<?> logout(HttpServletResponse resp) {
+
+		Cookie cookie = new Cookie("Authorization", null);
+		cookie.setMaxAge(0);
+		cookie.setPath("/");
+		resp.addCookie(cookie);
+
 		SessionConfig.logout(session.getId());
 		session.removeAttribute("principal");
 		session.removeAttribute("companyId");
 		session.removeAttribute("personalId");
 		session.removeAttribute("subscribe");
+
 		return new ResponseDto<>(-1, "성공", null);
 	}
 
@@ -76,39 +87,29 @@ public class UserController {
 			responseDto = new ResponseDto<>(-1, "아이디를 입력하여 주세요", null);
 			return responseDto;
 		}
+
 		Integer userCheck = userService.checkUserId(loginId);
+		
 		if (userCheck == null) {
 			responseDto = new ResponseDto<>(1, "아이디 중복 없음 사용하셔도 좋습니다.", null);
 		} else {
 			responseDto = new ResponseDto<>(-1, "아이디 중복이 확인됨", null);
 		}
+
 		return responseDto;
 	}
 
 	@PostMapping("/login")
-	public ResponseDto<?> login(@RequestBody LoginDto loginDto) {
+	public ResponseDto<?> login(@RequestBody LoginDto loginDto, HttpServletRequest req, HttpServletResponse resp) {
 
 		SignedDto<?> signUserDto = userService.login(loginDto);
 
-		// if (signedDto == null)
-		// return new ResponseDto<>(-1, "비밀번호 또는 아이디를 확인하여 주세요", null);
+		String token = CreateJWTToken.createToken(signUserDto);
+		
 
-		// if (SessionConfig.getSessionidCheck(signedDto.getUsersId()) != null) {
-		// return new ResponseDto<>(-2, "중복 로그인 확인됨", null);
-		// }
+		resp.addHeader("Authorization", "Bearer " + token);
+		resp.addCookie(CreateJWTToken.setCookie(token));
 
-		// session.setAttribute("principal", signedDto);
-		// SessionConfig.login(session.getId(), signedDto.getUsersId());
-
-		// if (signedDto.getCompanyId() != null) {
-		// session.setAttribute("companyId", signedDto.getCompanyId());
-		// } else {
-		// subscribes =
-		// userService.findSubscribeinfoByPersonalId(signedDto.getPersonalId());
-		// session.setAttribute("personalId", signedDto.getPersonalId());
-		// session.setAttribute("subscribe", subscribes);
-		// }
-		session.setAttribute("principal", signUserDto);
 		return new ResponseDto<>(1, "로그인완료", signUserDto);
 	}
 
@@ -122,12 +123,6 @@ public class UserController {
 		SignedDto<?> signedDto = userService.login(loginDto);
 
 		session.setAttribute("principal", signedDto);
-
-		// if (signedDto.getCompanyId() != null) {
-		// session.setAttribute("companyId", signedDto.getCompanyId());
-		// } else {
-		// session.setAttribute("personalId", signedDto.getPersonalId());
-		// }
 
 		return new ResponseDto<>(1, "계정생성완료", signedDto);
 	}

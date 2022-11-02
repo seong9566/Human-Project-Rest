@@ -82,14 +82,13 @@ public class PersonalController {
 	}
 
 	// 이력서 수정
-	@GetMapping("/personal/resumes/update/{resumesId}")
-	public String updateForm(@PathVariable Integer resumesId, Model model) {
-		ResumesDetailDto resumesDetailDtoPS = personalService.resumesById(resumesId);
-		model.addAttribute("resumesDetailDtoPS", resumesDetailDtoPS);
-		return "personal/resumesUpdateForm";
-	}
+	// @GetMapping("/personal/resumes/update/{resumesId}")
+	// public String updateForm(@PathVariable Integer resumesId) {
+	// ResumesDetailDto resumesDetailDtoPS = personalService.resumesById(resumesId);
+	// return "personal/resumesUpdateForm";
+	// }
 
-	@PutMapping(value = "/personal/resumes/update/{resumesId}")
+	@PutMapping(value = "/resumes/update/{resumesId}")
 	public @ResponseBody ResponseDto<?> updateResumes(@PathVariable Integer resumesId,
 			@RequestPart("file") MultipartFile file, @RequestPart("ResumesUpdateDto") ResumesUpdateDto resumesUpdateDto)
 			throws Exception {
@@ -112,7 +111,8 @@ public class PersonalController {
 			e.printStackTrace();
 		}
 		resumesUpdateDto.setResumesPicture(imgName);
-		personalService.updateResumes(resumesId, resumesUpdateDto);
+		resumesUpdateDto.setResumesId(resumesId);
+		personalService.updateResumes(resumesUpdateDto);
 		return new ResponseDto<>(1, "이력서 수정 성공", null);
 	}
 

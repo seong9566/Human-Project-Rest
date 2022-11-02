@@ -3,8 +3,8 @@ package site.metacoding.miniproject.dto.personal;
 import lombok.Getter;
 import lombok.Setter;
 import site.metacoding.miniproject.domain.personal.Personal;
-
 import site.metacoding.miniproject.domain.users.Users;
+import site.metacoding.miniproject.utill.SHA256;
 
 public class PersonalReqDto {
     @Getter
@@ -32,35 +32,16 @@ public class PersonalReqDto {
         }
 
         public Users personalJoinDtoToUserEntity() {
+
+            SHA256 sha256 = new SHA256();
+            this.loginPassword = sha256.encrypt(this.loginPassword);
+
             return Users.builder()
                     .loginId(loginId)
                     .loginPassword(loginPassword)
                     .personalId(personalId)
                     .build();
         }
-    }
-
-    @Getter
-    @Setter
-    public static class PersonalUpdatReqeDto { // PersonalUpdateDto -> PersonalUpdateReqDto
-        private Integer personalId;
-        private String personalName;
-        private String personalEmail;
-        private String personalEducation;
-
-        private String personalPhoneNumber;
-        private String personalAddress;
-
-        private String loginId;
-        private String loginPassword;
-
-        public Personal toEntity() {
-            return Personal.builder().personalId(personalId).personalName(personalName).personalEmail(personalEmail)
-                    .personalEducation(personalEducation).personalPhoneNumber(personalPhoneNumber)
-                    .personalAddress(personalAddress)
-                    .build();
-        }
-
     }
 
 }

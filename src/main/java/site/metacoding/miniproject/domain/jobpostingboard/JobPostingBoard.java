@@ -2,10 +2,11 @@ package site.metacoding.miniproject.domain.jobpostingboard;
 
 import java.sql.Timestamp;
 
+import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
-import site.metacoding.miniproject.web.dto.request.jobpostingboard.JobPostingBoardInsertDto;
+import site.metacoding.miniproject.dto.jobpostingboard.JobPostingBoardReqDto.JobPostingBoardInsertReqDto;
 import site.metacoding.miniproject.web.dto.request.jobpostingboard.JobPostingBoardUpdateDto;
 
 @Getter
@@ -23,12 +24,21 @@ public class JobPostingBoard {
 	private Timestamp jobPostingBoardDeadline;
 	private Timestamp createdAt;
 
-	public JobPostingBoard(JobPostingBoardInsertDto jobPostingBoardInsertDto) {
-		this.jobPostingSalary = jobPostingBoardInsertDto.getJobPostingSalary();
-		this.jobPostingBoardTitle = jobPostingBoardInsertDto.getJobPostingBoardTitle();
-		this.jobPostingBoardContent = jobPostingBoardInsertDto.getJobPostingBoardContent();
-		this.jobPostingBoardPlace = jobPostingBoardInsertDto.getJobPostingBoardPlace();
-		this.jobPostingBoardDeadline = jobPostingBoardInsertDto.getJobPostingBoardDeadline();
+	@Builder
+	public JobPostingBoard(Integer jobPostingBoardId, Integer companyId, Integer jobPostingSalary,
+			Integer jobPostingBoardCareerId, Integer jobPostingBoardCategoryId, String jobPostingBoardTitle,
+			String jobPostingBoardContent, String jobPostingBoardPlace, Timestamp jobPostingBoardDeadline,
+			Timestamp createdAt) {
+		this.jobPostingBoardId = jobPostingBoardId;
+		this.companyId = companyId;
+		this.jobPostingSalary = jobPostingSalary;
+		this.jobPostingBoardCareerId = jobPostingBoardCareerId;
+		this.jobPostingBoardCategoryId = jobPostingBoardCategoryId;
+		this.jobPostingBoardTitle = jobPostingBoardTitle;
+		this.jobPostingBoardContent = jobPostingBoardContent;
+		this.jobPostingBoardPlace = jobPostingBoardPlace;
+		this.jobPostingBoardDeadline = jobPostingBoardDeadline;
+		this.createdAt = createdAt;
 	}
 
 	public JobPostingBoard(Integer jobPostingBoardId, JobPostingBoardUpdateDto updateDto) {

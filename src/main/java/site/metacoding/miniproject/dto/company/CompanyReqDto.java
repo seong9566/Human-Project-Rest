@@ -1,7 +1,6 @@
 package site.metacoding.miniproject.dto.company;
 
 import java.io.File;
-import java.io.IOException;
 import java.nio.file.Files;
 import java.util.UUID;
 
@@ -12,6 +11,7 @@ import lombok.Setter;
 import site.metacoding.miniproject.config.handler.exception.ApiException;
 import site.metacoding.miniproject.domain.company.Company;
 import site.metacoding.miniproject.domain.users.Users;
+import site.metacoding.miniproject.utill.SHA256;
 
 public class CompanyReqDto {
     
@@ -31,13 +31,6 @@ public static class CompanyJoinDto {
     private Integer categoryId;
     private MultipartFile file;
 
-    public Users companyJoinDtoToUserEntity() {
-        return Users.builder().loginId(loginId)
-            .loginPassword(loginPassword)
-            .companyId(companyId)
-            .build();
-    }
-
     public Company companyJoinDtoToCompanyEntity() {
         return Company.builder()
                 .companyName(companyName)
@@ -47,6 +40,17 @@ public static class CompanyJoinDto {
                 .companyEmail(companyEmail)
                 .build();
     }
+
+    public Users companyJoinDtoToUserEntity() {
+        
+        SHA256 sha256 = new SHA256();
+        this.loginPassword = sha256.encrypt(this.loginPassword);
+        return Users.builder().loginId(loginId)
+            .loginPassword(loginPassword)
+            .companyId(companyId)
+            .build();
+    }
+
     
     public void companyJoinDtoPictureSet() throws Exception {
         int pos = file.getOriginalFilename().lastIndexOf('.');

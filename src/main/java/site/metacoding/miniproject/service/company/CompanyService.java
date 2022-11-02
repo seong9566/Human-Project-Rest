@@ -19,12 +19,15 @@ import site.metacoding.miniproject.domain.jobpostingboard.JobPostingBoard;
 import site.metacoding.miniproject.domain.jobpostingboard.JobPostingBoardDao;
 import site.metacoding.miniproject.domain.users.Users;
 import site.metacoding.miniproject.domain.users.UsersDao;
-import site.metacoding.miniproject.dto.company.CompanyRespDto.CompanyInfoRespDto;
-import site.metacoding.miniproject.dto.jobposting.JobPostingRespDto.JobPostingBoardDetailRespDto;
+import site.metacoding.miniproject.dto.company.CompanyRespDto.CompanyAddressRespDto;
+import site.metacoding.miniproject.dto.company.CompanyRespDto.CompanyDetailRespDto;
+import site.metacoding.miniproject.dto.jobpostingboard.JobPostingBoardReqDto.JobPostingBoardInsertReqDto;
+import site.metacoding.miniproject.dto.jobpostingboard.JobPostingBoardRespDto.JobPostingBoardDetailRespDto;
+import site.metacoding.miniproject.dto.jobpostingboard.JobPostingBoardRespDto.JobPostingBoardInsertRespDto;
+import site.metacoding.miniproject.dto.user.UserRespDto.SignPersonalDto;
+import site.metacoding.miniproject.dto.user.UserRespDto.SignedDto;
 import site.metacoding.miniproject.web.dto.request.company.CompanyUpdateDto;
-import site.metacoding.miniproject.web.dto.request.jobpostingboard.JobPostingBoardInsertDto;
 import site.metacoding.miniproject.web.dto.request.jobpostingboard.JobPostingBoardUpdateDto;
-import site.metacoding.miniproject.web.dto.response.company.CompanyAddressDto;
 import site.metacoding.miniproject.web.dto.response.etc.PagingDto;
 import site.metacoding.miniproject.web.dto.response.jobpostingboard.JobPostingBoardListDto;
 import site.metacoding.miniproject.web.dto.response.personal.PersonalMainDto;
@@ -39,14 +42,22 @@ public class CompanyService {
 	private final CompanyDao companyDao;
 	private final UsersDao userDao;
 
-	public CompanyAddressDto findByAddress(Integer companyId) {
+	public CompanyAddressRespDto findByAddress(Integer companyId) {
 		return companyDao.findByAddress(companyId);
 	}
 
 	@Transactional(readOnly = true)
-	public CompanyInfoRespDto findByCompany(Integer companyId) {
-		CompanyInfoRespDto companyInfoRespDto = companyDao.companyInfo(companyId);
-		return companyInfoRespDto;
+	public CompanyDetailRespDto findByCompany(Integer companyId) {
+		CompanyAddressRespDto companyAddressRespDto = companyDao.findByAddress(companyId);
+		CompanyDetailRespDto companyPS = companyDao.findByCompany(companyId);
+		CompanyDetailRespDto companyDetailRespDto = new CompanyDetailRespDto(companyPS, companyAddressRespDto);
+		System.out.println("디버그 : companyname은?" + companyPS.getCompanyName());
+		// companyDetailRespDto.setZoneCode(companyAddressRespDto.getZoneCode());
+		// companyDetailRespDto.setCompanyForAddressId(companyId);
+		// companyDetailRespDto.setRoadJibunAddr(companyAddressRespDto.getRoadJibunAddr());
+		// companyDetailRespDto.setDetailAddress(companyAddressRespDto.getDetailAddress());
+		System.out.println("디버그: companyID는?" + companyDetailRespDto.getCompanyId());
+		return companyDetailRespDto;
 	}
 
 	// 회사정보변경 (user, company)
@@ -63,18 +74,23 @@ public class CompanyService {
 
 	// 채용공고 작성 (category,career,jobPostingboard)
 	@Transactional(rollbackFor = Exception.class)
-	public void insertJobPostingBoard(Integer companyId, JobPostingBoardInsertDto insertDto) {
-		Category category = new Category(insertDto);
-		categoryDao.insert(category);
+	public JobPostingBoardInsertRespDto insertJobPostingBoard(JobPostingBoardInsertReqDto jobPostingBoardInsertReqDto) {
 
-		Career career = new Career(insertDto);
-		careerDao.insert(career);
+		Category categoryPS = jobPostingBoardInsertReqDto.JobPostingBoardInsertRespDtoToCategoryEntity();
+		categoryDao.insert(categoryPS);
 
-		JobPostingBoard jobPostingBoard = new JobPostingBoard(insertDto);
-		jobPostingBoard.setCompanyId(companyId);
-		jobPostingBoard.setJobPostingBoardCategoryId(category.getCategoryId());
-		jobPostingBoard.setJobPostingBoardCareerId(career.getCareerId());
-		jobPostingBoardDao.insert(jobPostingBoard);
+		Career careerPS = jobPostingBoardInsertReqDto.JobPostingBoardInsertRespDtoToCareerEntity();
+		careerDao.insert(careerPS);
+
+		JobPostingBoard jobPostingBoardPS = jobPostingBoardInsertReqDto
+				.JobPostingBoardInsertReqDtoJobPostingBoardToEntity();
+		jobPostingBoardPS.setJobPostingBoardCategoryId(categoryPS.getCategoryId());
+		jobPostingBoardPS.setJobPostingBoardCareerId(careerPS.getCareerId());
+		jobPostingBoardDao.insert(jobPostingBoardPS);
+
+		JobPostingBoardInsertRespDto jobPostingBoardInsertRespDto = new JobPostingBoardInsertRespDto(jobPostingBoardPS,
+				categoryPS, careerPS);
+		return jobPostingBoardInsertRespDto;
 	}
 
 	// 채용공고 리스트

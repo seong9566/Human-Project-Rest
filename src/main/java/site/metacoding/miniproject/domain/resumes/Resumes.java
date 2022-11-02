@@ -35,11 +35,13 @@ public class Resumes {
 	}
 
 	// 이력서 수정
-	public Resumes(int resumesId, ResumesUpdateDto updateResumesDto) {
+	@Builder
+	public Resumes(int resumesId, String resumesTitle, String resumesPicture, String resumesIntroduce,
+			String resumesPlace) {
 		this.resumesId = resumesId;
-		this.resumesTitle = updateResumesDto.getResumesTitle();
-		this.resumesPicture = updateResumesDto.getResumesPicture();
-		this.resumesIntroduce = updateResumesDto.getResumesIntroduce();
-		this.resumesPlace = updateResumesDto.getResumesPlace();
+		this.resumesTitle = resumesTitle;
+		this.resumesPicture = resumesPicture;
+		this.resumesIntroduce = resumesIntroduce;
+		this.resumesPlace = resumesPlace;
 	}
 }
