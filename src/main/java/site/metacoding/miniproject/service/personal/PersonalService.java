@@ -162,7 +162,13 @@ public class PersonalService {
 	// 내 정보 수정에서 데이터 보여주기
 	@Transactional(readOnly = true)
 	public PersonalUpdateFormRespDto personalUpdateById(Integer personalId) {
-		PersonalUpdateFormRespDto personalUpdateFormRespDto = personalDao.personalUpdateById(personalId);
+		PersonalAddressRespDto personalAddressRespDto = personalDao.personalAddressById(personalId);
+
+		PersonalUpdateFormRespDto personalUpdatePS = personalDao.personalUpdateById(personalId);
+
+		PersonalUpdateFormRespDto personalUpdateFormRespDto = new PersonalUpdateFormRespDto(personalUpdatePS,
+				personalAddressRespDto);
+
 		return personalUpdateFormRespDto;
 	}
 

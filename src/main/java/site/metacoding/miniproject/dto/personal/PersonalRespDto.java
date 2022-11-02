@@ -65,19 +65,29 @@ public class PersonalRespDto {
         private String personalEmail;
         private String personalPhoneNumber;
         private String personalEducation;
-        private String personalAddress;
 
         private String loginPassword;
 
-        public PersonalUpdateFormRespDto(PersonalUpdateFormRespDto personalUpdateFormRespDto) {
+        private Integer personalForAddressId;
+        private String zoneCode;
+        private String roadJibunAddr;
+        private String detailAddress;
+
+        public PersonalUpdateFormRespDto(PersonalUpdateFormRespDto personalUpdateFormRespDto,
+                PersonalAddressRespDto personalAddressRespDto) {
 
             this.personalId = personalUpdateFormRespDto.getPersonalId();
             this.personalName = personalUpdateFormRespDto.getPersonalName();
             this.personalEmail = personalUpdateFormRespDto.getPersonalEmail();
             this.personalPhoneNumber = personalUpdateFormRespDto.getPersonalPhoneNumber();
-            this.personalAddress = personalUpdateFormRespDto.getPersonalAddress();
+            this.personalEducation = personalUpdateFormRespDto.getPersonalEducation();
 
             this.loginPassword = personalUpdateFormRespDto.getLoginPassword();
+
+            this.personalForAddressId = personalAddressRespDto.getPersonalId();
+            this.zoneCode = personalAddressRespDto.getZoneCode();
+            this.roadJibunAddr = personalAddressRespDto.getRoadJibunAddr();
+            this.detailAddress = personalAddressRespDto.getDetailAddress();
 
         }
 
@@ -93,7 +103,6 @@ public class PersonalRespDto {
         private String personalPhoneNumber;
         private String personalEducation;
         private String personalAddress;
-
         private String loginPassword;
 
         public PersonalUpdateRespDto(Personal personal, Users users) {
@@ -101,9 +110,8 @@ public class PersonalRespDto {
             this.personalName = personal.getPersonalName();
             this.personalEmail = personal.getPersonalEmail();
             this.personalPhoneNumber = personal.getPersonalPhoneNumber();
-            this.personalAddress = personal.getPersonalAddress();
             this.personalEducation = personal.getPersonalEducation();
-
+            this.personalAddress = personal.getPersonalAddress();
             this.loginPassword = users.getLoginPassword();
         }
 
