@@ -53,7 +53,7 @@ public class JWTToken {
 
         public static Cookie setCookie(String token) {
             Cookie cookie = new Cookie("Authorization", token); // Cookie에 Bearer 추가하면 안됨 - 최대 공간 초과....
-
+            cookie.setMaxAge(60 * 60);
             return cookie;
         }
 
@@ -87,7 +87,7 @@ public class JWTToken {
             token = token.trim();
             try {
 
-                log.debug("디버그 : 토큰확인 - " + token);
+                // log.debug("디버그 : 토큰확인 - " + token);
 
                 Date now = new Date(System.currentTimeMillis());
 
@@ -95,8 +95,8 @@ public class JWTToken {
 
                 // log.debug("디버그 : 만료시간 - " + decodedJWT.getExpiresAt().toString());
                 // log.debug("디버그 : 현재시간 - " + now);
-                // 입력받은 토큰값이 현재시간을 넘지 않았을 경우 true를 반환 - 만료된 토큰이 아닌지 판별
 
+                // 입력받은 토큰값이 현재시간을 넘지 않았을 경우 true를 반환 - 만료된 토큰이 아닌지 판별
                 if (decodedJWT.getExpiresAt() != null && decodedJWT.getExpiresAt().after(now)) {
                     return true;
                 }
@@ -116,7 +116,8 @@ public class JWTToken {
         SignPersonalDto signPersonalDto = new SignPersonalDto();
         SignCompanyDto signCompanyDto = new SignCompanyDto();
 
-        public SignedDto<?> tokenSignedDto(Map<String, Object> getSigned) {
+        // 토큰 -> 로그인값으로 변경 로직 ..... 뭔가 더러움
+        public SignedDto<?> tokenToSignedDto(Map<String, Object> getSigned) {
             for (String key : getSigned.keySet()) {
 
                 if (key.equals("usersId")) {

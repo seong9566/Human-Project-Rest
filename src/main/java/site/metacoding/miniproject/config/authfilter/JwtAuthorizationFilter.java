@@ -43,7 +43,7 @@ public class JwtAuthorizationFilter implements Filter {
         Map<String, Object> getSigned = decodedJWT.getClaim("sigendDto").asMap();
 
         TokenToSinedDto tokenToSinedDto = new TokenToSinedDto();
-        SignedDto<?> signedDto = tokenToSinedDto.tokenSignedDto(getSigned);
+        SignedDto<?> signedDto = tokenToSinedDto.tokenToSignedDto(getSigned);
 
         HttpSession session = req.getSession();
 
