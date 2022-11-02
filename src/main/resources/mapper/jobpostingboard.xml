@@ -4,7 +4,7 @@
 	namespace="site.metacoding.miniproject.domain.jobpostingboard.JobPostingBoardDao">
 
 	<select id="jobPostingAddress"
-		resultType="site.metacoding.miniproject.web.dto.response.company.CompanyAddressDto">
+		resultType="site.metacoding.miniproject.dto.company.CompanyRespDto$CompanyAddressRespDto">
 		SELECT job_posting_board_id,
 		SUBSTRING_INDEX(SUBSTRING_INDEX(job_posting_board_place,',',1),',',-1)
 		AS
@@ -80,7 +80,7 @@
 	</update>
 
 	<select id="findByDetail"
-		resultType="site.metacoding.miniproject.dto.jobposting.JobPostingRespDto$JobPostingBoardDetailRespDto">
+		resultType="site.metacoding.miniproject.dto.jobpostingboard.JobPostingBoardRespDto$JobPostingBoardDetailRespDto">
 			SELECT 
 		jpb.job_posting_board_id,
 		jpb.company_id,

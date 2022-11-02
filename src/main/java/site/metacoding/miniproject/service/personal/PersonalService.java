@@ -55,13 +55,13 @@ public class PersonalService {
 			throw new ApiException("멀티파트 폼 에러");
 		}
 
-		Category categoryPS = resumesInsertReqDto.ResumesInsertRespDtoToCategoryEntity();
+		Category categoryPS = resumesInsertReqDto.ResumesInsertReqDtoToCategoryEntity();
 		categoryDao.insert(categoryPS);
 
-		Portfolio portfolioPS = resumesInsertReqDto.ResumesInsertRespDtoToPortfolioEntity();
+		Portfolio portfolioPS = resumesInsertReqDto.ResumesInsertReqDtoToPortfolioEntity();
 		portfolioDao.insert(portfolioPS);
 
-		Career careerPS = resumesInsertReqDto.ResumesInsertRespDtoToCareerEntity();
+		Career careerPS = resumesInsertReqDto.ResumesInsertReqDtoToCareerEntity();
 		careerDao.insert(careerPS);
 
 		// if 체크
@@ -70,7 +70,7 @@ public class PersonalService {
 			throw new ApiException("이력서 작성 에러");
 		}
 
-		Resumes resumesPS = resumesInsertReqDto.ResumesInsertRespDtoToResumesEntity();
+		Resumes resumesPS = resumesInsertReqDto.ResumesInsertReqDtoToResumesEntity();
 		resumesPS.setCareerId(careerPS.getCareerId());
 		resumesPS.setPortfolioId(portfolioPS.getPortfolioId());
 		resumesPS.setResumesCategoryId(categoryPS.getCategoryId());
