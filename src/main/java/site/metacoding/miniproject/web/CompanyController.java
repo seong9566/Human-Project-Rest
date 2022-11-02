@@ -31,6 +31,7 @@ import site.metacoding.miniproject.service.company.CompanyService;
 import site.metacoding.miniproject.web.dto.request.company.CompanyUpdateDto;
 import site.metacoding.miniproject.web.dto.request.jobpostingboard.JobPostingBoardUpdateDto;
 import site.metacoding.miniproject.web.dto.response.ResponseDto;
+import site.metacoding.miniproject.web.dto.response.company.CompanyInfoDto;
 import site.metacoding.miniproject.web.dto.response.jobpostingboard.JobPostingBoardDetailDto;
 import site.metacoding.miniproject.web.dto.response.jobpostingboard.JobPostingBoardListDto;
 
@@ -41,10 +42,9 @@ public class CompanyController {
 	private final HttpSession session;
 	private final CompanyService companyService;
 
-	// 회사 정보 보기
 	@GetMapping("/api/company/detail")
 	public ResponseDto<?> findByCompany() {
-		SignedDto principal = (SignedDto<?>) session.getAttribute("principal");
+		SignedDto<?> principal = (SignedDto<?>) session.getAttribute("principal");
 		SignCompanyDto signCompanyDto = (SignCompanyDto) principal.getUserInfo();
 		return new ResponseDto<>(1, "성공", companyService.findByCompany(signCompanyDto.getCompanyId()));
 	}
@@ -64,9 +64,11 @@ public class CompanyController {
 		// ValidationCheckUtil.valCheckToUpdatePersonal(personalUpdatReqDto);
 		SignedDto<?> principal = (SignedDto<?>) session.getAttribute("principal");
 		SignCompanyDto signCompanyDto = (SignCompanyDto) principal.getUserInfo();
+		CompanyUpdateRespDto companyUpdateRespDto = companyService.updateCompany(principal.getUsersId(),
+				signCompanyDto.getCompanyId(),
+				companyUpdateReqDto);
 		return new ResponseDto<>(1, "수정 성공",
-				companyService.updateCompany(principal.getUsersId(), signCompanyDto.getCompanyId(),
-						companyUpdateReqDto));
+				companyUpdateRespDto);
 	}
 
 	@PutMapping(value = "/company/companyInform/update")
