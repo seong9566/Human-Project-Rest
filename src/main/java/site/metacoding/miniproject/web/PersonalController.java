@@ -251,7 +251,7 @@ public class PersonalController {
 	}
 
 	// 내정보 수정 보기
-	@GetMapping("/api/personal/inform/informUpdate")
+	@GetMapping("/api/personal/updateForm")
 	public ResponseDto<?> personalInformUpdate() {
 		SignedDto<?> principal = (SignedDto<?>) session.getAttribute("principal");
 		SignPersonalDto signPersonalDto = (SignPersonalDto) principal.getUserInfo();

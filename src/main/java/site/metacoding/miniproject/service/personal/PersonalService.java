@@ -153,7 +153,7 @@ public class PersonalService {
 	@Transactional(readOnly = true)
 	public PersonalDetailRespDto findByPersonal(Integer personalId) {
 		PersonalAddressRespDto personalAddressRespDto = personalDao.personalAddressById(personalId);
-		Personal personalPS = personalDao.personalformById(personalId);
+		Personal personalPS = personalDao.personaldetailById(personalId);
 		PersonalDetailRespDto personalDetailRespDto = new PersonalDetailRespDto(personalPS, personalAddressRespDto);
 
 		return personalDetailRespDto;

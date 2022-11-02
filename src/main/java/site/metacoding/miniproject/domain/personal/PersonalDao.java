@@ -17,7 +17,7 @@ public interface PersonalDao {
 	public void deleteById(Integer id);
 
 	// 개인정보 나의 정보페이지에 불러오기
-	public Personal personalformById(Integer personalId);
+	public Personal personaldetailById(Integer personalId);
 
 	// 회원가입수정때 보여줄 개인정보
 	public PersonalUpdateFormRespDto personalUpdateById(Integer personalId);

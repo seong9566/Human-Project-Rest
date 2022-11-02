@@ -23,7 +23,7 @@
 		WHERE personal_id = #{personalId}
 	</select>
 	
-	<select id="personalformById"
+	<select id="personaldetailById"
 		resultType="site.metacoding.miniproject.domain.personal.Personal">
 		SELECT personal_id, personal_name, personal_email, personal_phone_number
 		, personal_education, personal_address
