@@ -33,7 +33,7 @@
 	</select>
 
 	<select id="personalAddressById"
-		resultType="site.metacoding.miniproject.dto.personal.PersonalRespDto$PersonalDetailRespDto">
+		resultType="site.metacoding.miniproject.dto.personal.PersonalRespDto$PersonalAddressRespDto">
 		SELECT personal_id,
 		SUBSTRING_INDEX(SUBSTRING_INDEX(personal_address,',',1),',',-1) AS
 		zonecode,

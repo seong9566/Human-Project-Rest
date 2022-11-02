@@ -22,6 +22,7 @@ import site.metacoding.miniproject.domain.resumes.ResumesDao;
 import site.metacoding.miniproject.domain.users.Users;
 import site.metacoding.miniproject.domain.users.UsersDao;
 import site.metacoding.miniproject.dto.personal.PersonalReqDto.PersonalUpdatReqDto;
+import site.metacoding.miniproject.dto.personal.PersonalRespDto.PersonalAddressRespDto;
 import site.metacoding.miniproject.dto.personal.PersonalRespDto.PersonalDetailRespDto;
 import site.metacoding.miniproject.dto.personal.PersonalRespDto.PersonalUpdateFormRespDto;
 import site.metacoding.miniproject.dto.personal.PersonalRespDto.PersonalUpdateRespDto;
@@ -32,7 +33,6 @@ import site.metacoding.miniproject.dto.resumes.ResumesRespDto.ResumesInsertRespD
 import site.metacoding.miniproject.web.dto.request.resume.ResumesUpdateDto;
 import site.metacoding.miniproject.web.dto.response.company.CompanyMainDto;
 import site.metacoding.miniproject.web.dto.response.etc.PagingDto;
-import site.metacoding.miniproject.web.dto.response.personal.PersonalAddressDto;
 
 @Service
 @RequiredArgsConstructor
@@ -43,7 +43,7 @@ public class PersonalService {
 	private final CategoryDao categoryDao;
 	private final PortfolioDao portfolioDao;
 	private final CareerDao careerDao;
-	private final UsersDao userDao;
+	private final UsersDao usersDao;
 
 	// 이력서 작성 하기
 	@Transactional(rollbackFor = RuntimeException.class)
@@ -160,10 +160,12 @@ public class PersonalService {
 	@Transactional(readOnly = true)
 	public PersonalUpdateFormRespDto personalUpdateById(Integer personalId) {
 		PersonalUpdateFormRespDto personalUpdateFormRespDto = personalDao.personalUpdateById(personalId);
+
 		return personalUpdateFormRespDto;
 	}
 
-	public PersonalAddressDto personalAddress(Integer personalId) {
+	@Transactional(readOnly = true)
+	public PersonalAddressRespDto personalAddressRespDto(Integer personalId) {
 		return personalDao.personalAddressById(personalId);
 	}
 
@@ -173,16 +175,15 @@ public class PersonalService {
 			PersonalUpdatReqDto personalUpdatReqDto) {
 
 		// user패스워드 수정
-		Users personalUserPS = userDao.findById(userId);
+		Users personalUserPS = usersDao.findById(userId);
 		personalUserPS.update(personalUpdatReqDto);
-		userDao.update(personalUserPS);
+		usersDao.update(personalUserPS);
 
 		// personal 개인정보 수정
 		Personal personalPS = personalDao.findById(perosnalId);
 		personalPS.updatePersonal(personalUpdatReqDto);
 		personalDao.update(personalPS);
 		PersonalUpdateRespDto personalUpdateRespDto = new PersonalUpdateRespDto(personalPS, personalUserPS);
-		System.out.println("ssss" + personalPS.getPersonalAddress());
 
 		return personalUpdateRespDto;
 	}

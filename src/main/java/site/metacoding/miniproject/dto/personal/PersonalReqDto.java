@@ -61,13 +61,6 @@ public class PersonalReqDto {
                     .build();
         }
 
-        public Personal toEntity() {
-            return Personal.builder().personalId(personalId).personalName(personalName).personalEmail(personalEmail)
-                    .personalEducation(personalEducation)
-                    .personalAddress(personalAddress)
-                    .build();
-        }
-
     }
 
 }

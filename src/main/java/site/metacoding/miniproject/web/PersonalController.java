@@ -21,11 +21,9 @@ import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.multipart.MultipartFile;
 
 import lombok.RequiredArgsConstructor;
-<<<<<<< HEAD
 import site.metacoding.miniproject.dto.personal.PersonalReqDto.PersonalUpdatReqDto;
 import site.metacoding.miniproject.dto.personal.PersonalRespDto.PersonalUpdateRespDto;
-=======
->>>>>>> de3146afe8d5809e2bd380ca53c5ed22650cebd2
+
 import site.metacoding.miniproject.dto.resumes.ResumesReqDto.ResumesInsertReqDto;
 import site.metacoding.miniproject.dto.resumes.ResumesRespDto.ResumesAllRespDto;
 import site.metacoding.miniproject.dto.resumes.ResumesRespDto.ResumesDetailRespDto;
@@ -253,19 +251,13 @@ public class PersonalController {
 
 	// 내정보 수정 보기
 	@GetMapping("/api/personal/inform/informUpdate")
-<<<<<<< HEAD
 	public ResponseDto<?> personalInformUpdate() {
 		SignedDto<SignPersonalDto> principal = (SignedDto<SignPersonalDto>) session.getAttribute("principal");
 		return new ResponseDto<>(1, "성공", personalService.personalUpdateById(principal.getUserInfo().getPersonalId()));
-=======
-	public ResponseDto<?> personalupdate() {
-		SignedDto<?> principal = (SignedDto<?>) session.getAttribute("principal");
-		PersonalUpdateDto personalUpdateFormPS = personalService.personalUpdateById(principal.getPersonalId());
-		PersonalAddressDto personalAddressPS = personalService.personalAddress(principal.getPersonalId());
-		return new ResponseDto<>(1, "성공", null);
->>>>>>> de3146afe8d5809e2bd380ca53c5ed22650cebd2
+
 	}
 
+	// 내정보 수정
 	@PutMapping("/api/personal/update")
 	public @ResponseBody ResponseDto<?> personalUpdate(@RequestBody PersonalUpdatReqDto personalUpdatReqDto) {
 		// ValidationCheckUtil.valCheckToUpdatePersonal(personalUpdatReqDto);

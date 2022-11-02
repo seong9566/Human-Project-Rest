@@ -2,9 +2,9 @@ package site.metacoding.miniproject.domain.personal;
 
 import java.util.List;
 
+import site.metacoding.miniproject.dto.personal.PersonalRespDto.PersonalAddressRespDto;
 import site.metacoding.miniproject.dto.personal.PersonalRespDto.PersonalDetailRespDto;
 import site.metacoding.miniproject.dto.personal.PersonalRespDto.PersonalUpdateFormRespDto;
-import site.metacoding.miniproject.web.dto.response.personal.PersonalAddressDto;
 import site.metacoding.miniproject.web.dto.response.personal.PersonalInfoDto;
 
 public interface PersonalDao {
@@ -27,7 +27,7 @@ public interface PersonalDao {
 	// public void updateById(PersonalUpdateDto personalUpdateDto);
 
 	// 주소
-	public PersonalAddressDto personalAddressById(Integer personalId);
+	public PersonalAddressRespDto personalAddressById(Integer personalId);
 
 	public PersonalInfoDto personalInfoById(Integer personalId);
 

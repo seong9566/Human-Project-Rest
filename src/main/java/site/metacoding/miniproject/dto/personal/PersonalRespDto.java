@@ -1,5 +1,6 @@
 package site.metacoding.miniproject.dto.personal;
 
+import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
@@ -79,6 +80,24 @@ public class PersonalRespDto {
             this.personalEducation = personal.getPersonalEducation();
 
             this.loginPassword = users.getLoginPassword();
+        }
+
+    }
+
+    @Getter
+    @Setter
+    public static class PersonalAddressRespDto {
+        private Integer personalId;
+        private String zoneCode;
+        private String roadJibunAddr;
+        private String detailAddress;
+
+        @Builder
+        public PersonalAddressRespDto(Integer personalId, String zoneCode, String roadJibunAddr, String detailAddress) {
+            this.personalId = personalId;
+            this.zoneCode = zoneCode;
+            this.roadJibunAddr = roadJibunAddr;
+            this.detailAddress = detailAddress;
         }
 
     }
