@@ -46,4 +46,5 @@
 		SET login_password = #{loginPassword}
 		WHERE users_id = #{usersId}
 	</update>
+	
 </mapper>

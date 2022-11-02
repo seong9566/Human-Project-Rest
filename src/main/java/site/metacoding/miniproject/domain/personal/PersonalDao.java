@@ -2,9 +2,9 @@ package site.metacoding.miniproject.domain.personal;
 
 import java.util.List;
 
+import site.metacoding.miniproject.dto.personal.PersonalRespDto.PersonalAddressRespDto;
 import site.metacoding.miniproject.dto.personal.PersonalRespDto.PersonalDetailRespDto;
-import site.metacoding.miniproject.web.dto.request.personal.PersonalUpdateDto;
-import site.metacoding.miniproject.web.dto.response.personal.PersonalAddressDto;
+import site.metacoding.miniproject.dto.personal.PersonalRespDto.PersonalUpdateFormRespDto;
 import site.metacoding.miniproject.web.dto.response.personal.PersonalInfoDto;
 
 public interface PersonalDao {
@@ -17,17 +17,17 @@ public interface PersonalDao {
 	public void deleteById(Integer id);
 
 	// 개인정보 나의 정보페이지에 불러오기
-	public PersonalDetailRespDto personalformById(Integer personalId);
+	public Personal personaldetailById(Integer personalId);
 
 	// 회원가입수정때 보여줄 개인정보
-	public PersonalUpdateDto personalUpdateById(Integer personalId);
+	public PersonalUpdateFormRespDto personalUpdateById(Integer personalId);
 
 	// 회원가입 수정
 	public void update(Personal personal);
 	// public void updateById(PersonalUpdateDto personalUpdateDto);
 
 	// 주소
-	public PersonalAddressDto personalAddressById(Integer personalId);
+	public PersonalAddressRespDto personalAddressById(Integer personalId);
 
 	public PersonalInfoDto personalInfoById(Integer personalId);
 

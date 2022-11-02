@@ -5,14 +5,13 @@
 	<select id="findAll" resultType="site.metacoding.miniproject.domain.personal.Personal">
 		SELECT * FROM users
 	</select>
-
+	
 	<select id="findById" resultType="site.metacoding.miniproject.domain.personal.Personal">
 	SELECT *
 	FROM personal
 	WHERE personal_id = #{personalId}
 
 	</select>
-	
 	<insert id="insert" useGeneratedKeys="true" keyProperty="personalId" keyColumn="personal_id">
 		INSERT INTO personal (personal_name, personal_email, personal_education, personal_phone_number, personal_address, created_at)
 		VALUES(#{personalName},#{personalEmail}, #{personalEducation}, #{personalPhoneNumber}, #{personalAddress}, NOW())
@@ -24,8 +23,8 @@
 		WHERE personal_id = #{personalId}
 	</select>
 	
-	<select id="personalformById"
-		resultType="site.metacoding.miniproject.dto.personal.PersonalRespDto$PersonalDetailRespDto">
+	<select id="personaldetailById"
+		resultType="site.metacoding.miniproject.domain.personal.Personal">
 		SELECT personal_id, personal_name, personal_email, personal_phone_number
 		, personal_education, personal_address
 		from personal
@@ -33,7 +32,7 @@
 	</select>
 
 	<select id="personalAddressById"
-		resultType="site.metacoding.miniproject.dto.personal.PersonalRespDto$PersonalDetailRespDto">
+		resultType="site.metacoding.miniproject.dto.personal.PersonalRespDto$PersonalAddressRespDto">
 		SELECT personal_id,
 		SUBSTRING_INDEX(SUBSTRING_INDEX(personal_address,',',1),',',-1) AS
 		zonecode,
@@ -45,17 +44,20 @@
 		where personal_id = #{personalId}
 	</select>
 
-	<!-- <select id="personalUpdateById"
-		resultType="site.metacoding.miniproject.web.dto.request.personal.PersonalUpdateDto">
-		SELECT personal_id, personal_name, personal_email, personal_education, personal_phone_number,personal_address,
-		login_password
-		FROM personal
-		left OUTER JOIN users
+
+	<select id="personalUpdateById"
+		resultType="site.metacoding.miniproject.dto.personal.PersonalRespDto$PersonalUpdateFormRespDto">
+		SELECT p.personal_id, p.personal_name, p.personal_email, p.personal_education, p.personal_phone_number, p.personal_address,
+		u.login_password
+		FROM personal p
+		left OUTER JOIN users u
+
 		ON
-		personal.personal_id = users.personal_id
-		WHERE personal.personal_id =
+		p.personal_id = u.personal_id
+		WHERE p.personal_id =
 		#{personalId}
-	</select> -->
+	</select>
+
 
 	<update id="update">
 		UPDATE personal
@@ -65,7 +67,6 @@
 		personal_education = #{personalEducation},
 		personal_address = #{personalAddress}
 		WHERE personal_id = #{personalId}
-
 	</update>
 
 </mapper>
