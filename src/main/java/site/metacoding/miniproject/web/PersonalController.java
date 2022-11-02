@@ -53,7 +53,7 @@ public class PersonalController {
 
 	// 이력서 작성 하기
 	@PostMapping(value = "/resumes/insert")
-	public ResponseDto<?> resumesInsert(@RequestPart(value = "file", required = false) MultipartFile file,
+	public ResponseDto<?> insertResumes(@RequestPart(value = "file", required = false) MultipartFile file,
 			@RequestPart("reqDto") ResumesInsertReqDto resumesInsertReqDto) throws Exception {
 		SignedDto<?> principal = (SignedDto<?>) session.getAttribute("principal");
 		SignPersonalDto signPersonalDto = (SignPersonalDto) principal.getUserInfo();
@@ -64,7 +64,7 @@ public class PersonalController {
 
 	// 내가 작성한 이력서 목록 보기
 	@GetMapping("/resumes/myList")
-	public ResponseDto<?> resumesList(ResumesAllRespDto resumesAllRespDto) {
+	public ResponseDto<?> findAllMyResumes(ResumesAllRespDto resumesAllRespDto) {
 		SignedDto<?> principal = (SignedDto<?>) session.getAttribute("principal");
 		SignPersonalDto signPersonalDto = (SignPersonalDto) principal.getUserInfo();
 		resumesAllRespDto.setPersonalId(signPersonalDto.getPersonalId());
@@ -75,11 +75,9 @@ public class PersonalController {
 	@GetMapping("/resumes/{resumesId}")
 	public ResponseDto<?> findByResumesId(@PathVariable Integer resumesId) {
 		SignedDto<?> principal = (SignedDto<?>) session.getAttribute("principal");
-
 		// PersonalLike personalLike = personalLikeService.좋아요확인(resumesId,
 		// signedDto.getCompanyId());
 		// model.addAttribute("personalLike", personalLike);
-
 		return new ResponseDto<>(1, "내 이력서 목록 보기 성공", personalService.findByResumesId(resumesId));
 	}
 
