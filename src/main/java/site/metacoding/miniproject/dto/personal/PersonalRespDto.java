@@ -44,6 +44,7 @@ public class PersonalRespDto {
         private String loginPassword;
 
         public PersonalUpdateFormRespDto(PersonalUpdateFormRespDto personalUpdateFormRespDto) {
+
             this.personalId = personalUpdateFormRespDto.getPersonalId();
             this.personalName = personalUpdateFormRespDto.getPersonalName();
             this.personalEmail = personalUpdateFormRespDto.getPersonalEmail();

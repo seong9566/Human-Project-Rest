@@ -2,10 +2,10 @@ package site.metacoding.miniproject.domain.category;
 
 import java.sql.Timestamp;
 
+import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
-import site.metacoding.miniproject.dto.resumes.ResumesReqDto.ResumesInsertReqDto;
 import site.metacoding.miniproject.web.dto.request.jobpostingboard.JobPostingBoardInsertDto;
 import site.metacoding.miniproject.web.dto.request.jobpostingboard.JobPostingBoardUpdateDto;
 import site.metacoding.miniproject.web.dto.request.resume.ResumesUpdateDto;
@@ -21,10 +21,11 @@ public class Category {
 	private Timestamp createdAt;
 
 	// 이력서 작성
-	public Category(ResumesInsertReqDto resumesInsertReqDto) {
-		this.categoryFrontend = resumesInsertReqDto.getCategoryFrontend();
-		this.categoryBackend = resumesInsertReqDto.getCategoryBackend();
-		this.categoryDevops = resumesInsertReqDto.getCategoryDevops();
+	@Builder
+	public Category(Boolean categoryFrontend, Boolean categoryBackend, Boolean categoryDevops) {
+		this.categoryFrontend = categoryFrontend;
+		this.categoryBackend = categoryBackend;
+		this.categoryDevops = categoryDevops;
 	}
 
 	// 이력서 수정

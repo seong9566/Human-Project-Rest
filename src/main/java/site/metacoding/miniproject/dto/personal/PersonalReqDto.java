@@ -42,7 +42,9 @@ public class PersonalReqDto {
 
     @Getter
     @Setter
+
     public static class PersonalUpdatReqDto { // PersonalUpdateDto -> PersonalUpdateReqDto
+
         private Integer personalId;
         private String personalName;
         private String personalEmail;
@@ -61,7 +63,7 @@ public class PersonalReqDto {
 
         public Personal toEntity() {
             return Personal.builder().personalId(personalId).personalName(personalName).personalEmail(personalEmail)
-                    .personalEducation(personalEducation).personalAddress(personalAddress)
+                    .personalEducation(personalEducation)
                     .personalAddress(personalAddress)
                     .build();
         }
