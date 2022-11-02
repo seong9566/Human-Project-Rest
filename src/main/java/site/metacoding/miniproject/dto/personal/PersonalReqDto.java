@@ -3,8 +3,8 @@ package site.metacoding.miniproject.dto.personal;
 import lombok.Getter;
 import lombok.Setter;
 import site.metacoding.miniproject.domain.personal.Personal;
-
 import site.metacoding.miniproject.domain.users.Users;
+import site.metacoding.miniproject.utill.SHA256;
 
 public class PersonalReqDto {
     @Getter
@@ -32,6 +32,10 @@ public class PersonalReqDto {
         }
 
         public Users personalJoinDtoToUserEntity() {
+
+            SHA256 sha256 = new SHA256();
+            this.loginPassword = sha256.encrypt(this.loginPassword);
+
             return Users.builder()
                     .loginId(loginId)
                     .loginPassword(loginPassword)
