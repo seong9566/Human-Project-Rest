@@ -59,7 +59,7 @@ public class ResumesReqDto {
             this.resumesPicture = imgName;
         }
 
-        public Resumes ResumesInsertRespDtoToResumesEntity() {
+        public Resumes ResumesInsertReqDtoToResumesEntity() {
             return Resumes.builder()
                     .resumesTitle(resumesTitle)
                     .resumesPicture(resumesPicture)
@@ -68,7 +68,7 @@ public class ResumesReqDto {
                     .build();
         }
 
-        public Category ResumesInsertRespDtoToCategoryEntity() {
+        public Category ResumesInsertReqDtoToCategoryEntity() {
             return Category.builder()
                     .categoryFrontend(categoryFrontend)
                     .categoryBackend(categoryBackend)
@@ -76,7 +76,7 @@ public class ResumesReqDto {
                     .build();
         }
 
-        public Career ResumesInsertRespDtoToCareerEntity() {
+        public Career ResumesInsertReqDtoToCareerEntity() {
             return Career.builder()
                     .oneYearLess(oneYearLess)
                     .twoYearOver(twoYearOver)
@@ -85,7 +85,7 @@ public class ResumesReqDto {
                     .build();
         }
 
-        public Portfolio ResumesInsertRespDtoToPortfolioEntity() {
+        public Portfolio ResumesInsertReqDtoToPortfolioEntity() {
             return Portfolio.builder()
                     .portfolioFile(portfolioFile)
                     .portfolioSource(portfolioSource)

@@ -1,18 +1,20 @@
-package site.metacoding.miniproject.dto.jobposting;
+package site.metacoding.miniproject.dto.jobpostingboard;
 
 import java.sql.Timestamp;
 
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
+import site.metacoding.miniproject.domain.career.Career;
+import site.metacoding.miniproject.domain.category.Category;
 import site.metacoding.miniproject.domain.jobpostingboard.JobPostingBoard;
 
-public class JobPostingRespDto {
+public class JobPostingBoardRespDto {
 
     @Getter
     @Setter
     @NoArgsConstructor
-    public class JobPostingBoardDetailRespDto {
+    public static class JobPostingBoardDetailRespDto {
 
         // postingBoard 테이블
         private Integer jobPostingBoardId;
@@ -61,7 +63,42 @@ public class JobPostingRespDto {
             this.jobPostingBoardPlace = jobPostingBoard.getJobPostingBoardPlace();
             this.jobPostingBoardDeadline = jobPostingBoard.getJobPostingBoardDeadline();
         }
-
     }
 
+    @Getter
+    @Setter
+    @NoArgsConstructor
+    public static class JobPostingBoardInsertRespDto {
+        private Integer jobPostingSalary;
+        private String jobPostingBoardTitle;
+        private String jobPostingBoardContent;
+        private String jobPostingBoardPlace;
+        // 경력
+        private Boolean oneYearLess;
+        private Boolean twoYearOver;
+        private Boolean threeYearOver;
+        private Boolean fiveYearOver;
+        // 관심 카테고리
+        private Boolean categoryFrontend;
+        private Boolean categoryBackend;
+        private Boolean categoryDevops;
+
+        private Timestamp jobPostingBoardDeadline;
+
+        public JobPostingBoardInsertRespDto(JobPostingBoard jobPostingBoard, Category category, Career career) {
+            this.jobPostingSalary = jobPostingBoard.getJobPostingSalary();
+            this.jobPostingBoardTitle = jobPostingBoard.getJobPostingBoardTitle();
+            this.jobPostingBoardContent = jobPostingBoard.getJobPostingBoardContent();
+            this.jobPostingBoardPlace = jobPostingBoard.getJobPostingBoardPlace();
+            this.oneYearLess = career.getOneYearLess();
+            this.twoYearOver = career.getTwoYearOver();
+            this.threeYearOver = career.getThreeYearOver();
+            this.fiveYearOver = career.getFiveYearOver();
+            this.categoryFrontend = category.getCategoryFrontend();
+            this.categoryBackend = category.getCategoryBackend();
+            this.categoryDevops = category.getCategoryDevops();
+            this.jobPostingBoardDeadline = jobPostingBoard.getJobPostingBoardDeadline();
+        }
+
+    }
 }

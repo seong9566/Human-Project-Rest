@@ -4,7 +4,7 @@ import java.util.List;
 
 import org.apache.ibatis.annotations.Param;
 
-import site.metacoding.miniproject.dto.jobposting.JobPostingRespDto.JobPostingBoardDetailRespDto;
+import site.metacoding.miniproject.dto.jobpostingboard.JobPostingBoardRespDto.JobPostingBoardDetailRespDto;
 import site.metacoding.miniproject.web.dto.response.etc.PagingDto;
 import site.metacoding.miniproject.web.dto.response.jobpostingboard.JobPostingBoardListDto;
 import site.metacoding.miniproject.web.dto.response.personal.PersonalMainDto;

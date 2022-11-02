@@ -2,8 +2,8 @@ package site.metacoding.miniproject.domain.company;
 
 import java.util.List;
 
-import site.metacoding.miniproject.dto.company.CompanyRespDto.CompanyInfoRespDto;
-import site.metacoding.miniproject.web.dto.response.company.CompanyAddressDto;
+import site.metacoding.miniproject.dto.company.CompanyRespDto.CompanyAddressRespDto;
+import site.metacoding.miniproject.dto.company.CompanyRespDto.CompanyDetailRespDto;
 
 public interface CompanyDao {
 	public void insert(Company company);
@@ -16,8 +16,8 @@ public interface CompanyDao {
 
 	public void deleteById(Integer id);
 
-	public CompanyInfoRespDto companyInfo(Integer companyId);
+	public CompanyDetailRespDto findByCompany(Integer companyId);
 
-	public CompanyAddressDto findByAddress(Integer companyId);
+	public CompanyAddressRespDto findByAddress(Integer companyId);
 
 }
