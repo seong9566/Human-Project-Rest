@@ -244,6 +244,7 @@ public class PersonalController {
 	@GetMapping("/api/personal/inform")
 	public ResponseDto<?> perosnalDetail() {
 		SignedDto<SignPersonalDto> principal = (SignedDto<SignPersonalDto>) session.getAttribute("principal");
+
 		return new ResponseDto<>(1, "성공", personalService.findByPersonal(principal.getUserInfo().getPersonalId()));
 		// principal.getUserinfo().getPersonalId()
 

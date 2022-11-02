@@ -1,13 +1,22 @@
 package site.metacoding.miniproject.dto.personal;
 
-import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
 import site.metacoding.miniproject.domain.personal.Personal;
 import site.metacoding.miniproject.domain.users.Users;
+import site.metacoding.miniproject.web.dto.response.personal.PersonalAddressDto;
 
 public class PersonalRespDto {
+
+    @Getter
+    @Setter
+    public static class PersonalAddressRespDto {
+        private Integer personalId;
+        private String zoneCode;
+        private String roadJibunAddr;
+        private String detailAddress;
+    }
 
     @Getter
     @Setter
@@ -20,15 +29,26 @@ public class PersonalRespDto {
         private String personalEducation;
         private String personalAddress;
 
-        public PersonalDetailRespDto(Personal personal) {
+        private Integer personalForAddressId;
+        private String zoneCode;
+        private String roadJibunAddr;
+        private String detailAddress;
+
+        public PersonalDetailRespDto(Personal personal, PersonalAddressRespDto personalAddressRespDto) {
+
             this.personalId = personal.getPersonalId();
             this.personalName = personal.getPersonalName();
             this.personalEmail = personal.getPersonalEmail();
             this.personalPhoneNumber = personal.getPersonalPhoneNumber();
             this.personalEducation = personal.getPersonalEducation();
             this.personalAddress = personal.getPersonalAddress();
-        }
 
+            this.personalForAddressId = personalAddressRespDto.getPersonalId();
+            this.zoneCode = personalAddressRespDto.getZoneCode();
+            this.roadJibunAddr = personalAddressRespDto.getRoadJibunAddr();
+            this.detailAddress = personalAddressRespDto.getDetailAddress();
+
+        }
     }
 
     @Getter
@@ -83,23 +103,4 @@ public class PersonalRespDto {
         }
 
     }
-
-    @Getter
-    @Setter
-    public static class PersonalAddressRespDto {
-        private Integer personalId;
-        private String zoneCode;
-        private String roadJibunAddr;
-        private String detailAddress;
-
-        @Builder
-        public PersonalAddressRespDto(Integer personalId, String zoneCode, String roadJibunAddr, String detailAddress) {
-            this.personalId = personalId;
-            this.zoneCode = zoneCode;
-            this.roadJibunAddr = roadJibunAddr;
-            this.detailAddress = detailAddress;
-        }
-
-    }
-
 }
