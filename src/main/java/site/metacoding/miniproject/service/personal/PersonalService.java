@@ -93,9 +93,8 @@ public class PersonalService {
 
 	// 이력서 상세 보기
 	@Transactional(readOnly = true)
-	public ResumesDetailRespDto resumesById(Integer resumesId) {
-		Resumes resumesPS = resumesDao.findById(resumesId);
-		ResumesDetailRespDto resumesDetailRespDto = new ResumesDetailRespDto(resumesPS);
+	public ResumesDetailRespDto findByResumesId(Integer resumesId) {
+		ResumesDetailRespDto resumesDetailRespDto = resumesDao.findByResumesId(resumesId);
 		return resumesDetailRespDto;
 	}
 

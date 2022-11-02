@@ -73,14 +73,14 @@ public class PersonalController {
 
 	// 이력서 상세 보기
 	@GetMapping("/resumes/{resumesId}")
-	public ResponseDto<?> resumesById(@PathVariable Integer resumesId) {
+	public ResponseDto<?> findByResumesId(@PathVariable Integer resumesId) {
 		SignedDto<?> principal = (SignedDto<?>) session.getAttribute("principal");
 
 		// PersonalLike personalLike = personalLikeService.좋아요확인(resumesId,
 		// signedDto.getCompanyId());
 		// model.addAttribute("personalLike", personalLike);
 
-		return new ResponseDto<>(1, "내 이력서 목록 보기 성공", personalService.resumesById(resumesId));
+		return new ResponseDto<>(1, "내 이력서 목록 보기 성공", personalService.findByResumesId(resumesId));
 	}
 
 	// 이력서 수정
