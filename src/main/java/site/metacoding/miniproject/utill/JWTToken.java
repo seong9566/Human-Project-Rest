@@ -42,6 +42,7 @@ public class JWTToken {
 
                     String token = null;
 
+                    //쿠키내의 토큰 찾기
                     for (Cookie cookie : cookies) {
                         if (cookie.getName().equals("Authorization"))
                             token = cookie.getValue();
@@ -57,9 +58,10 @@ public class JWTToken {
 
                     DecodedJWT decodedJWT = JWT.require(Algorithm.HMAC512(SecretKey.SECRETKEY.key())).build().verify(token);
                     
-                    log.debug("디버그 : 만료시간 - " + decodedJWT.getExpiresAt().toString());
-                    log.debug("디버그 : 현재시간 - " + now);
+                    // log.debug("디버그 : 만료시간 - " + decodedJWT.getExpiresAt().toString());
+                    // log.debug("디버그 : 현재시간 - " + now);
                     //입력받은 토큰값이 현재시간을 넘지 않았을 경우 true를 반환 - 만료된 토큰이 아닌지 판별
+                    
                     if (decodedJWT.getExpiresAt() != null && decodedJWT.getExpiresAt().after(now)) {
                         return true;
                     }
