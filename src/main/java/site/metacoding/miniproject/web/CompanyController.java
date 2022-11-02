@@ -21,7 +21,7 @@ import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.multipart.MultipartFile;
 
 import lombok.RequiredArgsConstructor;
-import site.metacoding.miniproject.dto.company.CompanyRespDto.CompanyDetailRespDto;
+import site.metacoding.miniproject.dto.company.CompanyRespDto.CompanyAddressRespDto;
 import site.metacoding.miniproject.dto.jobpostingboard.JobPostingBoardReqDto.JobPostingBoardInsertReqDto;
 import site.metacoding.miniproject.dto.user.UserRespDto.SignCompanyDto;
 import site.metacoding.miniproject.dto.user.UserRespDto.SignedDto;
@@ -29,7 +29,6 @@ import site.metacoding.miniproject.service.company.CompanyService;
 import site.metacoding.miniproject.web.dto.request.company.CompanyUpdateDto;
 import site.metacoding.miniproject.web.dto.request.jobpostingboard.JobPostingBoardUpdateDto;
 import site.metacoding.miniproject.web.dto.response.ResponseDto;
-import site.metacoding.miniproject.web.dto.response.company.CompanyAddressDto;
 import site.metacoding.miniproject.web.dto.response.company.CompanyInfoDto;
 import site.metacoding.miniproject.web.dto.response.jobpostingboard.JobPostingBoardDetailDto;
 import site.metacoding.miniproject.web.dto.response.jobpostingboard.JobPostingBoardListDto;
@@ -140,7 +139,7 @@ public class CompanyController {
 	public String jobPostingBoardUpdate(Model model, @PathVariable Integer jobPostingBoardId) {
 		JobPostingBoardDetailDto jobPostingPS = companyService.jobPostingOne(jobPostingBoardId);
 		SignedDto<?> principal = (SignedDto<?>) session.getAttribute("principal");
-		CompanyAddressDto addressPS = companyService.findByAddress(principal.getCompanyId());
+		CompanyAddressRespDto addressPS = companyService.findByAddress(principal.getCompanyId());
 		model.addAttribute("address", addressPS);
 		model.addAttribute("jobPostingPS", jobPostingPS);
 		return "company/jobPostingBoardUpdate";

@@ -2,6 +2,7 @@ package site.metacoding.miniproject.domain.jobpostingboard;
 
 import java.sql.Timestamp;
 
+import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
@@ -23,6 +24,7 @@ public class JobPostingBoard {
 	private Timestamp jobPostingBoardDeadline;
 	private Timestamp createdAt;
 
+	@Builder
 	public JobPostingBoard(JobPostingBoardInsertReqDto jobPostingBoardInsertReqDto) {
 		this.jobPostingSalary = jobPostingBoardInsertReqDto.getJobPostingSalary();
 		this.jobPostingBoardTitle = jobPostingBoardInsertReqDto.getJobPostingBoardTitle();

@@ -48,7 +48,14 @@ public class CompanyService {
 
 	@Transactional(readOnly = true)
 	public CompanyDetailRespDto findByCompany(Integer companyId) {
-		CompanyDetailRespDto companyDetailRespDto = companyDao.findByCompany(companyId);
+		CompanyAddressRespDto companyAddressRespDto = companyDao.findByAddress(companyId);
+		CompanyDetailRespDto companyPS = companyDao.findByCompany(companyId);
+		CompanyDetailRespDto companyDetailRespDto = new CompanyDetailRespDto(companyPS, companyAddressRespDto);
+		System.out.println("디버그 : companyname은?" + companyPS.getCompanyName());
+		// companyDetailRespDto.setZoneCode(companyAddressRespDto.getZoneCode());
+		// companyDetailRespDto.setCompanyForAddressId(companyId);
+		// companyDetailRespDto.setRoadJibunAddr(companyAddressRespDto.getRoadJibunAddr());
+		// companyDetailRespDto.setDetailAddress(companyAddressRespDto.getDetailAddress());
 		System.out.println("디버그: companyID는?" + companyDetailRespDto.getCompanyId());
 		return companyDetailRespDto;
 	}
