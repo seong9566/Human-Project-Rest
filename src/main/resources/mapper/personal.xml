@@ -5,13 +5,6 @@
 	<select id="findAll" resultType="site.metacoding.miniproject.domain.personal.Personal">
 		SELECT * FROM users
 	</select>
-
-	<select id="findById" resultType="site.metacoding.miniproject.domain.personal.Personal">
-	SELECT *
-	FROM personal
-	WHERE personal_id = #{personalId}
-
-	</select>
 	
 	<insert id="insert" useGeneratedKeys="true" keyProperty="personalId" keyColumn="personal_id">
 		INSERT INTO personal (personal_name, personal_email, personal_education, personal_phone_number, personal_address, created_at)
@@ -25,7 +18,7 @@
 	</select>
 	
 	<select id="personalformById"
-		resultType="site.metacoding.miniproject.dto.personal.PersonalRespDto$PersonalDetailRespDto">
+		resultType="site.metacoding.miniproject.domain.personal.Personal">
 		SELECT personal_id, personal_name, personal_email, personal_phone_number
 		, personal_education, personal_address
 		from personal

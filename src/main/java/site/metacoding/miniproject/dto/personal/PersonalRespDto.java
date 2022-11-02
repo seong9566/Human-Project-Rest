@@ -5,7 +5,6 @@ import lombok.NoArgsConstructor;
 import lombok.Setter;
 import site.metacoding.miniproject.domain.personal.Personal;
 import site.metacoding.miniproject.domain.users.Users;
-import site.metacoding.miniproject.web.dto.response.personal.PersonalAddressDto;
 
 public class PersonalRespDto {
 
@@ -16,6 +15,14 @@ public class PersonalRespDto {
         private String zoneCode;
         private String roadJibunAddr;
         private String detailAddress;
+
+        public PersonalAddressRespDto(Integer personalId, String zoneCode, String roadJibunAddr, String detailAddress) {
+            this.personalId = personalId;
+            this.zoneCode = zoneCode;
+            this.roadJibunAddr = roadJibunAddr;
+            this.detailAddress = detailAddress;
+
+        }
     }
 
     @Getter
@@ -27,7 +34,6 @@ public class PersonalRespDto {
         private String personalEmail;
         private String personalPhoneNumber;
         private String personalEducation;
-        private String personalAddress;
 
         private Integer personalForAddressId;
         private String zoneCode;
@@ -41,7 +47,6 @@ public class PersonalRespDto {
             this.personalEmail = personal.getPersonalEmail();
             this.personalPhoneNumber = personal.getPersonalPhoneNumber();
             this.personalEducation = personal.getPersonalEducation();
-            this.personalAddress = personal.getPersonalAddress();
 
             this.personalForAddressId = personalAddressRespDto.getPersonalId();
             this.zoneCode = personalAddressRespDto.getZoneCode();

@@ -152,7 +152,10 @@ public class PersonalService {
 	// 개인 정보에 보기
 	@Transactional(readOnly = true)
 	public PersonalDetailRespDto findByPersonal(Integer personalId) {
-		PersonalDetailRespDto personalDetailRespDto = personalDao.personalformById(personalId);
+		PersonalAddressRespDto personalAddressRespDto = personalDao.personalAddressById(personalId);
+		Personal personalPS = personalDao.personalformById(personalId);
+		PersonalDetailRespDto personalDetailRespDto = new PersonalDetailRespDto(personalPS, personalAddressRespDto);
+
 		return personalDetailRespDto;
 	}
 
@@ -160,7 +163,6 @@ public class PersonalService {
 	@Transactional(readOnly = true)
 	public PersonalUpdateFormRespDto personalUpdateById(Integer personalId) {
 		PersonalUpdateFormRespDto personalUpdateFormRespDto = personalDao.personalUpdateById(personalId);
-
 		return personalUpdateFormRespDto;
 	}
 
