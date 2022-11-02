@@ -6,6 +6,12 @@
 		SELECT * FROM users
 	</select>
 	
+	<select id="findById" resultType="site.metacoding.miniproject.domain.personal.Personal">
+	SELECT *
+	FROM personal
+	WHERE personal_id = #{personalId}
+
+	</select>
 	<insert id="insert" useGeneratedKeys="true" keyProperty="personalId" keyColumn="personal_id">
 		INSERT INTO personal (personal_name, personal_email, personal_education, personal_phone_number, personal_address, created_at)
 		VALUES(#{personalName},#{personalEmail}, #{personalEducation}, #{personalPhoneNumber}, #{personalAddress}, NOW())
