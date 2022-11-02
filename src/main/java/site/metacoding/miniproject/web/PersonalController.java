@@ -38,7 +38,6 @@ import site.metacoding.miniproject.web.dto.response.company.CompanyMainDto;
 import site.metacoding.miniproject.web.dto.response.etc.PagingDto;
 import site.metacoding.miniproject.web.dto.response.jobpostingboard.JobPostingBoardDetailDto;
 import site.metacoding.miniproject.web.dto.response.personal.PersonalAddressDto;
-import site.metacoding.miniproject.web.dto.response.personal.PersonalFormDto;
 import site.metacoding.miniproject.web.dto.response.personal.PersonalMainDto;
 import site.metacoding.miniproject.web.dto.response.resume.ResumesDetailDto;
 
@@ -69,6 +68,7 @@ public class PersonalController {
 		SignPersonalDto signPersonalDto = (SignPersonalDto) principal.getUserInfo();
 		resumesAllRespDto.setPersonalId(signPersonalDto.getPersonalId());
 		return new ResponseDto<>(1, "내 이력서 목록 보기 성공", null);
+
 	}
 
 	// 이력서 상세 보기
@@ -76,6 +76,10 @@ public class PersonalController {
 	public String resumesById(@PathVariable Integer resumesId, Model model) {
 		SignedDto<?> signedDto = (SignedDto<?>) session.getAttribute("principal");
 		// PersonalLike personalLike = personalLikeService.좋아요확인(resumesId,
+<<<<<<< HEAD
+=======
+		//
+>>>>>>> 9a4053b327de71b7053f2977ba81226a9c68054a
 		// signedDto.getCompanyId());
 		model.addAttribute("personalLike", personalLike);
 		ResumesDetailDto detailResumesDtoPS = personalService.resumesById(resumesId);
@@ -241,24 +245,21 @@ public class PersonalController {
 	}
 
 	// 내정보 보기
-	@GetMapping("/personal/personalInfo")
-	public String form(Model model) {
-		SignedDto<?> principal = (SignedDto<?>) session.getAttribute("principal");
-		PersonalFormDto personalformPS = personalService.personalformById(principal.getPersonalId());
-		PersonalAddressDto personalAddressPS = personalService.personalAddress(principal.getPersonalId());
-		model.addAttribute("personalAddress", personalAddressPS);
-		model.addAttribute("personalform", personalformPS);
-		return "personal/personalInfo";
+	@GetMapping("/api/personal/inform")
+	public ResponseDto<?> perosnalDetail() {
+		SignedDto<SignPersonalDto> principal = (SignedDto<SignPersonalDto>) session.getAttribute("principal");
+		return new ResponseDto<>(1, "성공", personalService.findByPersonal(principal.getUserInfo().getPersonalId()));
+		// principal.getUserinfo().getPersonalId()
+
 	}
 
-	@GetMapping("/personal/personalUpdate")
-	public String update(Model model) {
+	// 내정보 수정 보기
+	@GetMapping("/api/personal/inform/informUpdate")
+	public ResponseDto<?> personalupdate() {
 		SignedDto<?> principal = (SignedDto<?>) session.getAttribute("principal");
 		PersonalUpdateDto personalUpdateFormPS = personalService.personalUpdateById(principal.getPersonalId());
 		PersonalAddressDto personalAddressPS = personalService.personalAddress(principal.getPersonalId());
-		model.addAttribute("personalAddress", personalAddressPS);
-		model.addAttribute("personalUpdateForm", personalUpdateFormPS);
-		return "personal/personalUpdate";
+		return new ResponseDto<>(1, "성공", null);
 	}
 
 	@PutMapping("/personal/personalUpdate")

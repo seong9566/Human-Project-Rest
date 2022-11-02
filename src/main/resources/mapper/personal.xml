@@ -25,15 +25,15 @@
 	</select>
 	
 	<select id="personalformById"
-		resultType="site.metacoding.miniproject.web.dto.response.personal.PersonalFormDto">
-		SELECT personal_name, personal_email, personal_phone_number
-		, personal_education
+		resultType="site.metacoding.miniproject.dto.personal.PersonalRespDto$PersonalDetailRespDto">
+		SELECT personal_id, personal_name, personal_email, personal_phone_number
+		, personal_education, personal_address
 		from personal
 		WHERE personal_id = #{personalId}
 	</select>
 
 	<select id="personalAddressById"
-		resultType="site.metacoding.miniproject.web.dto.response.personal.PersonalAddressDto">
+		resultType="site.metacoding.miniproject.dto.personal.PersonalRespDto$PersonalDetailRespDto">
 		SELECT personal_id,
 		SUBSTRING_INDEX(SUBSTRING_INDEX(personal_address,',',1),',',-1) AS
 		zonecode,
@@ -45,16 +45,17 @@
 		where personal_id = #{personalId}
 	</select>
 
-	<select id="personalUpdateById"
+	<!-- <select id="personalUpdateById"
 		resultType="site.metacoding.miniproject.web.dto.request.personal.PersonalUpdateDto">
-		SELECT * FROM personal
+		SELECT personal_id, personal_name, personal_email, personal_education, personal_phone_number,personal_address,
+		login_password
+		FROM personal
 		left OUTER JOIN users
 		ON
 		personal.personal_id = users.personal_id
 		WHERE personal.personal_id =
 		#{personalId}
-	</select>
-
+	</select> -->
 
 	<update id="update">
 		UPDATE personal
