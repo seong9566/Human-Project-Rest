@@ -26,7 +26,6 @@ import site.metacoding.miniproject.dto.personal.PersonalRespDto.PersonalUpdateRe
 
 import site.metacoding.miniproject.dto.resumes.ResumesReqDto.ResumesInsertReqDto;
 import site.metacoding.miniproject.dto.resumes.ResumesRespDto.ResumesAllRespDto;
-import site.metacoding.miniproject.dto.resumes.ResumesRespDto.ResumesDetailRespDto;
 import site.metacoding.miniproject.dto.user.UserRespDto.SignPersonalDto;
 import site.metacoding.miniproject.dto.user.UserRespDto.SignedDto;
 import site.metacoding.miniproject.service.company.CompanyService;
