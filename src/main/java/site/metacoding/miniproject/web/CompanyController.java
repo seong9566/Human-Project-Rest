@@ -21,7 +21,9 @@ import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.multipart.MultipartFile;
 
 import lombok.RequiredArgsConstructor;
+import site.metacoding.miniproject.dto.company.CompanyReqDto.CompanyUpdateReqDto;
 import site.metacoding.miniproject.dto.company.CompanyRespDto.CompanyAddressRespDto;
+import site.metacoding.miniproject.dto.company.CompanyRespDto.CompanyUpdateRespDto;
 import site.metacoding.miniproject.dto.jobpostingboard.JobPostingBoardReqDto.JobPostingBoardInsertReqDto;
 import site.metacoding.miniproject.dto.user.UserRespDto.SignCompanyDto;
 import site.metacoding.miniproject.dto.user.UserRespDto.SignedDto;
@@ -29,7 +31,6 @@ import site.metacoding.miniproject.service.company.CompanyService;
 import site.metacoding.miniproject.web.dto.request.company.CompanyUpdateDto;
 import site.metacoding.miniproject.web.dto.request.jobpostingboard.JobPostingBoardUpdateDto;
 import site.metacoding.miniproject.web.dto.response.ResponseDto;
-import site.metacoding.miniproject.web.dto.response.company.CompanyInfoDto;
 import site.metacoding.miniproject.web.dto.response.jobpostingboard.JobPostingBoardDetailDto;
 import site.metacoding.miniproject.web.dto.response.jobpostingboard.JobPostingBoardListDto;
 
@@ -48,15 +49,24 @@ public class CompanyController {
 		return new ResponseDto<>(1, "성공", companyService.findByCompany(signCompanyDto.getCompanyId()));
 	}
 
-	// 회사 정보 업데이트
-	@GetMapping("/company/companyInform/companyUpdate")
-	public String companyUpdateForm(Model model) {
+	// 내정보 수정 보기
+	@GetMapping("/api/company/inform/informUpdate")
+	public ResponseDto<?> companyInformUpdate() {
 		SignedDto<?> principal = (SignedDto<?>) session.getAttribute("principal");
-		CompanyInfoDto companyPS = companyService.findCompanyInfo(principal.getCompanyId());
-		CompanyAddressDto addressPS = companyService.findByAddress(principal.getCompanyId());
-		model.addAttribute("address", addressPS);
-		model.addAttribute("companyInfo", companyPS);
-		return "company/companyUpdate";
+		SignCompanyDto signCompanyDto = (SignCompanyDto) principal.getUserInfo();
+		return new ResponseDto<>(1, "성공", companyService.companyUpdateById(signCompanyDto.getCompanyId()));
+
+	}
+
+	// 내정보 수정
+	@PutMapping("/api/company/update")
+	public @ResponseBody ResponseDto<?> companyUpdate(@RequestBody CompanyUpdateReqDto companyUpdateReqDto) {
+		// ValidationCheckUtil.valCheckToUpdatePersonal(personalUpdatReqDto);
+		SignedDto<?> principal = (SignedDto<?>) session.getAttribute("principal");
+		SignCompanyDto signCompanyDto = (SignCompanyDto) principal.getUserInfo();
+		return new ResponseDto<>(1, "수정 성공",
+				companyService.updateCompany(principal.getUsersId(), signCompanyDto.getCompanyId(),
+						companyUpdateReqDto));
 	}
 
 	@PutMapping(value = "/company/companyInform/update")

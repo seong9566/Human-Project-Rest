@@ -6,7 +6,7 @@ import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
-import site.metacoding.miniproject.web.dto.request.company.CompanyUpdateDto;
+import site.metacoding.miniproject.dto.company.CompanyReqDto.CompanyUpdateReqDto;
 import site.metacoding.miniproject.web.dto.request.personal.PersonalUpdateDto;
 
 @Getter
@@ -20,8 +20,6 @@ public class Users {
 	private Integer companyId;
 	private Timestamp createdAt;
 
-	
-
 	@Builder
 	public Users(Integer usersId, String loginId, String loginPassword, Integer personalId, Integer companyId,
 			Timestamp createdAt) {
@@ -33,9 +31,8 @@ public class Users {
 		this.createdAt = createdAt;
 	}
 
-
-	public void update(CompanyUpdateDto companyUpdateDto) {
-		this.loginPassword = companyUpdateDto.getLoginPassword();
+	public void update(CompanyUpdateReqDto companyUpdateReqDto) {
+		this.loginPassword = companyUpdateReqDto.getLoginPassword();
 	}
 
 	public void update(PersonalUpdateDto personalUpdateDto) {

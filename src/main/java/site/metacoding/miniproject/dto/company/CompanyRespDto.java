@@ -3,6 +3,8 @@ package site.metacoding.miniproject.dto.company;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
+import site.metacoding.miniproject.domain.company.Company;
+import site.metacoding.miniproject.domain.users.Users;
 
 public class CompanyRespDto {
 
@@ -52,6 +54,57 @@ public class CompanyRespDto {
             this.zoneCode = companyAddressRespDto.getZoneCode();
             this.roadJibunAddr = companyAddressRespDto.getRoadJibunAddr();
             this.detailAddress = companyAddressRespDto.getDetailAddress();
+        }
+
+    }
+
+    @Getter
+    @Setter
+    @NoArgsConstructor
+    public static class CompanyUpdateFormRespDto {
+        private Integer companyId;
+        private String companyName;
+        private String companyPhoneNumber;
+        private String companyEmail;
+        private String companyPicture;
+        private String companyAddress;
+        private String loginPassword;
+
+        public CompanyUpdateFormRespDto(CompanyUpdateFormRespDto companyUpdateFormRespDto) {
+
+            this.companyId = companyUpdateFormRespDto.getCompanyId();
+            this.companyName = companyUpdateFormRespDto.getCompanyName();
+            this.companyEmail = companyUpdateFormRespDto.getCompanyEmail();
+            this.companyPhoneNumber = companyUpdateFormRespDto.getCompanyPhoneNumber();
+            this.companyAddress = companyUpdateFormRespDto.getCompanyAddress();
+            this.companyPicture = companyUpdateFormRespDto.getCompanyPicture();
+            this.loginPassword = companyUpdateFormRespDto.getLoginPassword();
+
+        }
+
+    }
+
+    @Getter
+    @Setter
+    @NoArgsConstructor
+    public static class CompanyUpdateRespDto {
+        private Integer companyId;
+        private String companyName;
+        private String companyPhoneNumber;
+        private String companyEmail;
+        private String companyPicture;
+        private String companyAddress;
+        private String loginPassword;
+
+        public CompanyUpdateRespDto(Company company, Users users) {
+            this.companyId = company.getCompanyId();
+            this.companyName = company.getCompanyName();
+            this.companyEmail = company.getCompanyEmail();
+            this.companyPhoneNumber = company.getCompanyPhoneNumber();
+            this.companyPicture = company.getCompanyAddress();
+            this.companyAddress = company.getCompanyPicture();
+
+            this.loginPassword = users.getLoginPassword();
         }
 
     }
