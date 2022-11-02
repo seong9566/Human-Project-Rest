@@ -1,3 +1,13 @@
+### 작업시 참고 사항
+- @RestController 사용
+- Dto 작성시 Req, Resp 내부에 static 만들어 사용
+- Dto생성 후 Mybatis 경로 설정시 static클래스는 $를 붙여줘야함.
+- Entity 생성자에는 @Builder 사용 (이미 생성자로 되었다면 나머지 작업 끝난 후 추후 수정)
+- 상세보기는 기존 inform을 -> detail로 작성
+- Service, Controller, Dao 네이밍시 항상 앞에 동사옴 -> findById, updateByPersonal, insertResumes
+- List보기는 뒤에 List를 붙임  -> jobPostingBoardList
+- 주소 앞엔 항상 /api가 붙인다.
+
 ``` DB 사용자 설정
 CREATE USER 'jobsmatch'@'%' IDENTIFIED BY '1234';
 GRANT ALL PRIVILEGES ON *.* TO 'jobsmatch'@'%';
