@@ -40,18 +40,12 @@ public class CompanyController {
 	private final HttpSession session;
 	private final CompanyService companyService;
 
-	@GetMapping("/api/address") // 테스트로 임시로 넣어놓음.
-	public ResponseDto<?> address() {
-		SignedDto<SignCompanyDto> principal = (SignedDto<SignCompanyDto>) session.getAttribute("principal");
-		return new ResponseDto<>(1, "성공", companyService.findByAddress(principal.getUserInfo().getCompanyId()));
-	}
-
 	// 회사 정보 보기
-	@GetMapping("/api/company/inform")
-	public ResponseDto<?> CompanyInform() {
-		SignedDto<SignCompanyDto> principal = (SignedDto<SignCompanyDto>) session.getAttribute("principal");
-		return new ResponseDto<>(1, "성공",
-				companyService.findByCompany(principal.getUserInfo().getCompanyId()));
+	@GetMapping("/api/company/detail")
+	public ResponseDto<?> findByCompany() {
+		SignedDto principal = (SignedDto<?>) session.getAttribute("principal");
+		SignCompanyDto signCompanyDto = (SignCompanyDto) principal.getUserInfo();
+		return new ResponseDto<>(1, "성공", companyService.findByCompany(signCompanyDto.getCompanyId()));
 	}
 
 	// 회사 정보 업데이트

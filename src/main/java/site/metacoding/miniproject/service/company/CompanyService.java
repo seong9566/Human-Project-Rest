@@ -75,19 +75,21 @@ public class CompanyService {
 	// 채용공고 작성 (category,career,jobPostingboard)
 	@Transactional(rollbackFor = Exception.class)
 	public JobPostingBoardInsertRespDto insertJobPostingBoard(JobPostingBoardInsertReqDto jobPostingBoardInsertReqDto) {
-		Category category = new Category(jobPostingBoardInsertReqDto);
-		categoryDao.insert(category);
 
-		Career career = new Career(jobPostingBoardInsertReqDto);
-		careerDao.insert(career);
+		Category categoryPS = jobPostingBoardInsertReqDto.JobPostingBoardInsertRespDtoToCategoryEntity();
+		categoryDao.insert(categoryPS);
 
-		JobPostingBoard jobPostingBoard = new JobPostingBoard(jobPostingBoardInsertReqDto);
-		jobPostingBoard.setJobPostingBoardCategoryId(category.getCategoryId());
-		jobPostingBoard.setJobPostingBoardCareerId(career.getCareerId());
-		jobPostingBoardDao.insert(jobPostingBoard);
+		Career careerPS = jobPostingBoardInsertReqDto.JobPostingBoardInsertRespDtoToCareerEntity();
+		careerDao.insert(careerPS);
 
-		JobPostingBoardInsertRespDto jobPostingBoardInsertRespDto = new JobPostingBoardInsertRespDto(jobPostingBoard,
-				category, career);
+		JobPostingBoard jobPostingBoardPS = jobPostingBoardInsertReqDto
+				.JobPostingBoardInsertReqDtoJobPostingBoardToEntity();
+		jobPostingBoardPS.setJobPostingBoardCategoryId(categoryPS.getCategoryId());
+		jobPostingBoardPS.setJobPostingBoardCareerId(careerPS.getCareerId());
+		jobPostingBoardDao.insert(jobPostingBoardPS);
+
+		JobPostingBoardInsertRespDto jobPostingBoardInsertRespDto = new JobPostingBoardInsertRespDto(jobPostingBoardPS,
+				categoryPS, careerPS);
 		return jobPostingBoardInsertRespDto;
 	}
 

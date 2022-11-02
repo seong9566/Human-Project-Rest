@@ -5,6 +5,9 @@ import java.sql.Timestamp;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
+import site.metacoding.miniproject.domain.career.Career;
+import site.metacoding.miniproject.domain.category.Category;
+import site.metacoding.miniproject.domain.jobpostingboard.JobPostingBoard;
 
 public class JobPostingBoardReqDto {
 
@@ -12,6 +15,7 @@ public class JobPostingBoardReqDto {
     @Setter
     @NoArgsConstructor
     public static class JobPostingBoardInsertReqDto {
+
         private Integer companyId;
         private Integer jobPostingSalary;
         private String jobPostingBoardTitle;
@@ -30,6 +34,33 @@ public class JobPostingBoardReqDto {
         private Boolean categoryDevops;
 
         private Timestamp jobPostingBoardDeadline;
+
+        public JobPostingBoard JobPostingBoardInsertReqDtoJobPostingBoardToEntity() {
+            return JobPostingBoard.builder()
+                    .jobPostingBoardTitle(jobPostingBoardTitle)
+                    .jobPostingBoardContent(jobPostingBoardContent)
+                    .jobPostingBoardPlace(jobPostingBoardPlace)
+                    .jobPostingSalary(jobPostingSalary)
+                    .jobPostingBoardDeadline(jobPostingBoardDeadline)
+                    .build();
+        }
+
+        public Category JobPostingBoardInsertRespDtoToCategoryEntity() {
+            return Category.builder()
+                    .categoryFrontend(categoryFrontend)
+                    .categoryBackend(categoryBackend)
+                    .categoryDevops(categoryDevops)
+                    .build();
+        }
+
+        public Career JobPostingBoardInsertRespDtoToCareerEntity() {
+            return Career.builder()
+                    .oneYearLess(oneYearLess)
+                    .twoYearOver(twoYearOver)
+                    .threeYearOver(threeYearOver)
+                    .fiveYearOver(fiveYearOver)
+                    .build();
+        }
     }
 
 }

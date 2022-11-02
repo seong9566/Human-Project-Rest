@@ -25,12 +25,20 @@ public class JobPostingBoard {
 	private Timestamp createdAt;
 
 	@Builder
-	public JobPostingBoard(JobPostingBoardInsertReqDto jobPostingBoardInsertReqDto) {
-		this.jobPostingSalary = jobPostingBoardInsertReqDto.getJobPostingSalary();
-		this.jobPostingBoardTitle = jobPostingBoardInsertReqDto.getJobPostingBoardTitle();
-		this.jobPostingBoardContent = jobPostingBoardInsertReqDto.getJobPostingBoardContent();
-		this.jobPostingBoardPlace = jobPostingBoardInsertReqDto.getJobPostingBoardPlace();
-		this.jobPostingBoardDeadline = jobPostingBoardInsertReqDto.getJobPostingBoardDeadline();
+	public JobPostingBoard(Integer jobPostingBoardId, Integer companyId, Integer jobPostingSalary,
+			Integer jobPostingBoardCareerId, Integer jobPostingBoardCategoryId, String jobPostingBoardTitle,
+			String jobPostingBoardContent, String jobPostingBoardPlace, Timestamp jobPostingBoardDeadline,
+			Timestamp createdAt) {
+		this.jobPostingBoardId = jobPostingBoardId;
+		this.companyId = companyId;
+		this.jobPostingSalary = jobPostingSalary;
+		this.jobPostingBoardCareerId = jobPostingBoardCareerId;
+		this.jobPostingBoardCategoryId = jobPostingBoardCategoryId;
+		this.jobPostingBoardTitle = jobPostingBoardTitle;
+		this.jobPostingBoardContent = jobPostingBoardContent;
+		this.jobPostingBoardPlace = jobPostingBoardPlace;
+		this.jobPostingBoardDeadline = jobPostingBoardDeadline;
+		this.createdAt = createdAt;
 	}
 
 	public JobPostingBoard(Integer jobPostingBoardId, JobPostingBoardUpdateDto updateDto) {
