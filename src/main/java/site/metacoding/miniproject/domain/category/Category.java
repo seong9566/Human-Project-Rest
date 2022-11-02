@@ -19,7 +19,7 @@ public class Category {
 	private Boolean categoryDevops;
 	private Timestamp createdAt;
 
-	// 이력서 작성
+	// 이력서 작성, 수정
 	@Builder
 	public Category(Boolean categoryFrontend, Boolean categoryBackend, Boolean categoryDevops) {
 		this.categoryFrontend = categoryFrontend;
@@ -27,14 +27,15 @@ public class Category {
 		this.categoryDevops = categoryDevops;
 	}
 
-	// 이력서 수정
-	@Builder
-	public Category(Integer categoryId, Boolean categoryFrontend, Boolean categoryBackend, Boolean categoryDevops) {
-		this.categoryId = categoryId;
-		this.categoryFrontend = categoryFrontend;
-		this.categoryBackend = categoryBackend;
-		this.categoryDevops = categoryDevops;
-	}
+	// // 이력서 수정
+	// @Builder
+	// public Category(Integer categoryId, Boolean categoryFrontend, Boolean
+	// categoryBackend, Boolean categoryDevops) {
+	// this.categoryId = categoryId;
+	// this.categoryFrontend = categoryFrontend;
+	// this.categoryBackend = categoryBackend;
+	// this.categoryDevops = categoryDevops;
+	// }
 
 	// 채용 공고 작성
 	public Category(JobPostingBoardInsertReqDto jobPostingBoardInsertReqDto) {

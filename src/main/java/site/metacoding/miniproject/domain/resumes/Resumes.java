@@ -25,7 +25,7 @@ public class Resumes {
 	private String resumesPlace;
 	private Timestamp createdAt;
 
-	// 이력서 작성
+	// 이력서 작성, 수정
 	@Builder
 	public Resumes(String resumesTitle, String resumesPicture, String resumesIntroduce, String resumesPlace) {
 		this.resumesTitle = resumesTitle;
@@ -34,14 +34,15 @@ public class Resumes {
 		this.resumesPlace = resumesPlace;
 	}
 
-	// 이력서 수정
-	@Builder
-	public Resumes(int resumesId, String resumesTitle, String resumesPicture, String resumesIntroduce,
-			String resumesPlace) {
-		this.resumesId = resumesId;
-		this.resumesTitle = resumesTitle;
-		this.resumesPicture = resumesPicture;
-		this.resumesIntroduce = resumesIntroduce;
-		this.resumesPlace = resumesPlace;
-	}
+	// // 이력서 수정
+	// @Builder
+	// public Resumes(int resumesId, String resumesTitle, String resumesPicture,
+	// String resumesIntroduce,
+	// String resumesPlace) {
+	// this.resumesId = resumesId;
+	// this.resumesTitle = resumesTitle;
+	// this.resumesPicture = resumesPicture;
+	// this.resumesIntroduce = resumesIntroduce;
+	// this.resumesPlace = resumesPlace;
+	// }
 }

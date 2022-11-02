@@ -23,11 +23,11 @@ import site.metacoding.miniproject.domain.users.Users;
 import site.metacoding.miniproject.domain.users.UsersDao;
 import site.metacoding.miniproject.dto.personal.PersonalRespDto.PersonalDetailRespDto;
 import site.metacoding.miniproject.dto.resumes.ResumesReqDto.ResumesInsertReqDto;
+import site.metacoding.miniproject.dto.resumes.ResumesReqDto.ResumesUpdateReqDto;
 import site.metacoding.miniproject.dto.resumes.ResumesRespDto.ResumesAllRespDto;
 import site.metacoding.miniproject.dto.resumes.ResumesRespDto.ResumesDetailRespDto;
 import site.metacoding.miniproject.dto.resumes.ResumesRespDto.ResumesInsertRespDto;
 import site.metacoding.miniproject.web.dto.request.personal.PersonalUpdateDto;
-import site.metacoding.miniproject.web.dto.request.resume.ResumesUpdateDto;
 import site.metacoding.miniproject.web.dto.response.company.CompanyMainDto;
 import site.metacoding.miniproject.web.dto.response.etc.PagingDto;
 import site.metacoding.miniproject.web.dto.response.personal.PersonalAddressDto;
@@ -100,20 +100,37 @@ public class PersonalService {
 
 	// 이력서 수정 하기
 	@Transactional(rollbackFor = RuntimeException.class)
-	public void updateResumes(ResumesUpdateDto updateResumesDto) {
+	public ResumesUpdateReqDto updateResumes(ResumesUpdateReqDto resumesUpdateReqDto) {
 
-		Resumes resumes = new Resumes(updateResumesDto.getResumesId(), updateResumesDto);
+		Resumes resumes = resumesDao.findById(resumesUpdateReqDto.getResumesId());
+		resumesUpdateReqDto.setCategoryId(resumes.getResumesCategoryId());
+		resumesUpdateReqDto.setPortfolioId(resumes.getPortfolioId());
+		resumesUpdateReqDto.setCareerId(resumes.getCareerId());
+
+		try {
+			resumesUpdateReqDto.ResumesUpdateDtoPictureSet();
+		} catch (Exception e) {
+			throw new ApiException("멀티파트 폼 에러");
+		}
+
+		resumes = resumesUpdateReqDto.ResumesUpdateReqDtoToResumesEntity();
 		resumesDao.update(resumes);
 
-		Category category = new Category(updateResumesDto.getCategoryId(), updateResumesDto);
+		Category category = categoryDao.findById(resumesUpdateReqDto.getCategoryId());
+		category = resumesUpdateReqDto
+				.ResumesUpdateReqDtoToCategoryEntity();
 		categoryDao.update(category);
 
-		Portfolio portfolio = new Portfolio(updateResumesDto.getPortfolioId(), updateResumesDto);
+		Portfolio portfolio = portfolioDao.findById(resumesUpdateReqDto.getPortfolioId());
+		resumesUpdateReqDto
+				.ResumesUpdateReqDtoToPortfolioEntity();
 		portfolioDao.update(portfolio);
 
-		Career career = new Career(updateResumesDto.getCareerId(), updateResumesDto);
+		Career career = careerDao.findById(resumesUpdateReqDto.getCareerId());
+		career = resumesUpdateReqDto.ResumesUpdateReqDtoToCareerEntity();
 		careerDao.update(career);
 
+		return resumesUpdateReqDto;
 	}
 
 	// 이력서 삭제

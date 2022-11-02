@@ -117,9 +117,58 @@ public class ResumesReqDto {
                 private Integer portfolioId;
                 private Integer categoryId;
                 private Integer resumesCategoryId;
+                private MultipartFile file;
+
+                // 사진
+                public void ResumesUpdateDtoPictureSet() throws Exception {
+                        int pos = file.getOriginalFilename().lastIndexOf('.');
+                        String extension = file.getOriginalFilename().substring(pos + 1);
+                        String filePath = "C:\\Temp\\img\\";
+                        // String filePath = "/Users/ihyeonseong/Desktop/img";//Mac전용 경로
+                        String imgSaveName = UUID.randomUUID().toString();
+                        String imgName = imgSaveName + "." + extension;
+                        File makeFileFolder = new File(filePath);
+                        if (!makeFileFolder.exists()) {
+                                if (!makeFileFolder.mkdir()) {
+                                        throw new RuntimeException("File.mkdir():Fail.");
+                                }
+                        }
+                        File dest = new File(filePath, imgName);
+                        Files.copy(file.getInputStream(), dest.toPath());
+                        this.resumesPicture = imgName;
+                }
+
+                public Resumes ResumesUpdateReqDtoToResumesEntity() {
+                        return Resumes.builder()
+                                        .resumesTitle(resumesTitle)
+                                        .resumesPicture(resumesPicture)
+                                        .resumesIntroduce(resumesIntroduce)
+                                        .resumesPlace(resumesPlace)
+                                        .build();
+                }
+
+                public Category ResumesUpdateReqDtoToCategoryEntity() {
+                        return Category.builder()
+                                        .categoryFrontend(categoryFrontend)
+                                        .categoryBackend(categoryBackend)
+                                        .categoryDevops(categoryDevops)
+                                        .build();
+                }
+
+                public Career ResumesUpdateReqDtoToCareerEntity() {
+                        return Career.builder()
+                                        .oneYearLess(oneYearLess)
+                                        .twoYearOver(twoYearOver)
+                                        .threeYearOver(threeYearOver)
+                                        .fiveYearOver(fiveYearOver)
+                                        .build();
+                }
 
                 public Portfolio ResumesUpdateReqDtoToPortfolioEntity() {
-
+                        return Portfolio.builder()
+                                        .portfolioFile(portfolioFile)
+                                        .portfolioSource(portfolioSource)
+                                        .build();
                 }
         }
 }

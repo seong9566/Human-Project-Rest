@@ -22,8 +22,8 @@ import org.springframework.web.multipart.MultipartFile;
 
 import lombok.RequiredArgsConstructor;
 import site.metacoding.miniproject.dto.resumes.ResumesReqDto.ResumesInsertReqDto;
+import site.metacoding.miniproject.dto.resumes.ResumesReqDto.ResumesUpdateReqDto;
 import site.metacoding.miniproject.dto.resumes.ResumesRespDto.ResumesAllRespDto;
-import site.metacoding.miniproject.dto.resumes.ResumesRespDto.ResumesDetailRespDto;
 import site.metacoding.miniproject.dto.user.UserRespDto.SignPersonalDto;
 import site.metacoding.miniproject.dto.user.UserRespDto.SignedDto;
 import site.metacoding.miniproject.service.company.CompanyService;
@@ -31,7 +31,6 @@ import site.metacoding.miniproject.service.personal.PersonalLikeService;
 import site.metacoding.miniproject.service.personal.PersonalService;
 import site.metacoding.miniproject.utill.ValidationCheckUtil;
 import site.metacoding.miniproject.web.dto.request.personal.PersonalUpdateDto;
-import site.metacoding.miniproject.web.dto.request.resume.ResumesUpdateDto;
 import site.metacoding.miniproject.web.dto.response.ResponseDto;
 import site.metacoding.miniproject.web.dto.response.company.CompanyAddressDto;
 import site.metacoding.miniproject.web.dto.response.company.CompanyInfoDto;
@@ -40,7 +39,6 @@ import site.metacoding.miniproject.web.dto.response.etc.PagingDto;
 import site.metacoding.miniproject.web.dto.response.jobpostingboard.JobPostingBoardDetailDto;
 import site.metacoding.miniproject.web.dto.response.personal.PersonalAddressDto;
 import site.metacoding.miniproject.web.dto.response.personal.PersonalMainDto;
-import site.metacoding.miniproject.web.dto.response.resume.ResumesDetailDto;
 
 @RequiredArgsConstructor
 @RestController
@@ -90,7 +88,8 @@ public class PersonalController {
 
 	@PutMapping(value = "/resumes/update/{resumesId}")
 	public @ResponseBody ResponseDto<?> updateResumes(@PathVariable Integer resumesId,
-			@RequestPart("file") MultipartFile file, @RequestPart("ResumesUpdateDto") ResumesUpdateDto resumesUpdateDto)
+			@RequestPart("file") MultipartFile file,
+			@RequestPart("ResumesUpdateReqDto") ResumesUpdateReqDto resumesUpdateReqDto)
 			throws Exception {
 		int pos = file.getOriginalFilename().lastIndexOf('.');
 		String extension = file.getOriginalFilename().substring(pos + 1);
@@ -110,10 +109,9 @@ public class PersonalController {
 		} catch (IOException e) {
 			e.printStackTrace();
 		}
-		resumesUpdateDto.setResumesPicture(imgName);
-		resumesUpdateDto.setResumesId(resumesId);
-		personalService.updateResumes(resumesUpdateDto);
-		return new ResponseDto<>(1, "이력서 수정 성공", null);
+		resumesUpdateReqDto.setResumesPicture(imgName);
+		resumesUpdateReqDto.setResumesId(resumesId);
+		return new ResponseDto<>(1, "이력서 수정 성공", personalService.updateResumes(resumesUpdateReqDto));
 	}
 
 	// 이력서 삭제 하기
