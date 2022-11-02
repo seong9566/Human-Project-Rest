@@ -53,15 +53,6 @@ public class PersonalService {
 			throw new ApiException("멀티파트 폼 에러");
 		}
 
-<<<<<<< HEAD
-		Category categoryPS = resumesInsertReqDto.ResumesInsertRespDtoToCategoryEntity();
-		categoryDao.insert(categoryPS);
-
-		Portfolio portfolioPS = resumesInsertReqDto.ResumesInsertRespDtoToPortfolioEntity();
-		portfolioDao.insert(portfolioPS);
-
-		Career careerPS = resumesInsertReqDto.ResumesInsertRespDtoToCareerEntity();
-=======
 		Category categoryPS = resumesInsertReqDto.ResumesInsertReqDtoToCategoryEntity();
 		categoryDao.insert(categoryPS);
 
@@ -69,7 +60,6 @@ public class PersonalService {
 		portfolioDao.insert(portfolioPS);
 
 		Career careerPS = resumesInsertReqDto.ResumesInsertReqDtoToCareerEntity();
->>>>>>> b24982f297cf6545f8bbd36fce512ce1e575c09f
 		careerDao.insert(careerPS);
 
 		// if 체크
@@ -78,11 +68,7 @@ public class PersonalService {
 			throw new ApiException("이력서 작성 에러");
 		}
 
-<<<<<<< HEAD
-		Resumes resumesPS = resumesInsertReqDto.ResumesInsertRespDtoToResumesEntity();
-=======
 		Resumes resumesPS = resumesInsertReqDto.ResumesInsertReqDtoToResumesEntity();
->>>>>>> b24982f297cf6545f8bbd36fce512ce1e575c09f
 		resumesPS.setCareerId(careerPS.getCareerId());
 		resumesPS.setPortfolioId(portfolioPS.getPortfolioId());
 		resumesPS.setResumesCategoryId(categoryPS.getCategoryId());
@@ -107,22 +93,16 @@ public class PersonalService {
 
 	// 이력서 상세 보기
 	@Transactional(readOnly = true)
-<<<<<<< HEAD
 	public ResumesDetailRespDto findByResumesId(Integer resumesId) {
 		ResumesDetailRespDto resumesDetailRespDto = resumesDao.findByResumesId(resumesId);
-=======
-	public ResumesDetailRespDto resumesById(Integer resumesId) {
-		Resumes resumesPS = resumesDao.findById(resumesId);
-		ResumesDetailRespDto resumesDetailRespDto = new ResumesDetailRespDto(resumesPS);
->>>>>>> b24982f297cf6545f8bbd36fce512ce1e575c09f
 		return resumesDetailRespDto;
 	}
 
 	// 이력서 수정 하기
 	@Transactional(rollbackFor = RuntimeException.class)
-	public void updateResumes(Integer resumesId, ResumesUpdateDto updateResumesDto) {
+	public void updateResumes(ResumesUpdateDto updateResumesDto) {
 
-		Resumes resumes = new Resumes(resumesId, updateResumesDto);
+		Resumes resumes = new Resumes(updateResumesDto.getResumesId(), updateResumesDto);
 		resumesDao.update(resumes);
 
 		Category category = new Category(updateResumesDto.getCategoryId(), updateResumesDto);
