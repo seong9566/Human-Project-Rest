@@ -38,19 +38,24 @@ public class JWTToken {
         public static class TokenVerificationForCookie {
 
             public Boolean Verification(Cookie[] cookies) {
+
+                String token = null;
+
+                //쿠키내의 토큰 찾기
+                for (Cookie cookie : cookies) {
+                    if (cookie.getName().equals("Authorization"))
+                        token = cookie.getValue();
+                }
+                
+                if (token == null) {
+                    return false;
+                }
+
+                // 토큰 검증 - 검증전 공백제거
+                token = token.replace("Authorization=", "");
+                token = token.trim();
+
                 try {
-
-                    String token = null;
-
-                    //쿠키내의 토큰 찾기
-                    for (Cookie cookie : cookies) {
-                        if (cookie.getName().equals("Authorization"))
-                            token = cookie.getValue();
-                    }
-
-                    // 토큰 검증 - 검증전 공백제거
-                    token = token.replace("Authorization=", "");
-                    token = token.trim();
 
                     log.debug("디버그 : 토큰확인 - " + token);
 
@@ -61,7 +66,7 @@ public class JWTToken {
                     // log.debug("디버그 : 만료시간 - " + decodedJWT.getExpiresAt().toString());
                     // log.debug("디버그 : 현재시간 - " + now);
                     //입력받은 토큰값이 현재시간을 넘지 않았을 경우 true를 반환 - 만료된 토큰이 아닌지 판별
-                    
+
                     if (decodedJWT.getExpiresAt() != null && decodedJWT.getExpiresAt().after(now)) {
                         return true;
                     }

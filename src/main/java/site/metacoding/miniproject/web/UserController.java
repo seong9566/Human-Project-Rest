@@ -51,6 +51,7 @@ public class UserController {
 
 		Cookie cookie = new Cookie("Authorization", null);
 		cookie.setMaxAge(0);
+		cookie.setPath("/");
 		resp.addCookie(cookie);
 
 		SessionConfig.logout(session.getId());
