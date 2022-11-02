@@ -42,9 +42,10 @@ public class CompanyController {
 	private final HttpSession session;
 	private final CompanyService companyService;
 
+	// 회사 정보 보기
 	@GetMapping("/api/company/detail")
 	public ResponseDto<?> findByCompany() {
-		SignedDto<?> principal = (SignedDto<?>) session.getAttribute("principal");
+		SignedDto principal = (SignedDto<?>) session.getAttribute("principal");
 		SignCompanyDto signCompanyDto = (SignCompanyDto) principal.getUserInfo();
 		return new ResponseDto<>(1, "성공", companyService.findByCompany(signCompanyDto.getCompanyId()));
 	}
