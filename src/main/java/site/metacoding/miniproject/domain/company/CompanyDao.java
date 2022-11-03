@@ -4,6 +4,7 @@ import java.util.List;
 
 import site.metacoding.miniproject.dto.company.CompanyRespDto.CompanyAddressRespDto;
 import site.metacoding.miniproject.dto.company.CompanyRespDto.CompanyDetailRespDto;
+import site.metacoding.miniproject.dto.company.CompanyRespDto.CompanyUpdateFormRespDto;
 
 public interface CompanyDao {
 	public void insert(Company company);
@@ -20,4 +21,5 @@ public interface CompanyDao {
 
 	public CompanyAddressRespDto findByAddress(Integer companyId);
 
+	public CompanyUpdateFormRespDto companyUpdateById(Integer companyId);
 }

@@ -2,14 +2,14 @@ package site.metacoding.miniproject.domain.like.companylike;
 
 import java.util.List;
 
-import site.metacoding.miniproject.web.dto.request.company.CompanyLikeDto;
+import site.metacoding.miniproject.dto.like.LikeReqDto.CompanyLikeReqDto;
 
 public interface CompanyLikesDao {
 	public void insert(CompanyLike companyLike);
 
-	public List<CompanyLikeDto> findAll();
+	public List<CompanyLikeReqDto> findAll();
 
-	public CompanyLike findById(CompanyLike companyLike);
+	public CompanyLike findById(CompanyLikeReqDto companyLikeReqDto);
 
 	public void update(CompanyLike companyLike);
 
