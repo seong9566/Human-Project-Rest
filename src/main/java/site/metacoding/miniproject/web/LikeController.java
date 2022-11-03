@@ -81,9 +81,8 @@ public class LikeController {
 
 	@GetMapping("/api/bestcompany")
 	public ResponseDto<?> bestCompany(Integer companyId) {
-		SignedDto<?> principal = (SignedDto<?>) session.getAttribute("principal");
-		SignCompanyDto signCompanyDto = (SignCompanyDto) principal.getUserInfo();
+
 		return new ResponseDto<>(1, "좋아요 많이 받은 회사",
-				companyLikeService.bestcompany(signCompanyDto.getCompanyId()));
+				companyLikeService.bestcompany(companyId));
 	}
 }
