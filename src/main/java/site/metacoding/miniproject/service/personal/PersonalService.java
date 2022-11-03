@@ -21,16 +21,18 @@ import site.metacoding.miniproject.domain.resumes.Resumes;
 import site.metacoding.miniproject.domain.resumes.ResumesDao;
 import site.metacoding.miniproject.domain.users.Users;
 import site.metacoding.miniproject.domain.users.UsersDao;
+import site.metacoding.miniproject.dto.personal.PersonalReqDto.PersonalUpdatReqDto;
+import site.metacoding.miniproject.dto.personal.PersonalRespDto.PersonalAddressRespDto;
 import site.metacoding.miniproject.dto.personal.PersonalRespDto.PersonalDetailRespDto;
+import site.metacoding.miniproject.dto.personal.PersonalRespDto.PersonalUpdateFormRespDto;
+import site.metacoding.miniproject.dto.personal.PersonalRespDto.PersonalUpdateRespDto;
 import site.metacoding.miniproject.dto.resumes.ResumesReqDto.ResumesInsertReqDto;
 import site.metacoding.miniproject.dto.resumes.ResumesRespDto.ResumesAllRespDto;
 import site.metacoding.miniproject.dto.resumes.ResumesRespDto.ResumesDetailRespDto;
 import site.metacoding.miniproject.dto.resumes.ResumesRespDto.ResumesInsertRespDto;
-import site.metacoding.miniproject.web.dto.request.personal.PersonalUpdateDto;
 import site.metacoding.miniproject.web.dto.request.resume.ResumesUpdateDto;
 import site.metacoding.miniproject.web.dto.response.company.CompanyMainDto;
 import site.metacoding.miniproject.web.dto.response.etc.PagingDto;
-import site.metacoding.miniproject.web.dto.response.personal.PersonalAddressDto;
 
 @Service
 @RequiredArgsConstructor
@@ -41,7 +43,7 @@ public class PersonalService {
 	private final CategoryDao categoryDao;
 	private final PortfolioDao portfolioDao;
 	private final CareerDao careerDao;
-	private final UsersDao userDao;
+	private final UsersDao usersDao;
 
 	// 이력서 작성 하기
 	@Transactional(rollbackFor = RuntimeException.class)
@@ -150,32 +152,47 @@ public class PersonalService {
 	// 개인 정보에 보기
 	@Transactional(readOnly = true)
 	public PersonalDetailRespDto findByPersonal(Integer personalId) {
-		PersonalDetailRespDto personalDetailRespDto = personalDao.personalformById(personalId);
+		PersonalAddressRespDto personalAddressRespDto = personalDao.personalAddressById(personalId);
+		Personal personalPS = personalDao.personaldetailById(personalId);
+		PersonalDetailRespDto personalDetailRespDto = new PersonalDetailRespDto(personalPS, personalAddressRespDto);
+
 		return personalDetailRespDto;
 	}
 
 	// 내 정보 수정에서 데이터 보여주기
-	// @Transactional(readOnly = true)
-	// public PersonalFormRespDto personalUpdateById(Integer personalId) {
-	// PersonalFormRespDto personalDetailRespDto =
-	// personalDao.personalformById(personalId);
-	// return personalDao.personalUpdateById(personalId);
-	// }
+	@Transactional(readOnly = true)
+	public PersonalUpdateFormRespDto personalUpdateById(Integer personalId) {
+		PersonalAddressRespDto personalAddressRespDto = personalDao.personalAddressById(personalId);
 
-	public PersonalAddressDto personalAddress(Integer personalId) {
+		PersonalUpdateFormRespDto personalUpdatePS = personalDao.personalUpdateById(personalId);
+
+		PersonalUpdateFormRespDto personalUpdateFormRespDto = new PersonalUpdateFormRespDto(personalUpdatePS,
+				personalAddressRespDto);
+
+		return personalUpdateFormRespDto;
+	}
+
+	@Transactional(readOnly = true)
+	public PersonalAddressRespDto personalAddressRespDto(Integer personalId) {
 		return personalDao.personalAddressById(personalId);
 	}
 
 	// 내 정보 수정
 	@Transactional(rollbackFor = Exception.class)
-	public void updatePersonal(Integer userId, Integer personalId, PersonalUpdateDto personalUpdateDto) {
-		Users personaluserPS = userDao.findById(userId);
-		personaluserPS.update(personalUpdateDto);
-		userDao.update(personaluserPS);
+	public PersonalUpdateRespDto updatePersonal(Integer userId, Integer perosnalId,
+			PersonalUpdatReqDto personalUpdatReqDto) {
 
-		Personal personalPS = personalDao.findById(personalId);
-		personalPS.updatePersonal(personalUpdateDto);
+		// user패스워드 수정
+		Users personalUserPS = usersDao.findById(userId);
+		personalUserPS.update(personalUpdatReqDto);
+		usersDao.update(personalUserPS);
+
+		// personal 개인정보 수정
+		Personal personalPS = personalDao.findById(perosnalId);
+		personalPS.updatePersonal(personalUpdatReqDto);
 		personalDao.update(personalPS);
+		PersonalUpdateRespDto personalUpdateRespDto = new PersonalUpdateRespDto(personalPS, personalUserPS);
 
+		return personalUpdateRespDto;
 	}
 }
