@@ -37,7 +37,6 @@ public class CompanyLikeService {
 		SignedDto<?> principal = (SignedDto<?>) session.getAttribute("principal");
 		SignPersonalDto signPersonalDto = (SignPersonalDto) principal.getUserInfo();
 		CompanyLike companyLike = new CompanyLike(companyId, signPersonalDto.getPersonalId());
-		companyLikesDao.insert(companyLike);
 
 		companylikes.put(AlarmEnum.ALARMCOMPANYLIKEID.key(),
 				companyLike.getCompanyLikeId());
@@ -50,6 +49,9 @@ public class CompanyLikeService {
 
 		companyLike.setAlarmId(alarm.getAlarmId());
 		companyLikesDao.update(companyLike);
+		CompanyLikeRespDto companyLikeRespDto = companyLikesDao.insert(companyLike);
+		return companyLikeRespDto;
+
 	}
 
 	public void 좋아요취소(Integer personalId, Integer companyId, CompanyLikeReqDto companyLikeReqDto) {

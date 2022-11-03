@@ -54,7 +54,7 @@ public class LikeController {
 		return "/company/recommendList";
 	}
 
-	@PostMapping("/s/api/companyLike/{companyId}/likes")
+	@PostMapping("/s/api/companyLike/{companyId}")
 	public @ResponseBody ResponseDto<?> insertCompanyLike(@PathVariable Integer companyId,
 			CompanyLikeReqDto companyLikeReqDto) {
 		SignedDto<?> principal = (SignedDto<?>) session.getAttribute("principal");
