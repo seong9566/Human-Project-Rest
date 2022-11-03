@@ -6,7 +6,8 @@ import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
-import site.metacoding.miniproject.dto.company.CompanyReqDto.CompanyUpdateReqDto;
+import site.metacoding.miniproject.dto.personal.PersonalReqDto.PersonalUpdatReqDto;
+import site.metacoding.miniproject.web.dto.request.company.CompanyUpdateDto;
 import site.metacoding.miniproject.web.dto.request.personal.PersonalUpdateDto;
 
 @Getter
@@ -31,12 +32,12 @@ public class Users {
 		this.createdAt = createdAt;
 	}
 
-	public void update(CompanyUpdateReqDto companyUpdateReqDto) {
-		this.loginPassword = companyUpdateReqDto.getLoginPassword();
+	public void update(CompanyUpdateDto companyUpdateDto) {
+		this.loginPassword = companyUpdateDto.getLoginPassword();
 	}
 
-	public void update(PersonalUpdateDto personalUpdateDto) {
-		this.loginPassword = personalUpdateDto.getLoginPassword();
+	public void update(PersonalUpdatReqDto personalUpdatReqDto) {
+		this.loginPassword = personalUpdatReqDto.getLoginPassword();
 	}
 
 }
