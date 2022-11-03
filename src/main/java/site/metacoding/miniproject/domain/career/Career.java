@@ -4,11 +4,12 @@ import java.sql.Timestamp;
 
 import lombok.Builder;
 import lombok.Getter;
+import lombok.NoArgsConstructor;
 import lombok.Setter;
 import site.metacoding.miniproject.dto.jobpostingboard.JobPostingBoardReqDto.JobPostingBoardInsertReqDto;
 import site.metacoding.miniproject.web.dto.request.jobpostingboard.JobPostingBoardUpdateDto;
-import site.metacoding.miniproject.web.dto.request.resume.ResumesUpdateDto;
 
+@NoArgsConstructor
 @Getter
 @Setter
 public class Career {

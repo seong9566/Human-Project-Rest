@@ -24,6 +24,7 @@ import lombok.RequiredArgsConstructor;
 import site.metacoding.miniproject.dto.resumes.ResumesReqDto.ResumesInsertReqDto;
 import site.metacoding.miniproject.dto.resumes.ResumesReqDto.ResumesUpdateReqDto;
 import site.metacoding.miniproject.dto.resumes.ResumesRespDto.ResumesAllRespDto;
+import site.metacoding.miniproject.dto.resumes.ResumesRespDto.ResumesUpdateRespDto;
 import site.metacoding.miniproject.dto.user.UserRespDto.SignPersonalDto;
 import site.metacoding.miniproject.dto.user.UserRespDto.SignedDto;
 import site.metacoding.miniproject.service.company.CompanyService;
@@ -50,7 +51,7 @@ public class PersonalController {
 	private final PersonalLikeService personalLikeService;
 
 	// 이력서 작성 하기
-	@PostMapping(value = "/resumes/insert")
+	@PostMapping(value = "/s/resumes/insert")
 	public ResponseDto<?> insertResumes(@RequestPart(value = "file", required = false) MultipartFile file,
 			@RequestPart("reqDto") ResumesInsertReqDto resumesInsertReqDto) throws Exception {
 		SignedDto<?> principal = (SignedDto<?>) session.getAttribute("principal");
@@ -86,32 +87,16 @@ public class PersonalController {
 	// return "personal/resumesUpdateForm";
 	// }
 
-	@PutMapping(value = "/resumes/update/{resumesId}")
-	public @ResponseBody ResponseDto<?> updateResumes(@PathVariable Integer resumesId,
-			@RequestPart("file") MultipartFile file,
-			@RequestPart("ResumesUpdateReqDto") ResumesUpdateReqDto resumesUpdateReqDto)
+	@PutMapping(value = "/s/resumes/update/{resumesId}")
+	public ResponseDto<?> updateResumes(@PathVariable Integer resumesId,
+			@RequestPart(value = "file", required = false) MultipartFile file,
+			@RequestPart("resumesUpdateReqDto") ResumesUpdateReqDto resumesUpdateReqDto)
 			throws Exception {
-		int pos = file.getOriginalFilename().lastIndexOf('.');
-		String extension = file.getOriginalFilename().substring(pos + 1);
-		String filePath = "C:\\Temp\\img\\";
-		// String filePath = "/Users/ihyeonseong/Desktop/img";//Mac전용 경로
-		String imgSaveName = UUID.randomUUID().toString();
-		String imgName = imgSaveName + "." + extension;
-		File makeFileFolder = new File(filePath);
-		if (!makeFileFolder.exists()) {
-			if (!makeFileFolder.mkdir()) {
-				throw new Exception("File.mkdir():Fail.");
-			}
-		}
-		File dest = new File(filePath, imgName);
-		try {
-			Files.copy(file.getInputStream(), dest.toPath());
-		} catch (IOException e) {
-			e.printStackTrace();
-		}
-		resumesUpdateReqDto.setResumesPicture(imgName);
+		resumesUpdateReqDto.setFile(file);
 		resumesUpdateReqDto.setResumesId(resumesId);
-		return new ResponseDto<>(1, "이력서 수정 성공", personalService.updateResumes(resumesUpdateReqDto));
+
+		ResumesUpdateRespDto resumesUpdateRespDto = personalService.updateResumes(resumesUpdateReqDto);
+		return new ResponseDto<>(1, "이력서 수정 성공", resumesUpdateRespDto);
 	}
 
 	// 이력서 삭제 하기
