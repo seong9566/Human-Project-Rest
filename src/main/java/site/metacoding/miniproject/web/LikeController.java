@@ -15,6 +15,7 @@ import org.springframework.web.bind.annotation.ResponseBody;
 import lombok.RequiredArgsConstructor;
 import site.metacoding.miniproject.dto.like.LikeReqDto.CompanyLikeReqDto;
 import site.metacoding.miniproject.dto.like.LikeRespDto.CompanyLikeRespDto;
+import site.metacoding.miniproject.dto.user.UserRespDto.SignPersonalDto;
 import site.metacoding.miniproject.dto.user.UserRespDto.SignedDto;
 import site.metacoding.miniproject.service.company.CompanyLikeService;
 import site.metacoding.miniproject.service.personal.PersonalLikeService;
@@ -55,13 +56,12 @@ public class LikeController {
 	}
 
 	@PostMapping("/s/api/companyLike/{companyId}")
-	public @ResponseBody ResponseDto<?> insertCompanyLike(@PathVariable Integer companyId,
+	public ResponseDto<?> insertCompanyLike(@PathVariable Integer companyId,
 			CompanyLikeReqDto companyLikeReqDto) {
 		SignedDto<?> principal = (SignedDto<?>) session.getAttribute("principal");
-		// SignPersonalDto signPersonalDto = (SignPersonalDto) principal.getUserInfo();
-		CompanyLikeRespDto companyLikeRespDto = companyLikeService.좋아요(principal, companyId);
-
-		return new ResponseDto<>(1, "좋아요성공", companyLikeRespDto);
+		SignPersonalDto signPersonalDto = (SignPersonalDto) principal.getUserInfo();
+		Integer personalId = signPersonalDto.getPersonalId();
+		return new ResponseDto<>(1, "좋아요 성공", companyLikeService.좋아요(personalId, companyId));
 
 	}
 

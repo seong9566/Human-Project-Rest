@@ -6,7 +6,7 @@ import site.metacoding.miniproject.dto.like.LikeReqDto.CompanyLikeReqDto;
 import site.metacoding.miniproject.dto.like.LikeRespDto.CompanyLikeRespDto;
 
 public interface CompanyLikesDao {
-	public CompanyLikeRespDto insert(CompanyLike companyLike);
+	public void insert(CompanyLike companyLike);
 
 	public List<CompanyLikeReqDto> findAll();
 

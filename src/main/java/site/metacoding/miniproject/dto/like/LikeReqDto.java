@@ -2,9 +2,9 @@ package site.metacoding.miniproject.dto.like;
 
 import java.sql.Timestamp;
 
+import lombok.Builder;
 import lombok.Getter;
 import lombok.Setter;
-import site.metacoding.miniproject.domain.company.Company;
 import site.metacoding.miniproject.domain.like.companylike.CompanyLike;
 import site.metacoding.miniproject.domain.like.personalike.PersonalLike;
 import site.metacoding.miniproject.domain.resumes.Resumes;

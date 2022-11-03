@@ -32,12 +32,13 @@ public class CompanyLikeService {
 	private final PersonalDao personalDao;
 
 	@Transactional(rollbackFor = RuntimeException.class)
-	public CompanyLikeRespDto 좋아요(SignedDto<?> signedDto, Integer companyId) {
+	public CompanyLikeRespDto 좋아요(Integer personalId, Integer companyId) {
 		HashMap<String, Integer> companylikes = new HashMap<>();
 		SignedDto<?> principal = (SignedDto<?>) session.getAttribute("principal");
 		SignPersonalDto signPersonalDto = (SignPersonalDto) principal.getUserInfo();
+		CompanyLikeReqDto companyLikeReqDto = new CompanyLikeReqDto();
 		CompanyLike companyLike = new CompanyLike(companyId, signPersonalDto.getPersonalId());
-
+		CompanyLikeRespDto companyLikeRespDto = companyLikesDao.insert(companyLike);
 		companylikes.put(AlarmEnum.ALARMCOMPANYLIKEID.key(),
 				companyLike.getCompanyLikeId());
 
@@ -49,8 +50,8 @@ public class CompanyLikeService {
 
 		companyLike.setAlarmId(alarm.getAlarmId());
 		companyLikesDao.update(companyLike);
-		CompanyLikeRespDto companyLikeRespDto = companyLikesDao.insert(companyLike);
-		return companyLikeRespDto;
+
+		return 
 
 	}
 
