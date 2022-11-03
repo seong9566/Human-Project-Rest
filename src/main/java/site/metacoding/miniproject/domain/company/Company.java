@@ -7,6 +7,7 @@ import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
+import site.metacoding.miniproject.dto.company.CompanyReqDto.CompanyUpdateReqDto;
 import site.metacoding.miniproject.web.dto.request.company.CompanyUpdateDto;
 
 @Getter
@@ -35,12 +36,12 @@ public class Company implements Serializable {
 		this.createdAt = createdAt;
 	}
 
-	public void updateCompany(CompanyUpdateDto companyInformUpdateDto) {
-		this.companyName = companyInformUpdateDto.getCompanyName();
-		this.companyPicture = companyInformUpdateDto.getCompanyPicture();
-		this.companyEmail = companyInformUpdateDto.getCompanyEmail();
-		this.companyPhoneNumber = companyInformUpdateDto.getCompanyPhoneNumber();
-		this.companyAddress = companyInformUpdateDto.getCompanyAddress();
+	public void updateCompany(CompanyUpdateReqDto companyUpdateReqDto) {
+		this.companyName = companyUpdateReqDto.getCompanyName();
+		this.companyPicture = companyUpdateReqDto.getCompanyPicture();
+		this.companyEmail = companyUpdateReqDto.getCompanyEmail();
+		this.companyPhoneNumber = companyUpdateReqDto.getCompanyPhoneNumber();
+		this.companyAddress = companyUpdateReqDto.getCompanyAddress();
 	}
 
 }

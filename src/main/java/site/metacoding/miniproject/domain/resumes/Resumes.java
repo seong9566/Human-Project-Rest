@@ -42,4 +42,16 @@ public class Resumes {
 		this.resumesIntroduce = updateResumesDto.getResumesIntroduce();
 		this.resumesPlace = updateResumesDto.getResumesPlace();
 	}
+
+	@Builder
+	public Resumes(Integer resumesId, Integer personalId, String resumesTitle, String resumesPicture,
+			String resumesIntroduce, Timestamp createdAt) {
+		this.resumesId = resumesId;
+		this.personalId = personalId;
+		this.resumesTitle = resumesTitle;
+		this.resumesPicture = resumesPicture;
+		this.resumesIntroduce = resumesIntroduce;
+		this.createdAt = createdAt;
+	}
+
 }
