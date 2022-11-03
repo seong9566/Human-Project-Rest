@@ -15,13 +15,6 @@ public class LikeReqDto {
     @Setter
     public static class CompanyLikeReqDto {
         private Integer companyId;
-        private String companyName;
-        private String companyPicture;
-        private String companyEmail;
-        private String companyPhoneNumber;
-        private String companyAddress;
-        private Timestamp createdAt;
-
         private Integer personalId;
         private Integer alarmId;
 
