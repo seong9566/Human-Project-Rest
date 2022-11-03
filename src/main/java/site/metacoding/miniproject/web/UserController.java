@@ -1,13 +1,9 @@
 package site.metacoding.miniproject.web;
 
-import java.util.List;
-
 import javax.servlet.http.Cookie;
-import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import javax.servlet.http.HttpSession;
 
-import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
@@ -18,8 +14,6 @@ import org.springframework.web.multipart.MultipartFile;
 
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
-import site.metacoding.miniproject.config.SessionConfig;
-import site.metacoding.miniproject.domain.alarm.Alarm;
 import site.metacoding.miniproject.dto.company.CompanyReqDto.CompanyJoinDto;
 import site.metacoding.miniproject.dto.personal.PersonalReqDto.PersonalJoinDto;
 import site.metacoding.miniproject.dto.user.UserRespDto.SignedDto;
@@ -50,16 +44,13 @@ public class UserController {
 	@GetMapping("/logout")
 	public ResponseDto<?> logout(HttpServletResponse resp) {
 
+		
 		Cookie cookie = new Cookie("Authorization", null);
 		cookie.setMaxAge(0);
 		cookie.setPath("/");
 		resp.addCookie(cookie);
 
-		SessionConfig.logout(session.getId());
 		session.removeAttribute("principal");
-		session.removeAttribute("companyId");
-		session.removeAttribute("personalId");
-		session.removeAttribute("subscribe");
 
 		return new ResponseDto<>(1, "성공", null);
 	}
@@ -145,26 +136,6 @@ public class UserController {
 		session.setAttribute("principal", signedDto);
 
 		return new ResponseDto<>(1, "계정생성완료", signedDto);
-	}
-
-	// 유저알람 갱신 해주기
-	@GetMapping("/s/user/alarm/{usersId}")
-	public ResponseDto<?> refreshUserAlarm(@PathVariable Integer usersId) {
-
-		ResponseDto<?> responseDto = new ResponseDto<>(1, "알람없음", null);
-
-		List<Alarm> usersAlarm = userService.userAlarm(usersId);
-		if (!usersAlarm.isEmpty())
-			responseDto = new ResponseDto<>(1, "통신 성공", usersAlarm);
-
-		return responseDto;
-	}
-
-	// 알람지우기
-	@DeleteMapping("/s/user/alarm/{alarmId}")
-	public ResponseDto<?> deleteUserAlarm(@PathVariable Integer alarmId) {
-		userService.deleteAlarm(alarmId);
-		return new ResponseDto<>(1, "삭제 성공", null);
 	}
 
 }

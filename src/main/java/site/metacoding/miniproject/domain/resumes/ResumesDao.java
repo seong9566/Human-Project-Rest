@@ -17,7 +17,7 @@ public interface ResumesDao {
 	public List<Resumes> findAllMyResumes(Integer personalId);
 
 	// 이력서 상세 보기
-	public ResumesDetailRespDto resumesById(Integer resumesId);
+	public ResumesDetailRespDto findByResumesId(Integer resumesId);
 
 	// 이력서 수정
 	public Resumes findById(Integer resumesId);
