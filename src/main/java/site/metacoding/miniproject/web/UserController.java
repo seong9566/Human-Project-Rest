@@ -24,6 +24,7 @@ import site.metacoding.miniproject.dto.company.CompanyReqDto.CompanyJoinDto;
 import site.metacoding.miniproject.dto.personal.PersonalReqDto.PersonalJoinDto;
 import site.metacoding.miniproject.dto.user.UserRespDto.SignedDto;
 import site.metacoding.miniproject.service.users.UsersService;
+import site.metacoding.miniproject.utill.JWTToken.CookieForToken;
 import site.metacoding.miniproject.utill.JWTToken.CreateJWTToken;
 import site.metacoding.miniproject.web.dto.request.etc.LoginDto;
 import site.metacoding.miniproject.web.dto.response.ResponseDto;
@@ -38,10 +39,10 @@ public class UserController {
 	@GetMapping("/loginForm")
 	public ResponseDto<?> loginForm() {
 		ResponseDto<?> responseDto;
-		if (session.getAttribute("principal") == null) {
+		if (session.getAttribute("principal") != null) {
 			responseDto = new ResponseDto<>(-1, "이미 로그인 되어 있음", null);
 		} else {
-			responseDto = new ResponseDto<>(-1, "성공", null);
+			responseDto = new ResponseDto<>(1, "성공", null);
 		}
 		return responseDto;
 	}
@@ -60,7 +61,7 @@ public class UserController {
 		session.removeAttribute("personalId");
 		session.removeAttribute("subscribe");
 
-		return new ResponseDto<>(-1, "성공", null);
+		return new ResponseDto<>(1, "성공", null);
 	}
 
 	@GetMapping("/company/joinForm")
@@ -89,7 +90,7 @@ public class UserController {
 		}
 
 		Integer userCheck = userService.checkUserId(loginId);
-		
+
 		if (userCheck == null) {
 			responseDto = new ResponseDto<>(1, "아이디 중복 없음 사용하셔도 좋습니다.", null);
 		} else {
@@ -100,27 +101,28 @@ public class UserController {
 	}
 
 	@PostMapping("/login")
-	public ResponseDto<?> login(@RequestBody LoginDto loginDto, HttpServletRequest req, HttpServletResponse resp) {
+	public ResponseDto<?> login(@RequestBody LoginDto loginDto, HttpServletResponse resp) {
 
 		SignedDto<?> signUserDto = userService.login(loginDto);
 
 		String token = CreateJWTToken.createToken(signUserDto);
-		
 
 		resp.addHeader("Authorization", "Bearer " + token);
-		resp.addCookie(CreateJWTToken.setCookie(token));
+		resp.addCookie(CookieForToken.setCookie(token));
 
 		return new ResponseDto<>(1, "로그인완료", signUserDto);
 	}
 
 	// 개인 회원가입
 	@PostMapping("/join/personal")
-	public ResponseDto<?> joinPersonal(@RequestBody PersonalJoinDto joinDto) {
+	public ResponseDto<?> joinPersonal(@RequestBody PersonalJoinDto joinDto, HttpServletResponse resp) {
 
-		userService.joinPersonal(joinDto);
+		SignedDto<?> signedDto = userService.joinPersonal(joinDto);
 
-		LoginDto loginDto = new LoginDto(joinDto);
-		SignedDto<?> signedDto = userService.login(loginDto);
+		String token = CreateJWTToken.createToken(signedDto);
+
+		resp.addHeader("Authorization", "Bearer " + token);
+		resp.addCookie(CookieForToken.setCookie(token));
 
 		session.setAttribute("principal", signedDto);
 
@@ -130,14 +132,15 @@ public class UserController {
 	// 기업 회원가입
 	@PostMapping(value = "/join/company")
 	public ResponseDto<?> joinCompany(@RequestPart(value = "file", required = false) MultipartFile file,
-			@RequestPart("joinDto") CompanyJoinDto joinDto) {
+			@RequestPart("joinDto") CompanyJoinDto joinDto, HttpServletResponse resp) {
 
 		joinDto.setFile(file);
-		userService.joinCompany(joinDto);
+		SignedDto<?> signedDto = userService.joinCompany(joinDto);
 
-		LoginDto loginDto = new LoginDto(joinDto);
+		String token = CreateJWTToken.createToken(signedDto);
 
-		SignedDto<?> signedDto = userService.login(loginDto);
+		resp.addHeader("Authorization", "Bearer " + token);
+		resp.addCookie(CookieForToken.setCookie(token));
 
 		session.setAttribute("principal", signedDto);
 
@@ -145,17 +148,20 @@ public class UserController {
 	}
 
 	// 유저알람 갱신 해주기
-	@GetMapping("/user/alarm/{usersId}")
+	@GetMapping("/s/user/alarm/{usersId}")
 	public ResponseDto<?> refreshUserAlarm(@PathVariable Integer usersId) {
-		ResponseDto<?> responseDto = null;
+
+		ResponseDto<?> responseDto = new ResponseDto<>(1, "알람없음", null);
+
 		List<Alarm> usersAlarm = userService.userAlarm(usersId);
 		if (!usersAlarm.isEmpty())
 			responseDto = new ResponseDto<>(1, "통신 성공", usersAlarm);
+
 		return responseDto;
 	}
 
 	// 알람지우기
-	@DeleteMapping("/user/alarm/{alarmId}")
+	@DeleteMapping("/s/user/alarm/{alarmId}")
 	public ResponseDto<?> deleteUserAlarm(@PathVariable Integer alarmId) {
 		userService.deleteAlarm(alarmId);
 		return new ResponseDto<>(1, "삭제 성공", null);

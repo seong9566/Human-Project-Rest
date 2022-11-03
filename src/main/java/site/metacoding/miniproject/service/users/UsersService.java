@@ -1,6 +1,7 @@
 package site.metacoding.miniproject.service.users;
 
 import java.util.List;
+import java.util.Optional;
 
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -36,60 +37,60 @@ public class UsersService {
     private final SubscribeDao subscribeDao;
     private final SHA256 sha256;
 
-    //로그인
+    // 로그인
     public SignedDto<?> login(LoginDto loginDto) {
+
         String loginId = loginDto.getLoginId();
         String loginPassword = sha256.encrypt(loginDto.getLoginPassword());
         SignedDto<?> signedDto;
 
-        Users userinfo = usersDao.findByIdAndPassword(loginId, loginPassword);
+        Users userInfo = usersDao.findByIdAndPassword(loginId, loginPassword);
 
-        if (userinfo == null) {
+        if (userInfo == null) {
             throw new ApiException("아이디 또는 패스워드가 틀렸습니다.");
         }
 
-        
-		// if (signedDto == null)
-		// return new ResponseDto<>(-1, "비밀번호 또는 아이디를 확인하여 주세요", null);
+        // if (signedDto == null)
+        // return new ResponseDto<>(-1, "비밀번호 또는 아이디를 확인하여 주세요", null);
 
-		// if (SessionConfig.getSessionidCheck(signedDto.getUsersId()) != null) {
-		// return new ResponseDto<>(-2, "중복 로그인 확인됨", null);
-		// }
+        // if (SessionConfig.getSessionidCheck(signedDto.getUsersId()) != null) {
+        // return new ResponseDto<>(-2, "중복 로그인 확인됨", null);
+        // }
 
-		// session.setAttribute("principal", signedDto);
-		// SessionConfig.login(session.getId(), signedDto.getUsersId());
+        // session.setAttribute("principal", signedDto);
+        // SessionConfig.login(session.getId(), signedDto.getUsersId());
 
-		// if (signedDto.getCompanyId() != null) {
-		// session.setAttribute("companyId", signedDto.getCompanyId());
-		// } else {
-		// subscribes =
-		// userService.findSubscribeinfoByPersonalId(signedDto.getPersonalId());
-		// session.setAttribute("personalId", signedDto.getPersonalId());
-		// session.setAttribute("subscribe", subscribes);
-		// }
+        // if (signedDto.getCompanyId() != null) {
+        // session.setAttribute("companyId", signedDto.getCompanyId());
+        // } else {
+        // subscribes =
+        // userService.findSubscribeinfoByPersonalId(signedDto.getPersonalId());
+        // session.setAttribute("personalId", signedDto.getPersonalId());
+        // session.setAttribute("subscribe", subscribes);
+        // }
 
-        //회사 또는 개인일 경우 Dto생성
-        if (userinfo.getCompanyId() != null) {
-            Company companyPS = companyDao.findById(userinfo.getCompanyId());
+        // 회사 또는 개인일 경우 Dto생성
+        if (userInfo.getCompanyId() != null) {
+            Company companyPS = companyDao.findById(userInfo.getCompanyId());
 
             SignCompanyDto signCompanyDto = new SignCompanyDto(companyPS);
 
-            signedDto = new SignedDto<>(userinfo.getUsersId(), userinfo.getLoginId(), signCompanyDto);
+            signedDto = new SignedDto<>(userInfo.getUsersId(), userInfo.getLoginId(), signCompanyDto);
         } else {
-            Personal personalPS = personalDao.findById(userinfo.getPersonalId());
+            Personal personalPS = personalDao.findById(userInfo.getPersonalId());
 
             SignPersonalDto signPersonalDto = new SignPersonalDto(personalPS);
 
-            signedDto = new SignedDto<>(userinfo.getUsersId(), userinfo.getLoginId(), signPersonalDto);
+            signedDto = new SignedDto<>(userInfo.getUsersId(), userInfo.getLoginId(), signPersonalDto);
 
         }
 
         return signedDto;
     }
 
-    //개인 회원가입
+    // 개인 회원가입
     @Transactional(rollbackFor = RuntimeException.class)
-    public void joinPersonal(PersonalJoinDto joinDto) {
+    public SignedDto<?> joinPersonal(PersonalJoinDto joinDto) {
 
         Personal personalBeforePS = joinDto.personalJoinDtoToPersonalEntity();
 
@@ -101,11 +102,17 @@ public class UsersService {
 
         usersDao.insert(usersBeforePS);
 
+        SignPersonalDto signPersonalDto = new SignPersonalDto(personalBeforePS);
+
+        SignedDto<?> signedDto = new SignedDto<>(usersBeforePS.getUsersId(), usersBeforePS.getLoginId(),
+                signPersonalDto);
+
+        return signedDto;
     }
-    
-    //기업 회원가입
+
+    // 기업 회원가입
     @Transactional(rollbackFor = RuntimeException.class)
-    public void joinCompany(CompanyJoinDto joinDto) {
+    public SignedDto<?> joinCompany(CompanyJoinDto joinDto) {
 
         try {
             joinDto.companyJoinDtoPictureSet();
@@ -113,13 +120,20 @@ public class UsersService {
             throw new ApiException("멀티파트 폼 에러");
         }
 
-        Company company = joinDto.companyJoinDtoToCompanyEntity();
-        companyDao.insert(company);
+        Company companyBeforePS = joinDto.companyJoinDtoToCompanyEntity();
+        companyDao.insert(companyBeforePS);
 
-        joinDto.setCompanyId(company.getCompanyId());
+        joinDto.setCompanyId(companyBeforePS.getCompanyId());
 
-        Users users = joinDto.companyJoinDtoToUserEntity();
-        usersDao.insert(users);
+        Users usersBeforePS = joinDto.companyJoinDtoToUserEntity();
+        usersDao.insert(usersBeforePS);
+
+        SignCompanyDto signCompanyDto = new SignCompanyDto(companyBeforePS);
+
+        SignedDto<?> signedDto = new SignedDto<>(usersBeforePS.getUsersId(), usersBeforePS.getLoginId(),
+                signCompanyDto);
+
+        return signedDto;
 
     }
 
@@ -154,6 +168,13 @@ public class UsersService {
     }
 
     public void deleteAlarm(Integer alarmId) {
+
+        try {
+            Alarm alarmPS = alarmDao.findById(alarmId);
+        } catch (Exception e) {
+            throw new ApiException("해당 알람이 존재하지 않습니다.");
+        }
+
         alarmDao.deleteById(alarmId);
     }
 

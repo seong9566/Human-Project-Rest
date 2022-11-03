@@ -13,6 +13,7 @@ import site.metacoding.miniproject.domain.like.companylike.CompanyLikesDao;
 import site.metacoding.miniproject.domain.personal.Personal;
 import site.metacoding.miniproject.domain.users.Users;
 import site.metacoding.miniproject.domain.users.UsersDao;
+import site.metacoding.miniproject.dto.like.LikeReqDto.CompanyLikeReqDto;
 import site.metacoding.miniproject.dto.user.UserRespDto.SignedDto;
 import site.metacoding.miniproject.utill.AlarmEnum;
 
@@ -25,12 +26,12 @@ public class CompanyLikeService {
 	private final AlarmDao alarmDao;
 
 	@Transactional(rollbackFor = RuntimeException.class)
-	public void 좋아요(SignedDto<?> signedDto, Integer companyId) {
+	public void 좋아요(SignedDto<?> signedDto, Integer companyId, CompanyLikeReqDto companyLikeReqDto) {
 
 		HashMap<String, Integer> companylikes = new HashMap<>();
 		Personal personalinfo = (Personal) signedDto.getUserInfo();
 
-		CompanyLike companyLike = new CompanyLike(companyId, personalinfo.getPersonalId());
+		CompanyLike companyLike = companyLikeReqDto.CompanyLikeEntity();
 		companyLikesDao.insert(companyLike);
 
 		companylikes.put(AlarmEnum.ALARMCOMPANYLIKEID.key(), companyLike.getCompanyLikeId());
@@ -45,14 +46,13 @@ public class CompanyLikeService {
 
 	}
 
-	public void 좋아요취소(Integer personalId, Integer companyId) {
-		CompanyLike companyLike = new CompanyLike(personalId, companyId);
+	public void 좋아요취소(Integer personalId, Integer companyId, CompanyLikeReqDto companyLikeReqDto) {
+		CompanyLike companyLike = companyLikeReqDto.CompanyLikeEntity();
 		companyLikesDao.deleteById(companyLike);
 	}
 
-	public CompanyLike 좋아요확인(Integer personalId, Integer companyId) {
-		CompanyLike companyLike = new CompanyLike(personalId, companyId);
-		CompanyLike companyLike3 = companyLikesDao.findById(companyLike);
-		return companyLike3;
+	public CompanyLike 좋아요확인(Integer personalId, Integer companyId, CompanyLikeReqDto companyLikeReqDto) {
+		CompanyLike companyLike = companyLikesDao.findById(companyLikeReqDto);
+		return companyLike;
 	}
 }

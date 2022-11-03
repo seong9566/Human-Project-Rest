@@ -35,7 +35,7 @@
 		WHERE login_id = #{loginId} AND login_password=#{loginPassword}
 	</select>
 
-	<insert id="insert">
+	<insert id="insert" useGeneratedKeys="true" keyProperty="usersId" keyColumn="users_id">
 		INSERT INTO users(login_id, login_password, personal_id, company_id,
 		created_at)
 		VALUES(#{loginId}, #{loginPassword}, #{personalId}, #{companyId}, NOW())
@@ -46,4 +46,5 @@
 		SET login_password = #{loginPassword}
 		WHERE users_id = #{usersId}
 	</update>
+	
 </mapper>

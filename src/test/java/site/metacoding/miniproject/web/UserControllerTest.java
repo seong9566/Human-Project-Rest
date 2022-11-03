@@ -1,12 +1,6 @@
 package site.metacoding.miniproject.web;
 
-import static org.junit.jupiter.api.Assertions.assertEquals;
-
-import java.util.Map;
-
 import org.junit.jupiter.api.Test;
-
-import site.metacoding.miniproject.utill.ValidationCheckUtil;
 
 public class UserControllerTest {
 
