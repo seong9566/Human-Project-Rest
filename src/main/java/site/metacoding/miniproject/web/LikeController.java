@@ -43,12 +43,10 @@ public class LikeController {
 	}
 
 	@DeleteMapping("/s/api/personalLike/{resumesId}")
-	public ResponseDto<?> deletePersonalLike(@PathVariable Integer resumesId,
-			PersonalLikeReqDto personalLikeReqDto) {
+	public ResponseDto<?> deletePersonalLike(@PathVariable Integer resumesId) {
 		SignedDto<?> principal = (SignedDto<?>) session.getAttribute("principal");
 		SignCompanyDto signCompanyDto = (SignCompanyDto) principal.getUserInfo();
-		personalLikeReqDto.setCompanyId(signCompanyDto.getCompanyId());
-		personalLikeService.좋아요취소(resumesId, personalLikeReqDto);
+		personalLikeService.좋아요취소(resumesId, signCompanyDto.getCompanyId());
 		return new ResponseDto<>(1, "좋아요취소", null);
 	}
 
@@ -70,13 +68,11 @@ public class LikeController {
 	}
 
 	@DeleteMapping("/s/api/companyLike/{companyId}")
-	public ResponseDto<?> deleteCompanyLike(@PathVariable Integer companyId,
-			CompanyLikeReqDto companyLikeReqDto) {
+	public ResponseDto<?> deleteCompanyLike(@PathVariable Integer companyId) {
 		SignedDto<?> principal = (SignedDto<?>) session.getAttribute("principal");
 		SignPersonalDto signPersonalDto = (SignPersonalDto) principal.getUserInfo();
-		companyLikeReqDto.setPersonalId(signPersonalDto.getPersonalId());
-		companyLikeService.좋아요취소(companyId, companyLikeReqDto);
-		return new ResponseDto<>(1, "좋아요취소", null);
+		companyLikeService.좋아요취소(signPersonalDto.getPersonalId(), companyId);
+		return new ResponseDto<>(1, "좋아요 취소 성공", null);
 	}
 
 	@GetMapping("/api/bestcompany")

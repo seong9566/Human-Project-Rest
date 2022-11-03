@@ -48,15 +48,9 @@ public class PersonalLikeService {
 		return personalLikeRespDto;
 	}
 
-	public PersonalLikeRespDto 좋아요취소(Integer resumesId, PersonalLikeReqDto personalLikeReqDto) {
-
-		PersonalLike personalLikePS = personalLikeReqDto.personalLikeEntity();
-		if (personalLikePS == null) {
-			throw new RuntimeException("해당" + resumesId + "의 좋아요를 삭제할수 없습니다.");
-		}
-		personalLikesDao.deleteById(personalLikePS);
-		PersonalLikeRespDto personalLikeRespDto = new PersonalLikeRespDto(personalLikePS);
-		return personalLikeRespDto;
+	public void 좋아요취소(Integer companyId, Integer resumesId) {
+		PersonalLike personalLike = new PersonalLike(resumesId, companyId, null);
+		personalLikesDao.deleteById(personalLike);
 	}
 
 	@Transactional(readOnly = true)
