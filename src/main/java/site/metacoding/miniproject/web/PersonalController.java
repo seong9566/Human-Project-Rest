@@ -80,12 +80,6 @@ public class PersonalController {
 	}
 
 	// 이력서 수정
-	// @GetMapping("/personal/resumes/update/{resumesId}")
-	// public String updateForm(@PathVariable Integer resumesId) {
-	// ResumesDetailDto resumesDetailDtoPS = personalService.resumesById(resumesId);
-	// return "personal/resumesUpdateForm";
-	// }
-
 	@PutMapping(value = "/s/resumes/update/{resumesId}")
 	public ResponseDto<?> updateResumes(@PathVariable Integer resumesId,
 			@RequestPart(value = "file", required = false) MultipartFile file,

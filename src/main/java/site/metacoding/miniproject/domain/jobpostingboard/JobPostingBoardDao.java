@@ -21,8 +21,8 @@ public interface JobPostingBoardDao {
 	// 회사가 작성한 채용공고 목록 보기
 	public List<JobPostingBoard> jobPostingBoardList(Integer companyId);
 
-	// 채용공고 자세히 보기
-	public JobPostingBoardDetailRespDto findByDetail(Integer jobPostingBoardId);
+	// 채용공고 상세보기
+	public JobPostingBoardDetailRespDto findByJobPostingBoard(Integer jobPostingBoardId);
 
 	// 채용공고 리스트
 	public List<PersonalMainDto> findAll(int startNum);
