@@ -49,13 +49,13 @@ public class ResumesRespDto {
     @NoArgsConstructor
     @Setter
     @Getter
-    public static class ResumesAllRespDto {
+    public static class ResumesAllByIdRespDto {
         private String resumesTitle;
         private String resumesPlace;
 
         private Integer personalId;
 
-        public ResumesAllRespDto(Resumes resumes) {
+        public ResumesAllByIdRespDto(Resumes resumes) {
             this.resumesTitle = resumes.getResumesTitle();
             this.resumesPlace = resumes.getResumesPlace();
         }
@@ -149,6 +149,48 @@ public class ResumesRespDto {
             this.fiveYearOver = career.getFiveYearOver();
             this.portfolioSource = portfolio.getPortfolioSource();
             this.portfolioFile = portfolio.getPortfolioFile();
+        }
+    }
+
+    @NoArgsConstructor
+    @Setter
+    @Getter
+    public static class ResumesAllRespDto {
+        private String resumesTitle;
+        private String resumesPlace;
+
+        private Integer page;
+        private Integer startNum;
+
+        public ResumesAllRespDto(Resumes resumes) {
+            this.resumesTitle = resumes.getResumesTitle();
+            this.resumesPlace = resumes.getResumesPlace();
+        }
+    }
+
+    @Setter
+    @Getter
+    public static class PagingDto {
+        private Integer totalCount;
+        private Integer totalPage;
+        private Integer currentPage;
+        private boolean isFirst;
+        private boolean isLast;
+
+        private Integer blockCount;
+        private Integer currentBlock;
+        private Integer startPageNum;
+        private Integer lastPageNum;
+
+        public void makeBlockInfo() {
+            this.blockCount = 5;
+            this.currentBlock = currentPage / blockCount;
+            this.startPageNum = 1 + blockCount * currentBlock;
+            this.lastPageNum = 5 + blockCount * currentBlock;
+
+            if (totalPage < lastPageNum) {
+                this.lastPageNum = totalPage;
+            }
         }
     }
 }
