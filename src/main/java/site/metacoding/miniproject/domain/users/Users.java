@@ -40,4 +40,8 @@ public class Users {
 	public void update(CompanyUpdateReqDto companyUpdateReqDto) {
 		this.loginPassword = companyUpdateReqDto.getLoginPassword();
 	}
+
+	public void update(Users companyPassWordUpdateReqDto) {
+		this.loginPassword = companyPassWordUpdateReqDto.getLoginPassword();
+	}
 }
