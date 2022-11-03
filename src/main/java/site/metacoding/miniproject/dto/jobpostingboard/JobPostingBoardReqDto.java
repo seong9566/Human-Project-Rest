@@ -102,6 +102,7 @@ public class JobPostingBoardReqDto {
                     .jobPostingSalary(jobPostingSalary)
                     .jobPostingBoardPlace(jobPostingBoardPlace)
                     .jobPostingBoardDeadline(jobPostingBoardDeadline)
+                    .jobPostingBoardId(jobPostingBoardId)
                     .build();
         }
 

@@ -163,6 +163,9 @@ public class JobPostingBoardRespDto {
 
         public JobPostingBoardUpdateRespDto(JobPostingBoard jobPostingBoard, Category category, Career career) {
             this.jobPostingBoardId = jobPostingBoard.getJobPostingBoardId();
+            this.jobPostingBoardTitle = jobPostingBoard.getJobPostingBoardTitle();
+            this.jobPostingBoardContent = jobPostingBoard.getJobPostingBoardContent();
+            this.jobPostingSalary = jobPostingBoard.getJobPostingSalary();
             this.jobPostingBoardContent = jobPostingBoard.getJobPostingBoardContent();
             this.jobPostingBoardDeadline = jobPostingBoard.getJobPostingBoardDeadline();
             this.categoryBackend = category.getCategoryBackend();

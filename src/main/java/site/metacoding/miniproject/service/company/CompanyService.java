@@ -163,10 +163,11 @@ public class CompanyService {
 	public JobPostingBoardUpdateRespDto updateJobPostingBoard(
 			JobPostingBoardUpdateReqDto jobPostingBoardUpdateReqDto, Integer jobPostingBoardId) {
 		// Integer categoryId,Integer careerId,
+		jobPostingBoardUpdateReqDto.setJobPostingBoardId(jobPostingBoardId);
+		JobPostingBoard jobPostingBoardPS2Board = jobPostingBoardUpdateReqDto.jobPostingBoardUpdate();
 
+		jobPostingBoardDao.update(jobPostingBoardPS2Board);
 		JobPostingBoard jobPostingBoardPS = jobPostingBoardDao.findById(jobPostingBoardId);
-
-		jobPostingBoardDao.update(jobPostingBoardPS);
 
 		Category categoryPS = categoryDao.findById(jobPostingBoardPS.getJobPostingBoardCategoryId());
 		categoryPS = jobPostingBoardUpdateReqDto.jobPostingUpdateReqDtoToCategoryEntity();
@@ -175,10 +176,8 @@ public class CompanyService {
 		Career careerPS = careerDao.findById(jobPostingBoardPS.getJobPostingBoardCareerId());
 		careerPS.updateCareer(jobPostingBoardUpdateReqDto);
 		careerDao.jobPostingUpdate(careerPS);
-		System.out.println("kkk" + jobPostingBoardUpdateReqDto.getCareerId());
 
-		JobPostingBoardUpdateRespDto jobPostingBoardUpdateRespDto = new JobPostingBoardUpdateRespDto(
-				jobPostingBoardPS,
+		JobPostingBoardUpdateRespDto jobPostingBoardUpdateRespDto = new JobPostingBoardUpdateRespDto(jobPostingBoardPS,
 				categoryPS, careerPS);
 
 		return jobPostingBoardUpdateRespDto;
