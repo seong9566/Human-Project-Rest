@@ -101,4 +101,21 @@ public class JobPostingBoardRespDto {
         }
 
     }
+
+    @Getter
+    @Setter
+    @NoArgsConstructor
+    public static class JobPostingBoardAllRespDto {
+        private Integer jobPostingBoardId;
+        private String jobPostingBoardTitle;
+
+        private Integer companyId;
+
+        public JobPostingBoardAllRespDto(JobPostingBoard jobPostingBoard) {
+            this.jobPostingBoardId = jobPostingBoard.getJobPostingBoardId();
+            this.jobPostingBoardTitle = jobPostingBoard.getJobPostingBoardTitle();
+        }
+
+    }
+
 }

@@ -3,7 +3,6 @@ package site.metacoding.miniproject.web;
 import java.io.File;
 import java.io.IOException;
 import java.nio.file.Files;
-import java.util.List;
 import java.util.UUID;
 
 import javax.servlet.http.HttpSession;
@@ -23,6 +22,7 @@ import org.springframework.web.multipart.MultipartFile;
 import lombok.RequiredArgsConstructor;
 import site.metacoding.miniproject.dto.company.CompanyRespDto.CompanyAddressRespDto;
 import site.metacoding.miniproject.dto.jobpostingboard.JobPostingBoardReqDto.JobPostingBoardInsertReqDto;
+import site.metacoding.miniproject.dto.jobpostingboard.JobPostingBoardRespDto.JobPostingBoardAllRespDto;
 import site.metacoding.miniproject.dto.user.UserRespDto.SignCompanyDto;
 import site.metacoding.miniproject.dto.user.UserRespDto.SignedDto;
 import site.metacoding.miniproject.service.company.CompanyService;
@@ -31,7 +31,6 @@ import site.metacoding.miniproject.web.dto.request.jobpostingboard.JobPostingBoa
 import site.metacoding.miniproject.web.dto.response.ResponseDto;
 import site.metacoding.miniproject.web.dto.response.company.CompanyInfoDto;
 import site.metacoding.miniproject.web.dto.response.jobpostingboard.JobPostingBoardDetailDto;
-import site.metacoding.miniproject.web.dto.response.jobpostingboard.JobPostingBoardListDto;
 
 @RestController
 @RequiredArgsConstructor
@@ -105,11 +104,16 @@ public class CompanyController {
 
 	// 회사가 작성한 구인 공고 리스트 보기
 	@GetMapping("/company/jobPostingBoardList")
-	public String jobPostingBoardList(Model model, Integer companyId) {
+	public ResponseDto<?> jobPostingBoardList(JobPostingBoardAllRespDto jobPostingBoardAllRespDto) {
 		SignedDto<?> principal = (SignedDto<?>) session.getAttribute("principal");
-		List<JobPostingBoardListDto> jobPostingBoardList = companyService.jobPostingBoardList(principal.getCompanyId());
-		model.addAttribute("jobPostingBoardList", jobPostingBoardList);
-		return "company/jobPostingBoardList";
+
+		SignCompanyDto signCompanyDto = (SignCompanyDto) principal.getUserInfo();
+		jobPostingBoardAllRespDto.setCompanyId(signCompanyDto.getCompanyId());
+
+		// List<JobPostingBoardAllRespDto> jobPostingBoardList =
+		// companyService.jobPostingBoardList(principal.getCompanyId());
+
+		return new ResponseDto<>(1, "성공", null);
 	}
 
 	// 채용 공고 상세보기

@@ -22,10 +22,9 @@ import site.metacoding.miniproject.domain.users.UsersDao;
 import site.metacoding.miniproject.dto.company.CompanyRespDto.CompanyAddressRespDto;
 import site.metacoding.miniproject.dto.company.CompanyRespDto.CompanyDetailRespDto;
 import site.metacoding.miniproject.dto.jobpostingboard.JobPostingBoardReqDto.JobPostingBoardInsertReqDto;
+import site.metacoding.miniproject.dto.jobpostingboard.JobPostingBoardRespDto.JobPostingBoardAllRespDto;
 import site.metacoding.miniproject.dto.jobpostingboard.JobPostingBoardRespDto.JobPostingBoardDetailRespDto;
 import site.metacoding.miniproject.dto.jobpostingboard.JobPostingBoardRespDto.JobPostingBoardInsertRespDto;
-import site.metacoding.miniproject.dto.user.UserRespDto.SignPersonalDto;
-import site.metacoding.miniproject.dto.user.UserRespDto.SignedDto;
 import site.metacoding.miniproject.web.dto.request.company.CompanyUpdateDto;
 import site.metacoding.miniproject.web.dto.request.jobpostingboard.JobPostingBoardUpdateDto;
 import site.metacoding.miniproject.web.dto.response.etc.PagingDto;
@@ -94,16 +93,21 @@ public class CompanyService {
 	}
 
 	// 채용공고 리스트
-	public List<JobPostingBoardListDto> jobPostingBoardList(Integer companyId) {
-		List<JobPostingBoardListDto> postingList = jobPostingBoardDao.jobPostingBoardList(companyId);
-		// TimeStamp to String
-		for (JobPostingBoardListDto deadLine : postingList) {
-			Timestamp ts = deadLine.getJobPostingBoardDeadline();
-			Date date = new Date();
-			date.setTime(ts.getTime());
-			String formattedDate = new SimpleDateFormat("yyyy년MM월dd일").format(date);
-			deadLine.setFormatDeadLine(formattedDate);
-		}
+	public List<JobPostingBoardAllRespDto> jobPostingBoardList(JobPostingBoardAllRespDto jobPostingBoardAllRespDto) {
+		List<JobPostingBoardAllRespDto> postingList = jobPostingBoardDao
+				.jobPostingBoardList(jobPostingBoardAllRespDto.getCompanyId());
+
+		// 데드라인 건드려야함
+
+		// // TimeStamp to String
+		// for (JobPostingBoardListDto deadLine : postingList) {
+		// Timestamp ts = deadLine.getJobPostingBoardDeadline();
+		// Date date = new Date();
+		// date.setTime(ts.getTime());
+		// String formattedDate = new SimpleDateFormat("yyyy년MM월dd일").format(date);
+		// deadLine.setFormatDeadLine(formattedDate);
+		// }
+
 		return postingList;
 	}
 

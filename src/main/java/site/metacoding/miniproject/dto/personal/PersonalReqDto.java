@@ -60,6 +60,10 @@ public class PersonalReqDto {
         private String loginPassword;
 
         public Users personalUpdateReqDto() {
+
+            SHA256 sha256 = new SHA256();
+            this.loginPassword = sha256.encrypt(this.loginPassword);
+
             return Users.builder()
                     .loginPassword(loginPassword)
                     .build();

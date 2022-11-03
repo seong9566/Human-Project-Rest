@@ -240,7 +240,7 @@ public class PersonalController {
 	}
 
 	// 내정보 보기
-	@GetMapping("/api/personal/detail")
+	@GetMapping("/s/api/personal/detail")
 	public ResponseDto<?> findByPersonal() {
 		SignedDto<?> principal = (SignedDto<?>) session.getAttribute("principal");
 		SignPersonalDto signPersonalDto = (SignPersonalDto) principal.getUserInfo();
@@ -251,7 +251,7 @@ public class PersonalController {
 	}
 
 	// 내정보 수정 보기
-	@GetMapping("/api/personal/updateForm")
+	@GetMapping("/s/api/personal/update")
 	public ResponseDto<?> personalInformUpdate() {
 		SignedDto<?> principal = (SignedDto<?>) session.getAttribute("principal");
 		SignPersonalDto signPersonalDto = (SignPersonalDto) principal.getUserInfo();
@@ -263,7 +263,7 @@ public class PersonalController {
 	}
 
 	// 내정보 수정
-	@PutMapping("/api/personal/update")
+	@PutMapping("/s/api/personal/update")
 	public @ResponseBody ResponseDto<?> personalUpdate(@RequestBody PersonalUpdatReqDto personalUpdatReqDto) {
 		// ValidationCheckUtil.valCheckToUpdatePersonal(personalUpdatReqDto);
 		SignedDto<SignPersonalDto> principal = (SignedDto<SignPersonalDto>) session.getAttribute("principal");
@@ -280,7 +280,7 @@ public class PersonalController {
 		JobPostingBoardDetailDto jobPostingPS = companyService.jobPostingOne(jobPostingBoardId);
 		// SignedDto<?> principal = (SignedDto<?>) session.getAttribute("principal");
 		CompanyAddressDto addressPS = companyService.findByAddress(jobPostingPS.getCompanyId());
-		model.addAttribute("address", addressPS);
+		model.addAttribute("address", addressPS);q
 		model.addAttribute("jobPostingPS", jobPostingPS);
 		System.out.println("jobpostingLike : " + jobPostingPS.getCompanyPhoneNumber());
 		return "personal/jobPostingViewApply";
