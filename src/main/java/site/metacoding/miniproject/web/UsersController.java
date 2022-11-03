@@ -44,7 +44,6 @@ public class UsersController {
 	@GetMapping("/logout")
 	public ResponseDto<?> logout(HttpServletResponse resp) {
 
-		
 		Cookie cookie = new Cookie("Authorization", null);
 		cookie.setMaxAge(0);
 		cookie.setPath("/");
