@@ -25,20 +25,8 @@ public class LikeReqDto {
         private Integer personalId;
         private Integer alarmId;
 
-        public Company CompanyLikeCompanyEntity() {
-            return Company.builder()
-                    .companyId(companyId)
-                    .companyName(companyName)
-                    .companyPicture(companyPicture)
-                    .companyEmail(companyEmail)
-                    .companyPhoneNumber(companyPhoneNumber)
-                    .companyAddress(companyAddress)
-                    .createdAt(createdAt)
-                    .build();
-        }
-
         public CompanyLike CompanyLikeEntity() {
-            return CompanyLike.builder().personalId(personalId).alarmId(alarmId).build();
+            return CompanyLike.builder().companyId(companyId).personalId(personalId).alarmId(alarmId).build();
         }
     }
 

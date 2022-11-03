@@ -7,6 +7,7 @@
 - Service, Controller, Dao 네이밍시 항상 앞에 동사옴 -> findById, updateByPersonal, insertResumes
 - List보기는 뒤에 List를 붙임  -> jobPostingBoardList
 - 주소 앞엔 항상 /api가 붙인다.
+- 인증이 필요할 경우 주소에 /s가 붙는다
 
 ``` DB 사용자 설정
 CREATE USER 'jobsmatch'@'%' IDENTIFIED BY '1234';

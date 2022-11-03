@@ -23,4 +23,9 @@ public class CompanyLike {
 		this.personalId = personalId;
 		this.alarmId = alarmId;
 	}
+
+	public CompanyLike(Integer companyId, Integer personalId) {
+		this.companyId = companyId;
+		this.personalId = personalId;
+	}
 }
