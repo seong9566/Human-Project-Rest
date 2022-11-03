@@ -44,7 +44,6 @@ public class ResumesRespDto {
             this.portfolioSource = portfolio.getPortfolioSource();
             this.portfolioFile = portfolio.getPortfolioFile();
         }
-
     }
 
     @NoArgsConstructor
