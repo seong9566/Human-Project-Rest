@@ -19,8 +19,8 @@
 		WHERE personal_id = #{personalId}
 	</select>
 
-	<select id="resumesById"
-		resultType="site.metacoding.miniproject.web.dto.response.resume.ResumesDetailDto">
+	<select id="findByResumesId"
+		resultType="site.metacoding.miniproject.dto.resumes.ResumesRespDto$ResumesDetailRespDto">
 		SELECT p.personal_name, p.personal_email,
 		p.personal_education, p.personal_phone_number,
 		r.resumes_id, r.resumes_title, r.resumes_picture, r.resumes_introduce,
@@ -43,6 +43,12 @@
 		ON
 		r.portfolio_id = pf.portfolio_id
 		where r.resumes_id = #{resumesId}
+	</select>
+
+	<select id="findById"
+		resultType="site.metacoding.miniproject.domain.resumes.Resumes">
+	SELECT * FROM resumes
+	WHERE resumes_id = #{resumesId}
 	</select>
 
 	<update id="update">
