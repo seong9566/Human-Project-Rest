@@ -59,7 +59,7 @@ public class LikeController {
 			CompanyLikeReqDto companyLikeReqDto) {
 		SignedDto<?> principal = (SignedDto<?>) session.getAttribute("principal");
 		// SignPersonalDto signPersonalDto = (SignPersonalDto) principal.getUserInfo();
-		companyLikeService.좋아요(principal, companyId, companyLikeReqDto);
+		companyLikeService.좋아요(principal, companyId, companyId);
 
 		return new ResponseDto<>(1, "좋아요성공", companyLikeReqDto);
 

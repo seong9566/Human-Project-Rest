@@ -13,6 +13,7 @@ import site.metacoding.miniproject.domain.alarm.AlarmDao;
 import site.metacoding.miniproject.domain.like.companylike.CompanyLike;
 import site.metacoding.miniproject.domain.like.companylike.CompanyLikesDao;
 import site.metacoding.miniproject.domain.personal.Personal;
+import site.metacoding.miniproject.domain.personal.PersonalDao;
 import site.metacoding.miniproject.domain.users.Users;
 import site.metacoding.miniproject.domain.users.UsersDao;
 import site.metacoding.miniproject.dto.like.LikeReqDto.CompanyLikeReqDto;
@@ -27,6 +28,7 @@ public class CompanyLikeService {
 	private final CompanyLikesDao companyLikesDao;
 	private final UsersDao usersDao;
 	private final AlarmDao alarmDao;
+	private final PersonalDao personalDao;
 
 	@Transactional(rollbackFor = RuntimeException.class)
 	public void 좋아요(SignedDto<?> signedDto, Integer companyId) {
@@ -40,7 +42,8 @@ public class CompanyLikeService {
 				companyLike.getCompanyLikeId());
 
 		Users users = usersDao.findByCompanyId(companyId);
-		Alarm alarm = new Alarm(users.getUsersId(), companylikes, personalinfo.getPersonalName());
+		Personal personalPS = personalDao.findById(personalId);
+		Alarm alarm = new Alarm(users.getUsersId(), companylikes, personalPS.getPersonalName());
 
 		alarmDao.insert(alarm);
 
