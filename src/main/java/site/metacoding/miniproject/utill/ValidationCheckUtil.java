@@ -6,11 +6,11 @@ import java.util.regex.Pattern;
 
 import org.springframework.util.ObjectUtils;
 
-import site.metacoding.miniproject.config.handler.exception.NormalException;
-import site.metacoding.miniproject.config.handler.exception.ValCheckException;
 import site.metacoding.miniproject.dto.company.CompanyReqDto.CompanyJoinDto;
 import site.metacoding.miniproject.dto.personal.PersonalReqDto.PersonalJoinDto;
 import site.metacoding.miniproject.dto.personal.PersonalReqDto.PersonalUpdatReqDto;
+import site.metacoding.miniproject.exception.NormalException;
+import site.metacoding.miniproject.exception.ValCheckException;
 
 public class ValidationCheckUtil {
 

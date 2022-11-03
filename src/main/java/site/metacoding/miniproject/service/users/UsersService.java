@@ -9,7 +9,6 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import lombok.RequiredArgsConstructor;
-import site.metacoding.miniproject.config.handler.exception.ApiException;
 import site.metacoding.miniproject.domain.alarm.Alarm;
 import site.metacoding.miniproject.domain.alarm.AlarmDao;
 import site.metacoding.miniproject.domain.company.Company;
@@ -29,12 +28,14 @@ import site.metacoding.miniproject.dto.personal.PersonalReqDto.PersonalJoinDto;
 import site.metacoding.miniproject.dto.user.UserRespDto.SignCompanyDto;
 import site.metacoding.miniproject.dto.user.UserRespDto.SignPersonalDto;
 import site.metacoding.miniproject.dto.user.UserRespDto.SignedDto;
+import site.metacoding.miniproject.exception.ApiException;
+import site.metacoding.miniproject.utill.PermissionCheck.UserPermissionCheck;
 import site.metacoding.miniproject.utill.SHA256;
 import site.metacoding.miniproject.web.dto.request.etc.LoginDto;
 
 @Service
 @RequiredArgsConstructor
-public class UsersService {
+public class UsersService{
 
     private final UsersDao usersDao;
     private final CompanyDao companyDao;
@@ -44,7 +45,7 @@ public class UsersService {
     private final SHA256 sha256;
 
     // 로그인
-    public SignedDto<?> login(LoginDto loginDto) {
+    public SignedDto<?> login(LoginDto loginDto){
 
         String loginId = loginDto.getLoginId();
         String loginPassword = sha256.encrypt(loginDto.getLoginPassword());
@@ -145,7 +146,6 @@ public class UsersService {
 
     //이력서번호로 유저 아이디찾기
     public Integer findUserIdByResumesId(Integer resumesId) {
-
         Users users = usersDao.findByResumesId(resumesId);
         return users.getUsersId();
     }
@@ -155,15 +155,18 @@ public class UsersService {
         return users.getUsersId();
     }
 
-    public Integer checkUserId(String loginId) {
+    public Boolean checkUserId(String loginId) {
         Integer checkUser = usersDao.findByLoginId(loginId);
-        return checkUser;
+        if (checkUser == null) {
+            return true;
+        }
+        return false;
     }
 
     //유저아이디로 해당 유저에게 온 알람 체크 하기
     public List<UserAlarmRespDto> finduserAlarmByUserId(Integer usersId) {
-
         List<Alarm> usersAlarmsPS = alarmDao.findByUsersId(usersId);
+        UserPermissionCheck.permissionCheck(usersId, usersId);
         List<UserAlarmRespDto> userAlarmRespDtos = new ArrayList<>();
 
         userAlarmRespDtos = usersAlarmsPS.stream().map(alarm-> new UserAlarmRespDto(alarm)).collect(Collectors.toList());
@@ -214,6 +217,7 @@ public class UsersService {
 
         try {
             Alarm alarmPS = alarmDao.findById(alarmReqDtoToDelete.getAlarmId());
+            UserPermissionCheck.permissionCheck(alarmReqDtoToDelete.getUsersId(), alarmPS.getUsersId());
             alarmDao.deleteById(alarmPS.getAlarmId());
         } catch (Exception e) {
             throw new ApiException("해당 알람이 존재하지 않습니다.");
