@@ -170,7 +170,7 @@ public class CompanyController {
 	}
 
 	// 채용 공고 삭제
-	@DeleteMapping("/company/jobPostingBoard/delete/{jobPostingBoardId}")
+	@DeleteMapping("/s/company/jobPostingBoard/delete/{jobPostingBoardId}")
 	public @ResponseBody ResponseDto<?> deleteResumes(@PathVariable Integer jobPostingBoardId) {
 		companyService.deleteJobposting(jobPostingBoardId);
 		return new ResponseDto<>(1, "채용공고 삭제 성공", null);

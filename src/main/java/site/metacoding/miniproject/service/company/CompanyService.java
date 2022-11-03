@@ -29,12 +29,8 @@ import site.metacoding.miniproject.dto.jobpostingboard.JobPostingBoardReqDto.Job
 import site.metacoding.miniproject.dto.jobpostingboard.JobPostingBoardRespDto.JobPostingBoardAllRespDto;
 import site.metacoding.miniproject.dto.jobpostingboard.JobPostingBoardRespDto.JobPostingBoardDetailRespDto;
 import site.metacoding.miniproject.dto.jobpostingboard.JobPostingBoardRespDto.JobPostingBoardInsertRespDto;
-
-import site.metacoding.miniproject.web.dto.request.company.CompanyUpdateDto;
-
 import site.metacoding.miniproject.web.dto.request.jobpostingboard.JobPostingBoardUpdateDto;
 import site.metacoding.miniproject.web.dto.response.etc.PagingDto;
-import site.metacoding.miniproject.web.dto.response.jobpostingboard.JobPostingBoardListDto;
 import site.metacoding.miniproject.web.dto.response.personal.PersonalMainDto;
 
 @Service
@@ -163,6 +159,11 @@ public class CompanyService {
 	// 채용 공고 삭제
 	@Transactional(rollbackFor = Exception.class)
 	public void deleteJobposting(Integer jobPostingBoardId) {
+		JobPostingBoard jobPostingBoard = jobPostingBoardDao.findById(jobPostingBoardId);
+		if (jobPostingBoard == null) {
+			throw new RuntimeException("해당" + jobPostingBoardId + "로 삭제할수 없습니다.");
+		}
+
 		jobPostingBoardDao.deleteById(jobPostingBoardId);
 	}
 
