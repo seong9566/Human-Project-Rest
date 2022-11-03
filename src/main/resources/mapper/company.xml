@@ -68,19 +68,13 @@
 	</update>
 	<select id="companyUpdateById"
 		resultType="site.metacoding.miniproject.dto.company.CompanyRespDto$CompanyUpdateFormRespDto">
-		SELECT 		
-		c.company_name,
-		c.company_id,
-		c.company_phone_number,
-		c.company_email,
-		c.company_picture,
-		c.company_address,
+		SELECT c.company_id, c.company_name, c.company_email, c.company_picture, c.company_phone_number, c.company_address,
 		u.login_password
 		FROM company c
 		left OUTER JOIN users u
 
 		ON
-		FROM company_id = u.company_id
+		c.company_id = u.company_id
 		WHERE c.company_id =
 		#{companyId}
 	</select>

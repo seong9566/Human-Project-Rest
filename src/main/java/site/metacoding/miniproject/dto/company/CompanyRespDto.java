@@ -1,10 +1,18 @@
 package site.metacoding.miniproject.dto.company;
 
+import java.nio.file.Files;
+import java.util.UUID;
+
+import org.springframework.web.multipart.MultipartFile;
+
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
+import site.metacoding.miniproject.config.handler.exception.ApiException;
 import site.metacoding.miniproject.domain.company.Company;
 import site.metacoding.miniproject.domain.users.Users;
+import java.io.File;
+import java.nio.file.Files;
 
 public class CompanyRespDto {
 
@@ -101,12 +109,11 @@ public class CompanyRespDto {
             this.companyName = company.getCompanyName();
             this.companyEmail = company.getCompanyEmail();
             this.companyPhoneNumber = company.getCompanyPhoneNumber();
-            this.companyPicture = company.getCompanyAddress();
-            this.companyAddress = company.getCompanyPicture();
+            this.companyPicture = company.getCompanyPicture();
+            this.companyAddress = company.getCompanyAddress();
 
             this.loginPassword = users.getLoginPassword();
         }
-
     }
 
 }

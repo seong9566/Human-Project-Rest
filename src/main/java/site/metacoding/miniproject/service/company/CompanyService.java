@@ -9,6 +9,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import lombok.RequiredArgsConstructor;
+import site.metacoding.miniproject.config.handler.exception.ApiException;
 import site.metacoding.miniproject.domain.career.Career;
 import site.metacoding.miniproject.domain.career.CareerDao;
 import site.metacoding.miniproject.domain.category.Category;
@@ -71,7 +72,11 @@ public class CompanyService {
 	@Transactional(rollbackFor = Exception.class)
 	public CompanyUpdateRespDto updateCompany(Integer userId, Integer companyId,
 			CompanyUpdateReqDto companyUpdateReqDto) {
-
+		try {
+			companyUpdateReqDto.companyUpdateDtoPictureSet();
+		} catch (Exception e) {
+			throw new ApiException("멀티파트 폼 에러");
+		}
 		// user패스워드 수정
 		Users companyUserPS = usersDao.findById(userId);
 		companyUserPS.update(companyUpdateReqDto);
