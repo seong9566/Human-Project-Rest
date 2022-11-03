@@ -15,6 +15,7 @@ import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import site.metacoding.miniproject.dto.alarm.AlarmReqDto.AlarmReqListDtoToCheck;
 import site.metacoding.miniproject.dto.alarm.AlarmRespDto.UserAlarmRespDto;
+import site.metacoding.miniproject.dto.alarm.AlarmRespDto.UserAlarmRespDtoToChecked;
 import site.metacoding.miniproject.dto.user.UserRespDto.SignedDto;
 import site.metacoding.miniproject.service.users.UsersService;
 import site.metacoding.miniproject.web.dto.response.ResponseDto;
@@ -48,8 +49,8 @@ public class AlarmController {
 	public ResponseDto<?> readedAlarm(@RequestBody AlarmReqListDtoToCheck alarmReqListDtoToCheck) {
 		SignedDto<?> signedDto = (SignedDto<?>) session.getAttribute("principal");
 		alarmReqListDtoToCheck.setUsersId(signedDto.getUsersId());
-		usersService.userAlarmToCheck(alarmReqListDtoToCheck);
-		return new ResponseDto<>(1, "success", null);
+		List<UserAlarmRespDtoToChecked> checkeds = usersService.userAlarmToCheck(alarmReqListDtoToCheck);
+		return new ResponseDto<>(1, "success", checkeds);
 	}
 
 	// 알람지우기
