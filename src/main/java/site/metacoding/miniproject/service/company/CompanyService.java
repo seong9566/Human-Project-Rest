@@ -2,6 +2,7 @@ package site.metacoding.miniproject.service.company;
 
 import java.sql.Timestamp;
 import java.text.SimpleDateFormat;
+import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
 
@@ -31,6 +32,7 @@ import site.metacoding.miniproject.dto.jobpostingboard.JobPostingBoardRespDto.Jo
 import site.metacoding.miniproject.dto.jobpostingboard.JobPostingBoardRespDto.JobPostingBoardInsertRespDto;
 import site.metacoding.miniproject.web.dto.request.jobpostingboard.JobPostingBoardUpdateDto;
 import site.metacoding.miniproject.web.dto.response.etc.PagingDto;
+import site.metacoding.miniproject.web.dto.response.jobpostingboard.JobPostingBoardListDto;
 import site.metacoding.miniproject.web.dto.response.personal.PersonalMainDto;
 
 @Service
@@ -114,12 +116,15 @@ public class CompanyService {
 
 	// 채용공고 리스트
 	public List<JobPostingBoardAllRespDto> jobPostingBoardList(JobPostingBoardAllRespDto jobPostingBoardAllRespDto) {
-		List<JobPostingBoardAllRespDto> postingList = jobPostingBoardDao
+		List<JobPostingBoard> jobPostingBoardList = jobPostingBoardDao
 				.jobPostingBoardList(jobPostingBoardAllRespDto.getCompanyId());
 
-		// 데드라인 건드려야함
+		List<JobPostingBoardAllRespDto> jobPostingAllRespDtoList = new ArrayList<>();
+		for (JobPostingBoard jobPostingBoard : jobPostingBoardList) {
+			jobPostingAllRespDtoList.add(new JobPostingBoardAllRespDto(jobPostingBoard));
+		}
 
-		// // TimeStamp to String
+		// TimeStamp to String
 		// for (JobPostingBoardListDto deadLine : postingList) {
 		// Timestamp ts = deadLine.getJobPostingBoardDeadline();
 		// Date date = new Date();
@@ -128,7 +133,7 @@ public class CompanyService {
 		// deadLine.setFormatDeadLine(formattedDate);
 		// }
 
-		return postingList;
+		return jobPostingAllRespDtoList;
 	}
 
 	// 채용공고 상세 보기

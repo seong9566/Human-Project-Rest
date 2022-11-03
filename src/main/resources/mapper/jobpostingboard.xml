@@ -17,7 +17,7 @@
 		=#{jobPostingBoardId}
 	</select>
 
-	<select id="jobPostingBoardList" resultType="site.metacoding.miniproject.web.dto.response.jobpostingboard.JobPostingBoardListDto">
+	<select id="jobPostingBoardList" resultType="site.metacoding.miniproject.dto.jobpostingboard.JobPostingBoardRespDto$JobPostingBoardAllRespDto">
 		SELECT 
 		jpb.job_posting_board_id,
 		jpb.company_id,

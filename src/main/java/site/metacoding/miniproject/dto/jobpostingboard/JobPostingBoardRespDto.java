@@ -107,13 +107,32 @@ public class JobPostingBoardRespDto {
     @NoArgsConstructor
     public static class JobPostingBoardAllRespDto {
         private Integer jobPostingBoardId;
-        private String jobPostingBoardTitle;
-
         private Integer companyId;
+        private String jobPostingBoardTitle;
+        private Timestamp jobPostingBoardDeadline;
+
+        private Integer jobPostingBoardCategoryId;
+        private Integer jobPostingBoardCareerId;
+
+        private Boolean categoryFrontend;
+        private Boolean categoryBackend;
+        private Boolean categoryDevops;
+
+        private Boolean oneYearLess;
+        private Boolean twoYearOver;
+        private Boolean threeYearOver;
+        private Boolean fiveYearOver;
+
+        private Integer categoryId;
+        private Integer careerId;
 
         public JobPostingBoardAllRespDto(JobPostingBoard jobPostingBoard) {
             this.jobPostingBoardId = jobPostingBoard.getJobPostingBoardId();
             this.jobPostingBoardTitle = jobPostingBoard.getJobPostingBoardTitle();
+            this.jobPostingBoardDeadline = jobPostingBoard.getJobPostingBoardDeadline();
+            this.jobPostingBoardCategoryId = jobPostingBoard.getJobPostingBoardCategoryId();
+            this.jobPostingBoardCareerId = jobPostingBoard.getJobPostingBoardCareerId();
+
         }
 
     }
