@@ -85,7 +85,6 @@ public class CompanyReqDto {
         private String companyPhoneNumber;
         private MultipartFile file;
         private String loginPassword;
-        public PersonalUpdatReqDto companyPassWordUpdateReqDto;
 
         public Company companyUpdateDtoToCompanyEntity() {
             return Company.builder()
