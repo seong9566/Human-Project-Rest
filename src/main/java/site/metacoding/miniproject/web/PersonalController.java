@@ -1,10 +1,6 @@
 package site.metacoding.miniproject.web;
 
-import java.io.File;
-import java.io.IOException;
-import java.nio.file.Files;
 import java.util.List;
-import java.util.UUID;
 
 import javax.servlet.http.HttpSession;
 
@@ -25,6 +21,7 @@ import site.metacoding.miniproject.dto.personal.PersonalReqDto.PersonalUpdatReqD
 import site.metacoding.miniproject.dto.personal.PersonalRespDto.PersonalUpdateRespDto;
 import site.metacoding.miniproject.dto.resumes.ResumesReqDto.ResumesInsertReqDto;
 import site.metacoding.miniproject.dto.resumes.ResumesReqDto.ResumesUpdateReqDto;
+import site.metacoding.miniproject.dto.resumes.ResumesRespDto.ResumesAllByIdRespDto;
 import site.metacoding.miniproject.dto.resumes.ResumesRespDto.ResumesAllRespDto;
 import site.metacoding.miniproject.dto.resumes.ResumesRespDto.ResumesUpdateRespDto;
 import site.metacoding.miniproject.dto.user.UserRespDto.SignPersonalDto;
@@ -62,11 +59,11 @@ public class PersonalController {
 
 	// 내가 작성한 이력서 목록 보기
 	@GetMapping("/resumes/myList")
-	public ResponseDto<?> findAllMyResumes(ResumesAllRespDto resumesAllRespDto) {
+	public ResponseDto<?> findAllMyResumes(ResumesAllByIdRespDto resumesAllByIdRespDto) {
 		SignedDto<?> principal = (SignedDto<?>) session.getAttribute("principal");
 		SignPersonalDto signPersonalDto = (SignPersonalDto) principal.getUserInfo();
-		resumesAllRespDto.setPersonalId(signPersonalDto.getPersonalId());
-		return new ResponseDto<>(1, "내 이력서 목록 보기 성공", personalService.findAllMyResumes(resumesAllRespDto));
+		resumesAllByIdRespDto.setPersonalId(signPersonalDto.getPersonalId());
+		return new ResponseDto<>(1, "내 이력서 목록 보기 성공", personalService.findAllMyResumes(resumesAllByIdRespDto));
 	}
 
 	// 이력서 상세 보기
@@ -96,6 +93,12 @@ public class PersonalController {
 	public ResponseDto<?> deleteResumes(@PathVariable Integer resumesId) {
 		personalService.deleteResumes(resumesId);
 		return new ResponseDto<>(1, "이력서 삭제 성공", null);
+	}
+
+	// 전체 이력서 목록 보기
+	@GetMapping("/resumes/resumesList")
+	public ResponseDto<?> findAllResumes(ResumesAllRespDto resumesAllRespDto) {
+		return new ResponseDto<>(1, "전체 이력서 목록 보기 성공", personalService.findAllResumes(resumesAllRespDto));
 	}
 
 	// 메인 - 채용공고 or 이력서 리스트 (페이징+검색)

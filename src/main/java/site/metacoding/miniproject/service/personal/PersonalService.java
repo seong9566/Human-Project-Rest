@@ -28,6 +28,7 @@ import site.metacoding.miniproject.dto.personal.PersonalRespDto.PersonalUpdateFo
 import site.metacoding.miniproject.dto.personal.PersonalRespDto.PersonalUpdateRespDto;
 import site.metacoding.miniproject.dto.resumes.ResumesReqDto.ResumesInsertReqDto;
 import site.metacoding.miniproject.dto.resumes.ResumesReqDto.ResumesUpdateReqDto;
+import site.metacoding.miniproject.dto.resumes.ResumesRespDto.ResumesAllByIdRespDto;
 import site.metacoding.miniproject.dto.resumes.ResumesRespDto.ResumesAllRespDto;
 import site.metacoding.miniproject.dto.resumes.ResumesRespDto.ResumesDetailRespDto;
 import site.metacoding.miniproject.dto.resumes.ResumesRespDto.ResumesInsertRespDto;
@@ -86,13 +87,14 @@ public class PersonalService {
 	}
 
 	// 내가 작성한 이력서 목록 보기
-	public List<ResumesAllRespDto> findAllMyResumes(ResumesAllRespDto resumesAllRespDto) {
-		List<Resumes> resumesList = resumesDao.findAllMyResumes(resumesAllRespDto.getPersonalId());
-		List<ResumesAllRespDto> resumesAllRespDtoList = new ArrayList<>();
+	@Transactional(readOnly = true)
+	public List<ResumesAllByIdRespDto> findAllMyResumes(ResumesAllByIdRespDto resumesAllByIdRespDto) {
+		List<Resumes> resumesList = resumesDao.findAllMyResumes(resumesAllByIdRespDto.getPersonalId());
+		List<ResumesAllByIdRespDto> resumesAllByIdRespDtoList = new ArrayList<>();
 		for (Resumes resumes : resumesList) {
-			resumesAllRespDtoList.add(new ResumesAllRespDto(resumes));
+			resumesAllByIdRespDtoList.add(new ResumesAllByIdRespDto(resumes));
 		}
-		return resumesAllRespDtoList;
+		return resumesAllByIdRespDtoList;
 	}
 
 	// 이력서 상세 보기
@@ -150,9 +152,19 @@ public class PersonalService {
 	}
 
 	// 전체 이력서 목록 보기
-	public List<CompanyMainDto> resumesAll(Integer startNum) {
-		return resumesDao.findAll(startNum);
+	@Transactional(readOnly = true)
+	public List<ResumesAllRespDto> findAllResumes(ResumesAllRespDto resumesAllRespDto) {
+		List<Resumes> resumesList = resumesDao.findAllResumes();
+		List<ResumesAllRespDto> resumesAllRespDtoList = new ArrayList<>();
+		for (Resumes resumes : resumesList) {
+			resumesAllRespDtoList.add(new ResumesAllRespDto(resumes));
+		}
+		return resumesAllRespDtoList;
 	}
+
+	// public List<CompanyMainDto> resumesAll(Integer startNum) {
+	// return resumesDao.findAll(startNum);
+	// }
 
 	// 페이징
 	public PagingDto resumesPaging(Integer page, String keyword) {

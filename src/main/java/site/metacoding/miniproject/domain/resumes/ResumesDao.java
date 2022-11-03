@@ -27,6 +27,9 @@ public interface ResumesDao {
 	// 이력서 삭제
 	public void deleteById(Integer resumesId);
 
+	// 전체 이력서 목록 보기
+	public List<Resumes> findAllResumes();
+
 	// 이력서 전체 목록 보기
 
 	public List<CompanyMainDto> findAll(int startNum);

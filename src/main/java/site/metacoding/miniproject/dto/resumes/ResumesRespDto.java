@@ -49,13 +49,13 @@ public class ResumesRespDto {
     @NoArgsConstructor
     @Setter
     @Getter
-    public static class ResumesAllRespDto {
+    public static class ResumesAllByIdRespDto {
         private String resumesTitle;
         private String resumesPlace;
 
         private Integer personalId;
 
-        public ResumesAllRespDto(Resumes resumes) {
+        public ResumesAllByIdRespDto(Resumes resumes) {
             this.resumesTitle = resumes.getResumesTitle();
             this.resumesPlace = resumes.getResumesPlace();
         }
@@ -149,6 +149,19 @@ public class ResumesRespDto {
             this.fiveYearOver = career.getFiveYearOver();
             this.portfolioSource = portfolio.getPortfolioSource();
             this.portfolioFile = portfolio.getPortfolioFile();
+        }
+    }
+
+    @NoArgsConstructor
+    @Setter
+    @Getter
+    public static class ResumesAllRespDto {
+        private String resumesTitle;
+        private String resumesPlace;
+
+        public ResumesAllRespDto(Resumes resumes) {
+            this.resumesTitle = resumes.getResumesTitle();
+            this.resumesPlace = resumes.getResumesPlace();
         }
     }
 }

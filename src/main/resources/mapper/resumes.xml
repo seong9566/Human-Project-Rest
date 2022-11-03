@@ -65,6 +65,11 @@
 		DELETE FROM resumes WHERE resumes_id=#{resumesId}
 	</delete>
 
+	<select id="findAllResumes"
+		resultType="site.metacoding.miniproject.domain.resumes.Resumes">
+		SELECT * FROM resumes
+	</select>
+
 	<select id="findAll"
 		resultType="site.metacoding.miniproject.web.dto.response.company.CompanyMainDto">
 		SELECT * FROM resumes
