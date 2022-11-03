@@ -20,6 +20,7 @@ import site.metacoding.miniproject.domain.subscribe.Subscribe;
 import site.metacoding.miniproject.domain.subscribe.SubscribeDao;
 import site.metacoding.miniproject.domain.users.Users;
 import site.metacoding.miniproject.domain.users.UsersDao;
+import site.metacoding.miniproject.dto.alarm.AlarmReqDto.AlarmReqDtoToDelete;
 import site.metacoding.miniproject.dto.alarm.AlarmReqDto.AlarmReqListDtoToCheck;
 import site.metacoding.miniproject.dto.alarm.AlarmRespDto.UserAlarmRespDto;
 import site.metacoding.miniproject.dto.alarm.AlarmRespDto.UserAlarmRespDtoToChecked;
@@ -209,10 +210,10 @@ public class UsersService {
     }
         
     //알람 지우기
-    public void deleteAlarm(Integer alarmId) {
+    public void deleteAlarm(AlarmReqDtoToDelete alarmReqDtoToDelete) {
 
         try {
-            Alarm alarmPS = alarmDao.findById(alarmId);
+            Alarm alarmPS = alarmDao.findById(alarmReqDtoToDelete.getAlarmId());
             alarmDao.deleteById(alarmPS.getAlarmId());
         } catch (Exception e) {
             throw new ApiException("해당 알람이 존재하지 않습니다.");
