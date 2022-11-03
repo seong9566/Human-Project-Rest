@@ -18,6 +18,7 @@ import org.springframework.web.multipart.MultipartFile;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import site.metacoding.miniproject.domain.alarm.Alarm;
+import site.metacoding.miniproject.dto.alarm.AlarmRespDto.UserAlarmRespDto;
 import site.metacoding.miniproject.dto.company.CompanyReqDto.CompanyJoinDto;
 import site.metacoding.miniproject.dto.personal.PersonalReqDto.PersonalJoinDto;
 import site.metacoding.miniproject.dto.user.UserRespDto.SignedDto;
@@ -140,27 +141,6 @@ public class UserController {
 		session.setAttribute("principal", signedDto);
 
 		return new ResponseDto<>(1, "계정생성완료", signedDto);
-	}
-
-	// 유저알람 갱신 해주기
-	@GetMapping("/s/user/alarm/{usersId}")
-	public ResponseDto<?> refreshUserAlarm(@PathVariable Integer usersId) {
-
-		ResponseDto<?> responseDto = new ResponseDto<>(1, "알람없음", null);
-
-		List<Alarm> usersAlarm = userService.finduserAlarmByUserId(usersId);
-
-		if (!usersAlarm.isEmpty())
-			responseDto = new ResponseDto<>(1, "통신 성공", usersAlarm);
-
-		return responseDto;
-	}
-
-	// 알람지우기
-	@DeleteMapping("/s/user/alarm/{alarmId}")
-	public ResponseDto<?> deleteUserAlarm(@PathVariable Integer alarmId) {
-		userService.deleteAlarm(alarmId);
-		return new ResponseDto<>(1, "삭제 성공", null);
 	}
 
 }

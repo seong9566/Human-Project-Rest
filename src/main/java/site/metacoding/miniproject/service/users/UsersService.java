@@ -1,7 +1,9 @@
 package site.metacoding.miniproject.service.users;
 
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
+import java.util.stream.Collectors;
 
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -18,6 +20,7 @@ import site.metacoding.miniproject.domain.subscribe.Subscribe;
 import site.metacoding.miniproject.domain.subscribe.SubscribeDao;
 import site.metacoding.miniproject.domain.users.Users;
 import site.metacoding.miniproject.domain.users.UsersDao;
+import site.metacoding.miniproject.dto.alarm.AlarmRespDto.UserAlarmRespDto;
 import site.metacoding.miniproject.dto.company.CompanyReqDto.CompanyJoinDto;
 import site.metacoding.miniproject.dto.personal.PersonalReqDto.PersonalJoinDto;
 import site.metacoding.miniproject.dto.user.UserRespDto.SignCompanyDto;
@@ -153,9 +156,13 @@ public class UsersService {
         return checkUser;
     }
 
-    public List<Alarm> finduserAlarmByUserId(Integer usersId) {
-        List<Alarm> usersAlarm = alarmDao.findByusersId(usersId);
-        return usersAlarm;
+    public List<UserAlarmRespDto> finduserAlarmByUserId(Integer usersId) {
+
+        List<Alarm> usersAlarmsPS = alarmDao.findByusersId(usersId);
+        List<UserAlarmRespDto> userAlarmRespDtos = new ArrayList<>();
+
+        userAlarmRespDtos = usersAlarmsPS.stream().map(alarm-> new UserAlarmRespDto(alarm)).collect(Collectors.toList());
+        return userAlarmRespDtos;
     }
 
     public Boolean checkUserAlarm(Integer usersId) {

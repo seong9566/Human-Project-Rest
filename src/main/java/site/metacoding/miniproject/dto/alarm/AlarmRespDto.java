@@ -1,7 +1,5 @@
 package site.metacoding.miniproject.dto.alarm;
 
-import java.sql.Timestamp;
-
 import lombok.Getter;
 import lombok.Setter;
 import site.metacoding.miniproject.domain.alarm.Alarm;

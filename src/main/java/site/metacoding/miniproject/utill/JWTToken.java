@@ -55,7 +55,7 @@ public class JWTToken {
 
         public static Cookie setCookie(String token) {
             Cookie cookie = new Cookie("Authorization", token); // Cookie에 Bearer 추가하면 안됨 - 최대 공간 초과....
-            cookie.setMaxAge(60 * 60); // 토큰값도 1시간이기에....
+            cookie.setMaxAge(6 * 100 * 60); // 토큰값도 1시간이기에....
             return cookie;
         }
 
@@ -118,7 +118,7 @@ public class JWTToken {
         SignPersonalDto signPersonalDto = new SignPersonalDto();
         SignCompanyDto signCompanyDto = new SignCompanyDto();
 
-        // 토큰 -> 로그인값으로 변경 로직 ..... 뭔가 더러움
+        // 토큰 -> 로그인Dto 변경 로직 ..... 뭔가 더러움
         public SignedDto<?> tokenToSignedDto(Map<String, Object> getSigned) {
             for (String key : getSigned.keySet()) {
 
