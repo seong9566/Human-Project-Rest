@@ -95,11 +95,14 @@
 		0 first,
 		0 last
 		FROM resumes
+		<if test="keyword != null">
+			WHERE resumes_title like CONCAT('%', #{keyword}, '%')
+		</if>
 		) paging
 	</select>
 
 	<select id="findSearch"
-		resultType="site.metacoding.miniproject.web.dto.response.company.CompanyMainDto">
+		resultType="site.metacoding.miniproject.domain.resumes.Resumes">
 		SELECT resumes_id, resumes_title, resumes_place
 		FROM resumes
 		WHERE resumes_title like CONCAT('%', #{keyword}, '%')
