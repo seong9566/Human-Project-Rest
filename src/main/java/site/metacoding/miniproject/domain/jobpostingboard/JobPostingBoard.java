@@ -6,7 +6,6 @@ import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
-import site.metacoding.miniproject.dto.jobpostingboard.JobPostingBoardReqDto.JobPostingBoardInsertReqDto;
 import site.metacoding.miniproject.web.dto.request.jobpostingboard.JobPostingBoardUpdateDto;
 
 @Getter
@@ -49,4 +48,19 @@ public class JobPostingBoard {
 		this.jobPostingBoardPlace = updateDto.getJobPostingBoardPlace();
 		this.jobPostingBoardDeadline = updateDto.getJobPostingBoardDeadline();
 	}
+
+	public JobPostingBoard(Integer jobPostingBoardId, Integer companyId, Integer jobPostingBoardCareerId,
+			Integer jobPostingBoardCategoryId, String jobPostingBoardTitle, Timestamp jobPostingBoardDeadline,
+			Timestamp createdAt) {
+
+		this.jobPostingBoardId = jobPostingBoardId;
+		this.companyId = companyId;
+		this.jobPostingBoardCareerId = jobPostingBoardCareerId;
+		this.jobPostingBoardCategoryId = jobPostingBoardCategoryId;
+		this.jobPostingBoardTitle = jobPostingBoardTitle;
+		this.jobPostingBoardDeadline = jobPostingBoardDeadline;
+		this.createdAt = createdAt;
+
+	}
+
 }

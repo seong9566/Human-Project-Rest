@@ -5,8 +5,8 @@ import java.util.Map;
 
 import org.springframework.util.ObjectUtils;
 
-import site.metacoding.miniproject.config.handler.exception.NormalException;
-import site.metacoding.miniproject.config.handler.exception.ValCheckException;
+import site.metacoding.miniproject.exception.NormalException;
+import site.metacoding.miniproject.exception.ValCheckException;
 import site.metacoding.miniproject.web.dto.request.resume.ResumesInsertDto;
 import site.metacoding.miniproject.web.dto.request.resume.ResumesUpdateDto;
 

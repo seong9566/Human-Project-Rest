@@ -64,4 +64,26 @@ public class JobPostingBoardReqDto {
         }
     }
 
+    @Getter
+    @Setter
+    public static class JobPostingBoardUpdateReqDto {
+        private Integer jobPostingBoardId;
+        private String jobPostingBoardTitle;
+        private String jobPostingBoardContent;
+        private Integer jobPostingSalary;
+        private String jobPostingBoardPlace;
+        private Timestamp jobPostingBoardDeadline;
+
+        public JobPostingBoard jobPostingBoardUpdate() {
+            return JobPostingBoard.builder()
+                    .jobPostingBoardTitle(jobPostingBoardTitle)
+                    .jobPostingBoardContent(jobPostingBoardContent)
+                    .jobPostingSalary(jobPostingSalary)
+                    .jobPostingBoardPlace(jobPostingBoardPlace)
+                    .jobPostingBoardDeadline(jobPostingBoardDeadline)
+                    .build();
+        }
+
+    }
+
 }
