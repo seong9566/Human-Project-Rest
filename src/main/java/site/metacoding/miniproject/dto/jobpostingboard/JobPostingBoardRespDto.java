@@ -98,4 +98,37 @@ public class JobPostingBoardRespDto {
         }
 
     }
+
+    @Getter
+    @Setter
+    @NoArgsConstructor
+    public static class JobPostingBoardAllRespDto {
+        private Integer jobPostingBoardId;
+        private Integer companyId;
+        private String jobPostingBoardTitle;
+        private Timestamp jobPostingBoardDeadline;
+
+        private Boolean categoryFrontend;
+        private Boolean categoryBackend;
+        private Boolean categoryDevops;
+
+        private Boolean oneYearLess;
+        private Boolean twoYearOver;
+        private Boolean threeYearOver;
+        private Boolean fiveYearOver;
+
+        // private Integer categoryId;
+        // private Integer careerId;
+
+        private String formatDeadLine;
+
+        public JobPostingBoardAllRespDto(JobPostingBoard jobPostingBoard) {
+            this.jobPostingBoardId = jobPostingBoard.getJobPostingBoardId();
+            this.jobPostingBoardTitle = jobPostingBoard.getJobPostingBoardTitle();
+            this.jobPostingBoardDeadline = jobPostingBoard.getJobPostingBoardDeadline();
+
+        }
+
+    }
+
 }

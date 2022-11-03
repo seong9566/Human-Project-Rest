@@ -3,7 +3,6 @@ package site.metacoding.miniproject.web;
 import java.io.File;
 import java.io.IOException;
 import java.nio.file.Files;
-import java.util.List;
 import java.util.UUID;
 
 import javax.servlet.http.HttpSession;
@@ -25,6 +24,7 @@ import site.metacoding.miniproject.dto.company.CompanyReqDto.CompanyUpdateReqDto
 import site.metacoding.miniproject.dto.company.CompanyRespDto.CompanyAddressRespDto;
 import site.metacoding.miniproject.dto.company.CompanyRespDto.CompanyUpdateRespDto;
 import site.metacoding.miniproject.dto.jobpostingboard.JobPostingBoardReqDto.JobPostingBoardInsertReqDto;
+import site.metacoding.miniproject.dto.jobpostingboard.JobPostingBoardRespDto.JobPostingBoardAllRespDto;
 import site.metacoding.miniproject.dto.user.UserRespDto.SignCompanyDto;
 import site.metacoding.miniproject.dto.user.UserRespDto.SignedDto;
 import site.metacoding.miniproject.service.company.CompanyService;
@@ -33,7 +33,6 @@ import site.metacoding.miniproject.web.dto.request.jobpostingboard.JobPostingBoa
 import site.metacoding.miniproject.web.dto.response.ResponseDto;
 import site.metacoding.miniproject.web.dto.response.company.CompanyInfoDto;
 import site.metacoding.miniproject.web.dto.response.jobpostingboard.JobPostingBoardDetailDto;
-import site.metacoding.miniproject.web.dto.response.jobpostingboard.JobPostingBoardListDto;
 
 @RestController
 @RequiredArgsConstructor
@@ -124,12 +123,17 @@ public class CompanyController {
 	}
 
 	// 회사가 작성한 구인 공고 리스트 보기
-	@GetMapping("/company/jobPostingBoardList")
-	public String jobPostingBoardList(Model model, Integer companyId) {
+	@GetMapping("/s/company/jobPostingBoardList")
+	public ResponseDto<?> jobPostingBoardList() {
 		SignedDto<?> principal = (SignedDto<?>) session.getAttribute("principal");
-		List<JobPostingBoardListDto> jobPostingBoardList = companyService.jobPostingBoardList(principal.getCompanyId());
-		model.addAttribute("jobPostingBoardList", jobPostingBoardList);
-		return "company/jobPostingBoardList";
+
+		SignCompanyDto signCompanyDto = (SignCompanyDto) principal.getUserInfo();
+		Integer companyId = signCompanyDto.getCompanyId();
+
+		// List<JobPostingBoardAllRespDto> jobPostingBoardList =
+		// companyService.jobPostingBoardList(principal.getCompanyId());
+
+		return new ResponseDto<>(1, "성공", companyService.jobPostingBoardList(companyId));
 	}
 
 	// 내가 쓴 채용 공고 상세보기 - 인증 필요
@@ -164,7 +168,7 @@ public class CompanyController {
 	}
 
 	// 채용 공고 삭제
-	@DeleteMapping("/company/jobPostingBoard/delete/{jobPostingBoardId}")
+	@DeleteMapping("/s/company/jobPostingBoard/delete/{jobPostingBoardId}")
 	public @ResponseBody ResponseDto<?> deleteResumes(@PathVariable Integer jobPostingBoardId) {
 		companyService.deleteJobposting(jobPostingBoardId);
 		return new ResponseDto<>(1, "채용공고 삭제 성공", null);
