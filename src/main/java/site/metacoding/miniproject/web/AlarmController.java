@@ -13,6 +13,7 @@ import org.springframework.web.bind.annotation.RestController;
 
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import site.metacoding.miniproject.dto.alarm.AlarmReqDto.AlarmReqDtoToDelete;
 import site.metacoding.miniproject.dto.alarm.AlarmReqDto.AlarmReqListDtoToCheck;
 import site.metacoding.miniproject.dto.alarm.AlarmRespDto.UserAlarmRespDto;
 import site.metacoding.miniproject.dto.alarm.AlarmRespDto.UserAlarmRespDtoToChecked;
@@ -44,6 +45,7 @@ public class AlarmController {
 
 		return responseDto;
 	}
+
 	//알람 확인시 ischeck -> true 변경
 	@PutMapping("/s/users/alarm/readed")
 	public ResponseDto<?> readedAlarm(@RequestBody AlarmReqListDtoToCheck alarmReqListDtoToCheck) {
@@ -56,6 +58,10 @@ public class AlarmController {
 	// 알람지우기
 	@DeleteMapping("/s/users/alarm/delete/{alarmId}")
 	public ResponseDto<?> deleteUserAlarm(@PathVariable Integer alarmId) {
+
+		SignedDto<?> signedDto = (SignedDto<?>) session.getAttribute("principal");
+		AlarmReqDtoToDelete alarmReqDtoToDelete = new AlarmReqDtoToDelete();
+
 		usersService.deleteAlarm(alarmId);
 		return new ResponseDto<>(1, "삭제 성공", null);
 	}

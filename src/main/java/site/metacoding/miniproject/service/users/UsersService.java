@@ -197,6 +197,7 @@ public class UsersService {
 
         List<UserAlarmRespDtoToChecked> checkeds = new ArrayList<>();
 
+        //Dto반환을 위해 PS부에서 check를 true 변환 한 뒤 Dto로 넘김
         alarmsPS.iterator().forEachRemaining(alarm -> {
             alarm.setAlarmCheck(true);
             checkeds.add(new UserAlarmRespDtoToChecked(alarm));
