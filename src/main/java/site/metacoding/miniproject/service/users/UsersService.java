@@ -1,6 +1,7 @@
 package site.metacoding.miniproject.service.users;
 
 import java.util.List;
+import java.util.Optional;
 
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -36,7 +37,7 @@ public class UsersService {
     private final SubscribeDao subscribeDao;
     private final SHA256 sha256;
 
-    //로그인
+    // 로그인
     public SignedDto<?> login(LoginDto loginDto) {
 
         String loginId = loginDto.getLoginId();
@@ -49,27 +50,26 @@ public class UsersService {
             throw new ApiException("아이디 또는 패스워드가 틀렸습니다.");
         }
 
-        
-		// if (signedDto == null)
-		// return new ResponseDto<>(-1, "비밀번호 또는 아이디를 확인하여 주세요", null);
+        // if (signedDto == null)
+        // return new ResponseDto<>(-1, "비밀번호 또는 아이디를 확인하여 주세요", null);
 
-		// if (SessionConfig.getSessionidCheck(signedDto.getUsersId()) != null) {
-		// return new ResponseDto<>(-2, "중복 로그인 확인됨", null);
-		// }
+        // if (SessionConfig.getSessionidCheck(signedDto.getUsersId()) != null) {
+        // return new ResponseDto<>(-2, "중복 로그인 확인됨", null);
+        // }
 
-		// session.setAttribute("principal", signedDto);
-		// SessionConfig.login(session.getId(), signedDto.getUsersId());
+        // session.setAttribute("principal", signedDto);
+        // SessionConfig.login(session.getId(), signedDto.getUsersId());
 
-		// if (signedDto.getCompanyId() != null) {
-		// session.setAttribute("companyId", signedDto.getCompanyId());
-		// } else {
-		// subscribes =
-		// userService.findSubscribeinfoByPersonalId(signedDto.getPersonalId());
-		// session.setAttribute("personalId", signedDto.getPersonalId());
-		// session.setAttribute("subscribe", subscribes);
-		// }
+        // if (signedDto.getCompanyId() != null) {
+        // session.setAttribute("companyId", signedDto.getCompanyId());
+        // } else {
+        // subscribes =
+        // userService.findSubscribeinfoByPersonalId(signedDto.getPersonalId());
+        // session.setAttribute("personalId", signedDto.getPersonalId());
+        // session.setAttribute("subscribe", subscribes);
+        // }
 
-        //회사 또는 개인일 경우 Dto생성
+        // 회사 또는 개인일 경우 Dto생성
         if (userInfo.getCompanyId() != null) {
             Company companyPS = companyDao.findById(userInfo.getCompanyId());
 
@@ -88,7 +88,7 @@ public class UsersService {
         return signedDto;
     }
 
-    //개인 회원가입
+    // 개인 회원가입
     @Transactional(rollbackFor = RuntimeException.class)
     public SignedDto<?> joinPersonal(PersonalJoinDto joinDto) {
 
@@ -107,11 +107,10 @@ public class UsersService {
         SignedDto<?> signedDto = new SignedDto<>(usersBeforePS.getUsersId(), usersBeforePS.getLoginId(),
                 signPersonalDto);
 
-
         return signedDto;
     }
-    
-    //기업 회원가입
+
+    // 기업 회원가입
     @Transactional(rollbackFor = RuntimeException.class)
     public SignedDto<?> joinCompany(CompanyJoinDto joinDto) {
 
@@ -132,8 +131,7 @@ public class UsersService {
         SignCompanyDto signCompanyDto = new SignCompanyDto(companyBeforePS);
 
         SignedDto<?> signedDto = new SignedDto<>(usersBeforePS.getUsersId(), usersBeforePS.getLoginId(),
-        signCompanyDto);
-
+                signCompanyDto);
 
         return signedDto;
 
@@ -170,6 +168,13 @@ public class UsersService {
     }
 
     public void deleteAlarm(Integer alarmId) {
+
+        try {
+            Alarm alarmPS = alarmDao.findById(alarmId);
+        } catch (Exception e) {
+            throw new ApiException("해당 알람이 존재하지 않습니다.");
+        }
+
         alarmDao.deleteById(alarmId);
     }
 
