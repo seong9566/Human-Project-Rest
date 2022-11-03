@@ -26,7 +26,6 @@ public class JobPostingBoardRespDto {
         private String jobPostingBoardContent;
         private Integer jobPostingSalary;
         private String jobPostingBoardPlace;
-        private String jobPostingBoardPicture;
         private Timestamp jobPostingBoardDeadline;
 
         // Category테이블
@@ -48,10 +47,6 @@ public class JobPostingBoardRespDto {
         private Integer companyLikeId;
         // TimeStamp > String
         private String formatDeadLine;
-
-        // ID
-        private Integer categoryId;
-        private Integer careerId;
 
         public JobPostingBoardDetailRespDto(JobPostingBoard jobPostingBoard, Company company) {
             this.jobPostingBoardId = jobPostingBoard.getJobPostingBoardId();

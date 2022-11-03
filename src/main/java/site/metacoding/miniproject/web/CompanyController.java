@@ -133,7 +133,10 @@ public class CompanyController {
 	// 내가 쓴 채용 공고 상세보기 - 인증 필요
 	@GetMapping("/s/api/jobPostingBoard/detail/{jobPostingBoardId}")
 	public ResponseDto<?> findByjobPostingBoard(@PathVariable Integer jobPostingBoardId) {
-		return new ResponseDto<>(1, "채용공고 상세보기", companyService.jobPostingBoardDetail(jobPostingBoardId));
+		SignedDto<?> principal = (SignedDto<?>) session.getAttribute("principal");
+		SignCompanyDto signCompanyDto = (SignCompanyDto) principal.getUserInfo();
+		Integer companyId = signCompanyDto.getCompanyId();
+		return new ResponseDto<>(1, "채용공고 상세보기", companyService.jobPostingBoardDetail(jobPostingBoardId, companyId));
 	}
 
 	// 채용 공고 수정 폼

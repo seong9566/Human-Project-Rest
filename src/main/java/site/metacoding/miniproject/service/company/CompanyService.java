@@ -79,7 +79,7 @@ public class CompanyService {
 		}
 		// user패스워드 수정
 		Users companyUserPS = usersDao.findById(userId);
-		companyUserPS.update(companyUpdateReqDto.companyPassWordUpdateReqDto());
+		companyUserPS.update(companyUpdateReqDto);
 		usersDao.update(companyUserPS);
 
 		// personal 개인정보 수정
@@ -128,19 +128,23 @@ public class CompanyService {
 
 	// 채용공고 상세 보기
 	@Transactional(readOnly = true)
-	public JobPostingBoardDetailRespDto jobPostingBoardDetail(Integer jobPostingBoardId) {
+	public JobPostingBoardDetailRespDto jobPostingBoardDetail(Integer jobPostingBoardId, Integer companyId) {
+		// .. 로직이 너무 더러운데..
 		Company companyPS = companyDao.findById(companyId);
-		if (companyPS.getCompanyId() == null) {
-			throw new ApiException("Companyid가 없음");
+		JobPostingBoard jobPostingBoardPS = jobPostingBoardDao.findById(jobPostingBoardId);
+		if (jobPostingBoardPS == null) {
+			throw new ApiException("해당 " + jobPostingBoardId + " 로 채용공고를 찾을 수 없습니다.");
 		}
 
+		if (companyPS == null || jobPostingBoardPS.getCompanyId() != companyPS.getCompanyId()) {
+			throw new ApiException("해당 채용공고 작성 회사가 아닙니다.");
+		}
 		JobPostingBoardDetailRespDto jobPostingBoardDetailRespDto = jobPostingBoardDao
 				.findByJobPostingBoard(jobPostingBoardId);
 		Timestamp ts = jobPostingBoardDetailRespDto.getJobPostingBoardDeadline();
 		Date date = new Date();
 		date.setTime(ts.getTime());
 		String formattedDate = new SimpleDateFormat("yyyy년MM월dd일").format(date);
-
 		jobPostingBoardDetailRespDto.setFormatDeadLine(formattedDate);
 		return jobPostingBoardDetailRespDto;
 	}
