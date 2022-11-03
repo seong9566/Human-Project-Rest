@@ -2,7 +2,7 @@ package site.metacoding.miniproject.service.users;
 
 import java.util.ArrayList;
 import java.util.List;
-import java.util.Optional;
+import java.util.function.Function;
 import java.util.stream.Collectors;
 
 import org.springframework.stereotype.Service;
@@ -20,6 +20,7 @@ import site.metacoding.miniproject.domain.subscribe.Subscribe;
 import site.metacoding.miniproject.domain.subscribe.SubscribeDao;
 import site.metacoding.miniproject.domain.users.Users;
 import site.metacoding.miniproject.domain.users.UsersDao;
+import site.metacoding.miniproject.dto.alarm.AlarmReqDto.AlarmReqListDtoToCheck;
 import site.metacoding.miniproject.dto.alarm.AlarmRespDto.UserAlarmRespDto;
 import site.metacoding.miniproject.dto.company.CompanyReqDto.CompanyJoinDto;
 import site.metacoding.miniproject.dto.personal.PersonalReqDto.PersonalJoinDto;
@@ -170,19 +171,27 @@ public class UsersService {
         return ischecked;
     }
 
-    public void userAlarmToCheck(List<Integer> alarmsId) {
-        alarmDao.updateAlarmByIdToCheck(alarmsId);
-    }
+    public void userAlarmToCheck(AlarmReqListDtoToCheck alarmReqListDtoToCheck) {
 
+
+        List<Alarm> alarmsPS = alarmDao.findByusersId(alarmReqListDtoToCheck.getUsersId());
+
+        for (Integer userAlarmId : alarmReqListDtoToCheck.getAlarmsId()) {
+            alarmsPS.stream().map(alarm -> 
+                alarm.getUsersId().equals(userAlarmId) == false ? new ApiException("해당 유저의 알람이 아닙니다.") : true);
+        }
+        alarmDao.updateAlarmByIdToCheck(alarmReqListDtoToCheck.getAlarmsId());
+    }
+        
+      
     public void deleteAlarm(Integer alarmId) {
 
         try {
             Alarm alarmPS = alarmDao.findById(alarmId);
+            alarmDao.deleteById(alarmPS.getAlarmId());
         } catch (Exception e) {
             throw new ApiException("해당 알람이 존재하지 않습니다.");
         }
-
-        alarmDao.deleteById(alarmId);
     }
 
     public List<Subscribe> findSubscribeinfoByPersonalId(Integer personalId) {
