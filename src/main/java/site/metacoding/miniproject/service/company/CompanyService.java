@@ -79,7 +79,7 @@ public class CompanyService {
 		}
 		// user패스워드 수정
 		Users companyUserPS = usersDao.findById(userId);
-		companyUserPS.update(companyUpdateReqDto);
+		companyUserPS.update(companyUpdateReqDto.companyPassWordUpdateReqDto());
 		usersDao.update(companyUserPS);
 
 		// personal 개인정보 수정
