@@ -141,10 +141,8 @@ public class JWTToken {
             }
 
             if (signPersonalDto.getPersonalId() != null) {
-                log.debug("디버그 : 개인유저 아이디 출력 : " + signPersonalDto.getPersonalId());
                 return new SignedDto<>(usersId, LoginId, signPersonalDto);
             } else {
-                log.debug("디버그 : 기업유저 아이디 출력 : " + signCompanyDto.getCompanyId());
                 return new SignedDto<>(usersId, LoginId, signCompanyDto);
             }
         }
