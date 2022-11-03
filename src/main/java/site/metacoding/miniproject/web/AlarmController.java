@@ -60,9 +60,9 @@ public class AlarmController {
 	public ResponseDto<?> deleteUserAlarm(@PathVariable Integer alarmId) {
 
 		SignedDto<?> signedDto = (SignedDto<?>) session.getAttribute("principal");
-		AlarmReqDtoToDelete alarmReqDtoToDelete = new AlarmReqDtoToDelete();
+		AlarmReqDtoToDelete alarmReqDtoToDelete = new AlarmReqDtoToDelete(alarmId, signedDto.getUsersId());
 
-		usersService.deleteAlarm(alarmId);
+		usersService.deleteAlarm(alarmReqDtoToDelete);
 		return new ResponseDto<>(1, "삭제 성공", null);
 	}
 
