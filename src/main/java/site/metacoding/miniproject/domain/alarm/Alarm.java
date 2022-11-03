@@ -3,6 +3,7 @@ package site.metacoding.miniproject.domain.alarm;
 import java.security.Timestamp;
 import java.util.HashMap;
 
+import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
@@ -23,6 +24,25 @@ public class Alarm {
 	private Boolean alarmCheck;
 	private Timestamp createdAt;
 
+	
+
+	@Builder
+	public Alarm(Integer alarmId, Integer usersId, Integer alarmApplyId, Integer alarmIncruitId,
+			Integer alarmSubscribeId, Integer alarmCompanyLikeId, Integer alarmPersonalLikeId, String alarmMessage,
+			Boolean alarmCheck, Timestamp createdAt) {
+		this.alarmId = alarmId;
+		this.usersId = usersId;
+		this.alarmApplyId = alarmApplyId;
+		this.alarmIncruitId = alarmIncruitId;
+		this.alarmSubscribeId = alarmSubscribeId;
+		this.alarmCompanyLikeId = alarmCompanyLikeId;
+		this.alarmPersonalLikeId = alarmPersonalLikeId;
+		this.alarmMessage = alarmMessage;
+		this.alarmCheck = alarmCheck;
+		this.createdAt = createdAt;
+	}
+	
+	// null값 방지용 알람삽입 생성자
 	public Alarm(Integer usersId, HashMap<String, Integer> map, String username) {
 		this.usersId = usersId;
 		this.alarmApplyId = map.get("alarmApplyId") == null ? 0 : map.get("alarmApplyId");
