@@ -30,16 +30,14 @@ public interface ResumesDao {
 	// 전체 이력서 목록 보기
 	public List<Resumes> findAllResumes(int startNum);
 
-	// 이력서 전체 목록 보기
-	public List<CompanyMainDto> findAll(int startNum);
+	public List<Resumes> findSearch(@Param("startNum") int startNum, @Param("keyword") String keyword);
 
 	// 페이징
-	public PagingDto resumesPaging(Integer page);
-	// public PagingDto resumesPaging(@Param("page") Integer page, @Param("keyword")
-	// String keyword);
+	public PagingDto resumesPaging(@Param("page") Integer page, @Param("keyword") String keyword);
 
 	// 검색 결과 목록 보기
-	public List<CompanyMainDto> findSearch(@Param("startNum") int startNum, @Param("keyword") String keyword);
+	// public List<CompanyMainDto> findSearch(@Param("startNum") int startNum,
+	// @Param("keyword") String keyword);
 
 	// 카테고리별 목록보기
 	public List<CompanyMainDto> findCategory(@Param("startNum") Integer startNum, @Param("id") Integer id);

@@ -4,9 +4,9 @@ import java.util.List;
 
 import org.apache.ibatis.annotations.Param;
 
+import site.metacoding.miniproject.dto.jobpostingboard.JobPostingBoardRespDto.JobPostingBoardAllRespDto;
 import site.metacoding.miniproject.dto.jobpostingboard.JobPostingBoardRespDto.JobPostingBoardDetailRespDto;
 import site.metacoding.miniproject.web.dto.response.etc.PagingDto;
-import site.metacoding.miniproject.web.dto.response.jobpostingboard.JobPostingBoardListDto;
 import site.metacoding.miniproject.web.dto.response.personal.PersonalMainDto;
 
 public interface JobPostingBoardDao {
@@ -19,7 +19,7 @@ public interface JobPostingBoardDao {
 	public void deleteById(Integer jobPostingBoardId);
 
 	// 회사가 작성한 채용공고 목록 보기
-	public List<JobPostingBoardListDto> jobPostingBoardList(Integer companyId);
+	public List<JobPostingBoardAllRespDto> jobPostingBoardList(Integer jobPostingBoardId);
 
 	// 채용공고 상세보기
 	public JobPostingBoardDetailRespDto findByJobPostingBoard(Integer jobPostingBoardId);

@@ -161,6 +161,7 @@ public class ResumesRespDto {
 
         private Integer page;
         private Integer startNum;
+        private String keyword;
 
         public ResumesAllRespDto(Resumes resumes) {
             this.resumesTitle = resumes.getResumesTitle();
@@ -182,7 +183,10 @@ public class ResumesRespDto {
         private Integer startPageNum;
         private Integer lastPageNum;
 
-        public void makeBlockInfo() {
+        private String keyword;
+
+        public void makeBlockInfo(String keyword) {
+            this.keyword = keyword;
             this.blockCount = 5;
             this.currentBlock = currentPage / blockCount;
             this.startPageNum = 1 + blockCount * currentBlock;

@@ -2,6 +2,7 @@ package site.metacoding.miniproject.service.company;
 
 import java.sql.Timestamp;
 import java.text.SimpleDateFormat;
+import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
 
@@ -25,6 +26,7 @@ import site.metacoding.miniproject.dto.company.CompanyRespDto.CompanyDetailRespD
 import site.metacoding.miniproject.dto.company.CompanyRespDto.CompanyUpdateFormRespDto;
 import site.metacoding.miniproject.dto.company.CompanyRespDto.CompanyUpdateRespDto;
 import site.metacoding.miniproject.dto.jobpostingboard.JobPostingBoardReqDto.JobPostingBoardInsertReqDto;
+import site.metacoding.miniproject.dto.jobpostingboard.JobPostingBoardRespDto.JobPostingBoardAllRespDto;
 import site.metacoding.miniproject.dto.jobpostingboard.JobPostingBoardRespDto.JobPostingBoardDetailRespDto;
 import site.metacoding.miniproject.dto.jobpostingboard.JobPostingBoardRespDto.JobPostingBoardInsertRespDto;
 import site.metacoding.miniproject.exception.ApiException;
@@ -113,17 +115,25 @@ public class CompanyService {
 	}
 
 	// 채용공고 리스트
-	public List<JobPostingBoardListDto> jobPostingBoardList(Integer companyId) {
-		List<JobPostingBoardListDto> postingList = jobPostingBoardDao.jobPostingBoardList(companyId);
+	public List<JobPostingBoardAllRespDto> jobPostingBoardList(Integer companyId) {
+		List<JobPostingBoardAllRespDto> jobPostingBoardList = jobPostingBoardDao
+				.jobPostingBoardList(companyId);
+
+		// List<JobPostingBoardAllRespDto> jobPostingAllRespDtoList = new ArrayList<>();
+		// for (JobPostingBoard jobPostingBoard : jobPostingBoardList) {
+		// jobPostingAllRespDtoList.add(new JobPostingBoardAllRespDto(jobPostingBoard));
+		// }
+
 		// TimeStamp to String
-		for (JobPostingBoardListDto deadLine : postingList) {
+		for (JobPostingBoardAllRespDto deadLine : jobPostingBoardList) {
 			Timestamp ts = deadLine.getJobPostingBoardDeadline();
 			Date date = new Date();
 			date.setTime(ts.getTime());
 			String formattedDate = new SimpleDateFormat("yyyy년MM월dd일").format(date);
 			deadLine.setFormatDeadLine(formattedDate);
 		}
-		return postingList;
+
+		return jobPostingBoardList;
 	}
 
 	// 채용공고 상세 보기
@@ -166,6 +176,11 @@ public class CompanyService {
 	// 채용 공고 삭제
 	@Transactional(rollbackFor = Exception.class)
 	public void deleteJobposting(Integer jobPostingBoardId) {
+		JobPostingBoard jobPostingBoard = jobPostingBoardDao.findById(jobPostingBoardId);
+		if (jobPostingBoard == null) {
+			throw new RuntimeException("해당" + jobPostingBoardId + "로 삭제할수 없습니다.");
+		}
+
 		jobPostingBoardDao.deleteById(jobPostingBoardId);
 	}
 
