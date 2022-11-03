@@ -1,4 +1,4 @@
-package site.metacoding.miniproject.config.handler.exception;
+package site.metacoding.miniproject.exception;
 
 public class NormalException extends RuntimeException{
 	public NormalException(String msg) {

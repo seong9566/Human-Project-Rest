@@ -1,4 +1,4 @@
-package site.metacoding.miniproject.config.handler.exception;
+package site.metacoding.miniproject.exception;
 
 public class ApiException extends RuntimeException{
 	
