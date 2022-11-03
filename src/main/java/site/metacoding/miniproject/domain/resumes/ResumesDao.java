@@ -4,9 +4,9 @@ import java.util.List;
 
 import org.apache.ibatis.annotations.Param;
 
+import site.metacoding.miniproject.dto.resumes.ResumesRespDto.PagingDto;
 import site.metacoding.miniproject.dto.resumes.ResumesRespDto.ResumesDetailRespDto;
 import site.metacoding.miniproject.web.dto.response.company.CompanyMainDto;
-import site.metacoding.miniproject.web.dto.response.etc.PagingDto;
 
 public interface ResumesDao {
 
@@ -27,12 +27,16 @@ public interface ResumesDao {
 	// 이력서 삭제
 	public void deleteById(Integer resumesId);
 
-	// 이력서 전체 목록 보기
+	// 전체 이력서 목록 보기
+	public List<Resumes> findAllResumes(int startNum);
 
+	// 이력서 전체 목록 보기
 	public List<CompanyMainDto> findAll(int startNum);
 
 	// 페이징
-	public PagingDto resumesPaging(@Param("page") Integer page, @Param("keyword") String keyword);
+	public PagingDto resumesPaging(Integer page);
+	// public PagingDto resumesPaging(@Param("page") Integer page, @Param("keyword")
+	// String keyword);
 
 	// 검색 결과 목록 보기
 	public List<CompanyMainDto> findSearch(@Param("startNum") int startNum, @Param("keyword") String keyword);

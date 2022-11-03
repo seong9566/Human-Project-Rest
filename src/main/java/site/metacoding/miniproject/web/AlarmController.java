@@ -4,35 +4,41 @@ import java.util.List;
 
 import javax.servlet.http.HttpSession;
 
-import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
+import org.springframework.web.bind.annotation.PutMapping;
+import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RestController;
 
 import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
+import site.metacoding.miniproject.dto.alarm.AlarmReqDto.AlarmReqDtoToDelete;
+import site.metacoding.miniproject.dto.alarm.AlarmReqDto.AlarmReqListDtoToCheck;
 import site.metacoding.miniproject.dto.alarm.AlarmRespDto.UserAlarmRespDto;
+import site.metacoding.miniproject.dto.alarm.AlarmRespDto.UserAlarmRespDtoToChecked;
 import site.metacoding.miniproject.dto.user.UserRespDto.SignedDto;
 import site.metacoding.miniproject.service.users.UsersService;
 import site.metacoding.miniproject.web.dto.response.ResponseDto;
 
 @RestController
 @RequiredArgsConstructor
+@Slf4j
 public class AlarmController {
 	// sendTo사용시 destinationValue 적용 받을라면 Spring 4.2부터 가능 - simpleMessagingTemplate을
 	// 사용해서 DestinationValue를 대체한다.
 	//private final SimpMessagingTemplate simpMessagingTemplate;
-    private final UsersService userService;
+    private final UsersService usersService;
     private final HttpSession session;
 
     // 유저알람 갱신 해주기
-	@GetMapping("/s/user/alarm")
+	@GetMapping("/s/users/alarm")
 	public ResponseDto<?> refreshUserAlarm() {
-        ResponseDto<?> responseDto = new ResponseDto<>(1, "알람없음", null);
-        SignedDto<?> signedDto = (SignedDto<?>) session.getAttribute("principal");
+		ResponseDto<?> responseDto = new ResponseDto<>(1, "알람없음", null);
+		SignedDto<?> signedDto = (SignedDto<?>) session.getAttribute("principal");
 
-        Integer usersId = signedDto.getUsersId();
-		List<UserAlarmRespDto> usersAlarm = userService.finduserAlarmByUserId(usersId);
+		Integer usersId = signedDto.getUsersId();
+		List<UserAlarmRespDto> usersAlarm = usersService.finduserAlarmByUserId(usersId);
 
 		if (!usersAlarm.isEmpty())
 			responseDto = new ResponseDto<>(1, "통신 성공", usersAlarm);
@@ -40,10 +46,23 @@ public class AlarmController {
 		return responseDto;
 	}
 
+	//알람 확인시 ischeck -> true 변경
+	@PutMapping("/s/users/alarm/readed")
+	public ResponseDto<?> readedAlarm(@RequestBody AlarmReqListDtoToCheck alarmReqListDtoToCheck) {
+		SignedDto<?> signedDto = (SignedDto<?>) session.getAttribute("principal");
+		alarmReqListDtoToCheck.setUsersId(signedDto.getUsersId());
+		List<UserAlarmRespDtoToChecked> checkeds = usersService.userAlarmToCheck(alarmReqListDtoToCheck);
+		return new ResponseDto<>(1, "success", checkeds);
+	}
+
 	// 알람지우기
-	@DeleteMapping("/s/user/alarm/{alarmId}")
+	@DeleteMapping("/s/users/alarm/delete/{alarmId}")
 	public ResponseDto<?> deleteUserAlarm(@PathVariable Integer alarmId) {
-		userService.deleteAlarm(alarmId);
+
+		SignedDto<?> signedDto = (SignedDto<?>) session.getAttribute("principal");
+		AlarmReqDtoToDelete alarmReqDtoToDelete = new AlarmReqDtoToDelete(alarmId, signedDto.getUsersId());
+
+		usersService.deleteAlarm(alarmReqDtoToDelete);
 		return new ResponseDto<>(1, "삭제 성공", null);
 	}
 
@@ -70,12 +89,6 @@ public class AlarmController {
 // 		Integer usersId = userService.findUserIdByCompanyId(companyId);
 // 		simpMessagingTemplate.convertAndSend("/queue/Company/" + usersId,
 // 				new ResponseDto<>(1, "success", FromUsersId));
-// 	}
-
-// 	@PutMapping("/user/alarm/readed")
-// 	public @ResponseBody ResponseDto<?> readedAlarm(@RequestParam(value = "alarmsId[]") List<Integer> alarmsId) {
-// 		usersService.userAlarmToCheck(alarmsId);
-// 		return new ResponseDto<>(1, "success", alarmsId);
 // 	}
 
 // 	@GetMapping("/user/alarm/notreaded/{userId}")

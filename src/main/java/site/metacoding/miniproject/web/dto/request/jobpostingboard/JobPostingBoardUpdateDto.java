@@ -3,7 +3,6 @@ package site.metacoding.miniproject.web.dto.request.jobpostingboard;
 import java.sql.Timestamp;
 
 import lombok.Getter;
-import lombok.NoArgsConstructor;
 import lombok.Setter;
 
 @Getter

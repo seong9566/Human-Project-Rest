@@ -19,5 +19,7 @@ public interface AlarmDao {
 
 	public Boolean findByUsersIdToAlarmChecked(Integer usersId);
 
-	public List<Alarm> findByusersId(Integer usersId);
+	public List<Alarm> findByUsersId(Integer usersId);
+
+	public List<Alarm> findByUsersIdForUnCheckedAlarm(Integer usersId);
 }
