@@ -51,7 +51,7 @@ public class CompanyController {
 	}
 
 	// 내정보 수정 보기
-	@GetMapping("/api/company/inform/informUpdate")
+	@GetMapping("/s/api/company/update")
 	public ResponseDto<?> companyInformUpdate() {
 		SignedDto<?> principal = (SignedDto<?>) session.getAttribute("principal");
 		SignCompanyDto signCompanyDto = (SignCompanyDto) principal.getUserInfo();
@@ -60,7 +60,7 @@ public class CompanyController {
 	}
 
 	// 내정보 수정
-	@PutMapping(value = "/api/company/update")
+	@PutMapping(value = "/s/api/company/update")
 	public @ResponseBody ResponseDto<?> companyUpdate(@RequestPart(value = "file", required = false) MultipartFile file,
 			@RequestPart("companyUpdateReqDto") CompanyUpdateReqDto companyUpdateReqDto) {
 		// ValidationCheckUtil.valCheckToUpdatePersonal(personalUpdatReqDto);

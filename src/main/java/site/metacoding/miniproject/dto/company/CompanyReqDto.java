@@ -11,6 +11,7 @@ import lombok.Setter;
 import site.metacoding.miniproject.config.handler.exception.ApiException;
 import site.metacoding.miniproject.domain.company.Company;
 import site.metacoding.miniproject.domain.users.Users;
+import site.metacoding.miniproject.dto.personal.PersonalReqDto.PersonalUpdatReqDto;
 import site.metacoding.miniproject.utill.SHA256;
 
 public class CompanyReqDto {
@@ -84,19 +85,25 @@ public class CompanyReqDto {
         private String companyPhoneNumber;
         private MultipartFile file;
         private String loginPassword;
+        public PersonalUpdatReqDto companyPassWordUpdateReqDto;
 
-        // public Company companyUpdateDtoToCompanyEntity() {
-        // return Company.builder()
-        // .companyName(companyName)
-        // .companyPhoneNumber(companyPhoneNumber)
-        // .companyAddress(companyAddress)
-        // .companyPicture(companyPicture)
-        // .companyEmail(companyEmail)
-        // .build();
-        // }
+        public Company companyUpdateDtoToCompanyEntity() {
+            return Company.builder()
+                    .companyName(companyName)
+                    .companyPhoneNumber(companyPhoneNumber)
+                    .companyAddress(companyAddress)
+                    .companyPicture(companyPicture)
+                    .companyEmail(companyEmail)
+                    .build();
+        }
 
-        public Users CompanyUpdatReqDto() {
+        public Users companyPassWordUpdateReqDto() {
+
+            SHA256 sha256 = new SHA256();
+            this.loginPassword = sha256.encrypt(this.loginPassword);
+
             return Users.builder()
+                    .companyId(companyId)
                     .loginPassword(loginPassword)
                     .build();
         }
