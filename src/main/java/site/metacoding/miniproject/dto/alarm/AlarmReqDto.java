@@ -18,16 +18,15 @@ public class AlarmReqDto {
 
     @Getter
     @Setter
+    @NoArgsConstructor
     public static class AlarmReqDtoToDelete {
         Integer alarmId;
         Integer usersId;
-        
+
         public AlarmReqDtoToDelete(Integer alarmId, Integer usersId) {
             this.alarmId = alarmId;
             this.usersId = usersId;
         }
-
-        
 
     }
     
