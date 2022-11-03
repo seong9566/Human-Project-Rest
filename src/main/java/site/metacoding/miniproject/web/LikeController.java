@@ -65,7 +65,7 @@ public class LikeController {
 	}
 
 	@DeleteMapping("/s/api/companyLike/{companyId}")
-	public @ResponseBody ResponseDto<?> deleteCompanyLike(@PathVariable Integer companyId,
+	public ResponseDto<?> deleteCompanyLike(@PathVariable Integer companyId,
 			CompanyLikeReqDto companyLikeReqDto) {
 		SignedDto<?> principal = (SignedDto<?>) session.getAttribute("principal");
 		SignPersonalDto signPersonalDto = (SignPersonalDto) principal.getUserInfo();
@@ -74,17 +74,17 @@ public class LikeController {
 		return new ResponseDto<>(1, "좋아요취소", null);
 	}
 
-	@GetMapping("/jobPostingViewApply/{companyId}")
-	public String company(@PathVariable Integer companyId, Model model) {
-
+	@GetMapping("/s/api/companyLike/{companyId}")
+	public ResponseDto<?> findByCompanyLike(@PathVariable Integer companyId, CompanyLikeReqDto companyLikeReqDto) {
 		SignedDto<?> signUserDto = (SignedDto<?>) session.getAttribute("principal");
-
+		SignPersonalDto signPersonalDto = (SignPersonalDto) principal.getUserInfo();
 		// CompanyLike companyLike = companyLikeService.좋아요확인(companyId,
 		// signedDto.getPersonalId());
+		companyLikeReqDto.setPersonalId(signPersonalDto.getPersonalId());
 
 		// model.addAttribute("companyLike", companyLike);
 
-		return "/personal/jobPostingViewApply";
+		return new ResponseDto<>(companyId, "좋아요 찾기 완료", null);
 	}
 
 }

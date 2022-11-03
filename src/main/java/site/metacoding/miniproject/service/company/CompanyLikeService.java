@@ -59,8 +59,10 @@ public class CompanyLikeService {
 		return companyLikeRespDto;
 	}
 
-	public CompanyLike 좋아요확인(Integer personalId, Integer companyId, CompanyLikeReqDto companyLikeReqDto) {
-		CompanyLike companyLike = companyLikesDao.findById(companyLikeReqDto);
-		return companyLike;
+	public CompanyLikeRespDto 좋아요확인(Integer companyId, CompanyLikeReqDto companyLikeReqDto) {
+		CompanyLike companyLikePS = companyLikeReqDto.companyLikeEntity();
+		companyLikesDao.findById(companyLikePS);
+		CompanyLikeRespDto companyLikeRespDto = new CompanyLikeRespDto(companyLikePS);
+		return companyLikeRespDto;
 	}
 }

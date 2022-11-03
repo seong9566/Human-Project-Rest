@@ -9,7 +9,7 @@ public interface CompanyLikesDao {
 
 	public List<CompanyLikeReqDto> findAll();
 
-	public CompanyLike findById(CompanyLikeReqDto companyLikeReqDto);
+	public CompanyLike findById(CompanyLike companyLike);
 
 	public void update(CompanyLike companyLike);
 
