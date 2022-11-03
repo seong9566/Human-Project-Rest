@@ -14,7 +14,7 @@
 		UPDATE personal_like SET resumes_id= #{resumesId}, company_id = #{companyId}, alarm_id = #{alarmId} WHERE personal_like_id = #{personalLikeId}	
 	</update>
 
-	<select id="findAll" resultType="site.metacoding.miniproject.web.dto.request.personal.PersonalLikeDto">
+	<select id="findAll" resultType="site.metacoding.miniproject.dto.like.LikeReqDto$PersonalLikeReqDto">
 		SELECT p.resumes_id, r.resumes_title as resumesTitle
 		FROM personal_like p
 		INNER
@@ -23,7 +23,7 @@
 		WHERE p.company_id = #{companyId}
 	</select>
 
-	<select id="findById" resultType="site.metacoding.miniproject.domain.like.personalike.PersonalLike">
+	<select id="findById" resultType="site.metacoding.miniproject.dto.like.LikeReqDto$PersonalLikeReqDto">
 		SELECT * FROM personal_like WHERE company_id =#{companyId} and resumes_id =#{resumesId}
 	</select>
 

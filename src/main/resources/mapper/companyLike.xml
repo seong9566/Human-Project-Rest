@@ -10,10 +10,10 @@
 		DELETE FROM company_like WHERE personal_id =#{personalId} and company_id =#{companyId}
 	</delete>
 
-	<select id="findById" resultType="site.metacoding.miniproject.domain.like.companylike.CompanyLike">
+	<select id="findById" resultType="site.metacoding.miniproject.dto.like.LikeReqDto$CompanyLikeReqDto">
 		SELECT * FROM company_like WHERE personal_id =#{personalId} and company_id =#{companyId}
 	</select>
-	
+
 	<update id="update">
 		UPDATE company_like SET personal_id = #{personalId}, company_id = #{companyId}, alarm_id = #{alarmId} WHERE company_like_id = #{companyLikeId}
 	</update>

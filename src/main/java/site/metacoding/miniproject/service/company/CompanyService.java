@@ -9,6 +9,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import lombok.RequiredArgsConstructor;
+import site.metacoding.miniproject.config.handler.exception.ApiException;
 import site.metacoding.miniproject.domain.career.Career;
 import site.metacoding.miniproject.domain.career.CareerDao;
 import site.metacoding.miniproject.domain.category.Category;
@@ -19,13 +20,18 @@ import site.metacoding.miniproject.domain.jobpostingboard.JobPostingBoard;
 import site.metacoding.miniproject.domain.jobpostingboard.JobPostingBoardDao;
 import site.metacoding.miniproject.domain.users.Users;
 import site.metacoding.miniproject.domain.users.UsersDao;
+import site.metacoding.miniproject.dto.company.CompanyReqDto.CompanyUpdateReqDto;
 import site.metacoding.miniproject.dto.company.CompanyRespDto.CompanyAddressRespDto;
 import site.metacoding.miniproject.dto.company.CompanyRespDto.CompanyDetailRespDto;
+import site.metacoding.miniproject.dto.company.CompanyRespDto.CompanyUpdateFormRespDto;
+import site.metacoding.miniproject.dto.company.CompanyRespDto.CompanyUpdateRespDto;
 import site.metacoding.miniproject.dto.jobpostingboard.JobPostingBoardReqDto.JobPostingBoardInsertReqDto;
 import site.metacoding.miniproject.dto.jobpostingboard.JobPostingBoardRespDto.JobPostingBoardAllRespDto;
 import site.metacoding.miniproject.dto.jobpostingboard.JobPostingBoardRespDto.JobPostingBoardDetailRespDto;
 import site.metacoding.miniproject.dto.jobpostingboard.JobPostingBoardRespDto.JobPostingBoardInsertRespDto;
+
 import site.metacoding.miniproject.web.dto.request.company.CompanyUpdateDto;
+
 import site.metacoding.miniproject.web.dto.request.jobpostingboard.JobPostingBoardUpdateDto;
 import site.metacoding.miniproject.web.dto.response.etc.PagingDto;
 import site.metacoding.miniproject.web.dto.response.jobpostingboard.JobPostingBoardListDto;
@@ -39,7 +45,7 @@ public class CompanyService {
 	private final CategoryDao categoryDao;
 	private final CareerDao careerDao;
 	private final CompanyDao companyDao;
-	private final UsersDao userDao;
+	private final UsersDao usersDao;
 
 	public CompanyAddressRespDto findByAddress(Integer companyId) {
 		return companyDao.findByAddress(companyId);
@@ -59,16 +65,34 @@ public class CompanyService {
 		return companyDetailRespDto;
 	}
 
-	// 회사정보변경 (user, company)
-	@Transactional(rollbackFor = Exception.class)
-	public void updateCompany(Integer userId, Integer companyId, CompanyUpdateDto companyUpdateDto) {
-		Users companyUserPS = userDao.findById(userId);
-		companyUserPS.update(companyUpdateDto);
-		userDao.update(companyUserPS);
-		Company companyPS = companyDao.findById(companyId);
-		companyPS.updateCompany(companyUpdateDto);
-		companyDao.update(companyPS);
+	// 내 정보 수정에서 데이터 보여주기
+	@Transactional(readOnly = true)
+	public CompanyUpdateFormRespDto companyUpdateById(Integer companyId) {
+		CompanyUpdateFormRespDto companyUpdateFormRespDto = companyDao.companyUpdateById(companyId);
+		return companyUpdateFormRespDto;
+	}
 
+	// 내 정보 수정
+	@Transactional(rollbackFor = Exception.class)
+	public CompanyUpdateRespDto updateCompany(Integer userId, Integer companyId,
+			CompanyUpdateReqDto companyUpdateReqDto) {
+		try {
+			companyUpdateReqDto.companyUpdateDtoPictureSet();
+		} catch (Exception e) {
+			throw new ApiException("멀티파트 폼 에러");
+		}
+		// user패스워드 수정
+		Users companyUserPS = usersDao.findById(userId);
+		companyUserPS.update(companyUpdateReqDto.companyPassWordUpdateReqDto());
+		usersDao.update(companyUserPS);
+
+		// personal 개인정보 수정
+		Company companyPS = companyDao.findById(companyId);
+		companyPS.updateCompany(companyUpdateReqDto);
+		companyDao.update(companyPS);
+		CompanyUpdateRespDto companyUpdateRespDto = new CompanyUpdateRespDto(companyPS, companyUserPS);
+
+		return companyUpdateRespDto;
 	}
 
 	// 채용공고 작성 (category,career,jobPostingboard)
