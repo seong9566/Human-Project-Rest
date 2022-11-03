@@ -124,16 +124,16 @@ public class CompanyController {
 
 	// 회사가 작성한 구인 공고 리스트 보기
 	@GetMapping("/s/company/jobPostingBoardList")
-	public ResponseDto<?> jobPostingBoardList(JobPostingBoardAllRespDto jobPostingBoardAllRespDto) {
+	public ResponseDto<?> jobPostingBoardList() {
 		SignedDto<?> principal = (SignedDto<?>) session.getAttribute("principal");
 
 		SignCompanyDto signCompanyDto = (SignCompanyDto) principal.getUserInfo();
-		jobPostingBoardAllRespDto.setCompanyId(signCompanyDto.getCompanyId());
+		Integer companyId = signCompanyDto.getCompanyId();
 
 		// List<JobPostingBoardAllRespDto> jobPostingBoardList =
 		// companyService.jobPostingBoardList(principal.getCompanyId());
 
-		return new ResponseDto<>(1, "성공", companyService.jobPostingBoardList(jobPostingBoardAllRespDto));
+		return new ResponseDto<>(1, "성공", companyService.jobPostingBoardList(companyId));
 	}
 
 	// 내가 쓴 채용 공고 상세보기 - 인증 필요

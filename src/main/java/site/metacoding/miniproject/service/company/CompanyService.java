@@ -115,9 +115,9 @@ public class CompanyService {
 	}
 
 	// 채용공고 리스트
-	public List<JobPostingBoardAllRespDto> jobPostingBoardList(JobPostingBoardAllRespDto jobPostingBoardAllRespDto) {
+	public List<JobPostingBoardAllRespDto> jobPostingBoardList(Integer companyId) {
 		List<JobPostingBoardAllRespDto> jobPostingBoardList = jobPostingBoardDao
-				.jobPostingBoardList(jobPostingBoardAllRespDto.getCompanyId());
+				.jobPostingBoardList(companyId);
 
 		// List<JobPostingBoardAllRespDto> jobPostingAllRespDtoList = new ArrayList<>();
 		// for (JobPostingBoard jobPostingBoard : jobPostingBoardList) {
