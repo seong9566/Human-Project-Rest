@@ -1,7 +1,6 @@
 package site.metacoding.miniproject.config.authfilter;
 
 import java.io.IOException;
-import java.util.HashMap;
 import java.util.Map;
 
 import javax.servlet.Filter;
@@ -40,6 +39,8 @@ public class JwtAuthorizationFilter implements Filter {
         }
 
         DecodedJWT decodedJWT = JWT.require(Algorithm.HMAC512(SecretKey.SECRETKEY.key())).build().verify(token);
+        
+        //map 형식으로 저장되어있는 토큰값을 map형식으로 가져온다.
         Map<String, Object> getSigned = decodedJWT.getClaim("sigendDto").asMap();
 
         TokenToSinedDto tokenToSinedDto = new TokenToSinedDto();

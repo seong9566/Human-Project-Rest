@@ -153,7 +153,7 @@ public class UsersService {
         return checkUser;
     }
 
-    public List<Alarm> userAlarm(Integer usersId) {
+    public List<Alarm> finduserAlarmByUserId(Integer usersId) {
         List<Alarm> usersAlarm = alarmDao.findByusersId(usersId);
         return usersAlarm;
     }

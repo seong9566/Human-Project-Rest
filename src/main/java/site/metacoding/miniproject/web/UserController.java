@@ -3,7 +3,6 @@ package site.metacoding.miniproject.web;
 import java.util.List;
 
 import javax.servlet.http.Cookie;
-import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import javax.servlet.http.HttpSession;
 
@@ -18,7 +17,6 @@ import org.springframework.web.multipart.MultipartFile;
 
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
-import site.metacoding.miniproject.config.SessionConfig;
 import site.metacoding.miniproject.domain.alarm.Alarm;
 import site.metacoding.miniproject.dto.company.CompanyReqDto.CompanyJoinDto;
 import site.metacoding.miniproject.dto.personal.PersonalReqDto.PersonalJoinDto;
@@ -50,16 +48,13 @@ public class UserController {
 	@GetMapping("/logout")
 	public ResponseDto<?> logout(HttpServletResponse resp) {
 
+		
 		Cookie cookie = new Cookie("Authorization", null);
 		cookie.setMaxAge(0);
 		cookie.setPath("/");
 		resp.addCookie(cookie);
 
-		SessionConfig.logout(session.getId());
 		session.removeAttribute("principal");
-		session.removeAttribute("companyId");
-		session.removeAttribute("personalId");
-		session.removeAttribute("subscribe");
 
 		return new ResponseDto<>(1, "성공", null);
 	}
@@ -153,7 +148,8 @@ public class UserController {
 
 		ResponseDto<?> responseDto = new ResponseDto<>(1, "알람없음", null);
 
-		List<Alarm> usersAlarm = userService.userAlarm(usersId);
+		List<Alarm> usersAlarm = userService.finduserAlarmByUserId(usersId);
+
 		if (!usersAlarm.isEmpty())
 			responseDto = new ResponseDto<>(1, "통신 성공", usersAlarm);
 
