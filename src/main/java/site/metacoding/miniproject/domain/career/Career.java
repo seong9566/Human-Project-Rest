@@ -4,12 +4,12 @@ import java.sql.Timestamp;
 
 import lombok.Builder;
 import lombok.Getter;
+import lombok.NoArgsConstructor;
 import lombok.Setter;
 import site.metacoding.miniproject.dto.jobpostingboard.JobPostingBoardReqDto.JobPostingBoardInsertReqDto;
-import site.metacoding.miniproject.dto.resumes.ResumesReqDto.ResumesInsertReqDto;
 import site.metacoding.miniproject.web.dto.request.jobpostingboard.JobPostingBoardUpdateDto;
-import site.metacoding.miniproject.web.dto.request.resume.ResumesUpdateDto;
 
+@NoArgsConstructor
 @Getter
 @Setter
 public class Career {
@@ -30,12 +30,14 @@ public class Career {
 	}
 
 	// 이력서 수정
-	public Career(Integer careerId, ResumesUpdateDto updateResumesDto) {
+	@Builder
+	public Career(Integer careerId, Boolean oneYearLess, Boolean twoYearOver, Boolean threeYearOver,
+			Boolean fiveYearOver) {
 		this.careerId = careerId;
-		this.oneYearLess = updateResumesDto.getOneYearLess();
-		this.twoYearOver = updateResumesDto.getTwoYearOver();
-		this.threeYearOver = updateResumesDto.getThreeYearOver();
-		this.fiveYearOver = updateResumesDto.getFiveYearOver();
+		this.oneYearLess = oneYearLess;
+		this.twoYearOver = twoYearOver;
+		this.threeYearOver = threeYearOver;
+		this.fiveYearOver = fiveYearOver;
 	}
 
 	public Career(JobPostingBoardInsertReqDto jobPostingBoardInsertReqDto) {

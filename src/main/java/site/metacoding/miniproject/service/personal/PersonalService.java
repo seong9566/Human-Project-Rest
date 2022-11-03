@@ -27,10 +27,11 @@ import site.metacoding.miniproject.dto.personal.PersonalRespDto.PersonalDetailRe
 import site.metacoding.miniproject.dto.personal.PersonalRespDto.PersonalUpdateFormRespDto;
 import site.metacoding.miniproject.dto.personal.PersonalRespDto.PersonalUpdateRespDto;
 import site.metacoding.miniproject.dto.resumes.ResumesReqDto.ResumesInsertReqDto;
+import site.metacoding.miniproject.dto.resumes.ResumesReqDto.ResumesUpdateReqDto;
 import site.metacoding.miniproject.dto.resumes.ResumesRespDto.ResumesAllRespDto;
 import site.metacoding.miniproject.dto.resumes.ResumesRespDto.ResumesDetailRespDto;
 import site.metacoding.miniproject.dto.resumes.ResumesRespDto.ResumesInsertRespDto;
-import site.metacoding.miniproject.web.dto.request.resume.ResumesUpdateDto;
+import site.metacoding.miniproject.dto.resumes.ResumesRespDto.ResumesUpdateRespDto;
 import site.metacoding.miniproject.web.dto.response.company.CompanyMainDto;
 import site.metacoding.miniproject.web.dto.response.etc.PagingDto;
 
@@ -71,6 +72,7 @@ public class PersonalService {
 		}
 
 		Resumes resumesPS = resumesInsertReqDto.ResumesInsertReqDtoToResumesEntity();
+		resumesPS.setPersonalId(resumesInsertReqDto.getPersonalId());
 		resumesPS.setCareerId(careerPS.getCareerId());
 		resumesPS.setPortfolioId(portfolioPS.getPortfolioId());
 		resumesPS.setResumesCategoryId(categoryPS.getCategoryId());
@@ -95,32 +97,55 @@ public class PersonalService {
 
 	// 이력서 상세 보기
 	@Transactional(readOnly = true)
-	public ResumesDetailRespDto resumesById(Integer resumesId) {
-		Resumes resumesPS = resumesDao.findById(resumesId);
-		ResumesDetailRespDto resumesDetailRespDto = new ResumesDetailRespDto(resumesPS);
+	public ResumesDetailRespDto findByResumesId(Integer resumesId) {
+		ResumesDetailRespDto resumesDetailRespDto = resumesDao.findByResumesId(resumesId);
 		return resumesDetailRespDto;
 	}
 
 	// 이력서 수정 하기
 	@Transactional(rollbackFor = RuntimeException.class)
-	public void updateResumes(Integer resumesId, ResumesUpdateDto updateResumesDto) {
+	public ResumesUpdateRespDto updateResumes(ResumesUpdateReqDto resumesUpdateReqDto) {
 
-		Resumes resumes = new Resumes(resumesId, updateResumesDto);
-		resumesDao.update(resumes);
+		try {
+			resumesUpdateReqDto.ResumesUpdateDtoPictureSet();
+		} catch (Exception e) {
+			throw new ApiException("멀티파트 폼 에러");
+		}
 
-		Category category = new Category(updateResumesDto.getCategoryId(), updateResumesDto);
-		categoryDao.update(category);
+		Resumes resumesPS = resumesDao.findById(resumesUpdateReqDto.getResumesId());
+		resumesUpdateReqDto.setCategoryId(resumesPS.getResumesCategoryId());
+		resumesUpdateReqDto.setPortfolioId(resumesPS.getPortfolioId());
+		resumesUpdateReqDto.setCareerId(resumesPS.getCareerId());
+		resumesPS = resumesUpdateReqDto.ResumesUpdateReqDtoToResumesEntity();
+		resumesDao.update(resumesPS);
 
-		Portfolio portfolio = new Portfolio(updateResumesDto.getPortfolioId(), updateResumesDto);
-		portfolioDao.update(portfolio);
+		Category categoryPS = categoryDao.findById(resumesUpdateReqDto.getCategoryId());
+		categoryPS = resumesUpdateReqDto
+				.ResumesUpdateReqDtoToCategoryEntity();
+		categoryDao.update(categoryPS);
 
-		Career career = new Career(updateResumesDto.getCareerId(), updateResumesDto);
-		careerDao.update(career);
+		Portfolio portfolioPS = portfolioDao.findById(resumesUpdateReqDto.getPortfolioId());
+		portfolioPS = resumesUpdateReqDto
+				.ResumesUpdateReqDtoToPortfolioEntity();
+		portfolioDao.update(portfolioPS);
 
+		Career careerPS = careerDao.findById(resumesUpdateReqDto.getCareerId());
+		careerPS = resumesUpdateReqDto.ResumesUpdateReqDtoToCareerEntity();
+		careerDao.update(careerPS);
+
+		ResumesUpdateRespDto resumesUpdateRespDto = new ResumesUpdateRespDto(resumesPS, categoryPS, careerPS,
+				portfolioPS);
+
+		return resumesUpdateRespDto;
 	}
 
 	// 이력서 삭제
+	@Transactional
 	public void deleteResumes(@PathVariable Integer resumesId) {
+		Resumes resumes = resumesDao.findById(resumesId);
+		if (resumes == null) {
+			throw new RuntimeException("해당 " + resumesId + "로 삭제를 할 수 없습니다.");
+		}
 		resumesDao.deleteById(resumesId);
 	}
 

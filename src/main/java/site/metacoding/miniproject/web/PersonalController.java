@@ -24,13 +24,14 @@ import lombok.RequiredArgsConstructor;
 import site.metacoding.miniproject.dto.personal.PersonalReqDto.PersonalUpdatReqDto;
 import site.metacoding.miniproject.dto.personal.PersonalRespDto.PersonalUpdateRespDto;
 import site.metacoding.miniproject.dto.resumes.ResumesReqDto.ResumesInsertReqDto;
+import site.metacoding.miniproject.dto.resumes.ResumesReqDto.ResumesUpdateReqDto;
 import site.metacoding.miniproject.dto.resumes.ResumesRespDto.ResumesAllRespDto;
+import site.metacoding.miniproject.dto.resumes.ResumesRespDto.ResumesUpdateRespDto;
 import site.metacoding.miniproject.dto.user.UserRespDto.SignPersonalDto;
 import site.metacoding.miniproject.dto.user.UserRespDto.SignedDto;
 import site.metacoding.miniproject.service.company.CompanyService;
 import site.metacoding.miniproject.service.personal.PersonalLikeService;
 import site.metacoding.miniproject.service.personal.PersonalService;
-import site.metacoding.miniproject.web.dto.request.resume.ResumesUpdateDto;
 import site.metacoding.miniproject.web.dto.response.ResponseDto;
 import site.metacoding.miniproject.web.dto.response.company.CompanyAddressDto;
 import site.metacoding.miniproject.web.dto.response.company.CompanyInfoDto;
@@ -38,7 +39,6 @@ import site.metacoding.miniproject.web.dto.response.company.CompanyMainDto;
 import site.metacoding.miniproject.web.dto.response.etc.PagingDto;
 import site.metacoding.miniproject.web.dto.response.jobpostingboard.JobPostingBoardDetailDto;
 import site.metacoding.miniproject.web.dto.response.personal.PersonalMainDto;
-import site.metacoding.miniproject.web.dto.response.resume.ResumesDetailDto;
 
 @RequiredArgsConstructor
 @RestController
@@ -50,8 +50,8 @@ public class PersonalController {
 	private final PersonalLikeService personalLikeService;
 
 	// 이력서 작성 하기
-	@PostMapping(value = "/resumes/insert")
-	public ResponseDto<?> resumesInsert(@RequestPart(value = "file", required = false) MultipartFile file,
+	@PostMapping(value = "/s/resumes/insert")
+	public ResponseDto<?> insertResumes(@RequestPart(value = "file", required = false) MultipartFile file,
 			@RequestPart("reqDto") ResumesInsertReqDto resumesInsertReqDto) throws Exception {
 		SignedDto<?> principal = (SignedDto<?>) session.getAttribute("principal");
 		SignPersonalDto signPersonalDto = (SignPersonalDto) principal.getUserInfo();
@@ -62,7 +62,7 @@ public class PersonalController {
 
 	// 내가 작성한 이력서 목록 보기
 	@GetMapping("/resumes/myList")
-	public ResponseDto<?> resumesList(ResumesAllRespDto resumesAllRespDto) {
+	public ResponseDto<?> findAllMyResumes(ResumesAllRespDto resumesAllRespDto) {
 		SignedDto<?> principal = (SignedDto<?>) session.getAttribute("principal");
 		SignPersonalDto signPersonalDto = (SignPersonalDto) principal.getUserInfo();
 		resumesAllRespDto.setPersonalId(signPersonalDto.getPersonalId());
@@ -71,54 +71,29 @@ public class PersonalController {
 
 	// 이력서 상세 보기
 	@GetMapping("/resumes/{resumesId}")
-	public ResponseDto<?> resumesById(@PathVariable Integer resumesId) {
+	public ResponseDto<?> findByResumesId(@PathVariable Integer resumesId) {
 		SignedDto<?> principal = (SignedDto<?>) session.getAttribute("principal");
-
 		// PersonalLike personalLike = personalLikeService.좋아요확인(resumesId,
 		// signedDto.getCompanyId());
 		// model.addAttribute("personalLike", personalLike);
-
-		return new ResponseDto<>(1, "내 이력서 목록 보기 성공", personalService.resumesById(resumesId));
+		return new ResponseDto<>(1, "내 이력서 상세 보기 성공", personalService.findByResumesId(resumesId));
 	}
 
 	// 이력서 수정
-	@GetMapping("/personal/resumes/update/{resumesId}")
-	public String updateForm(@PathVariable Integer resumesId, Model model) {
-		ResumesDetailDto resumesDetailDtoPS = personalService.resumesById(resumesId);
-		model.addAttribute("resumesDetailDtoPS", resumesDetailDtoPS);
-		return "personal/resumesUpdateForm";
-	}
-
-	@PutMapping(value = "/personal/resumes/update/{resumesId}")
-	public @ResponseBody ResponseDto<?> updateResumes(@PathVariable Integer resumesId,
-			@RequestPart("file") MultipartFile file, @RequestPart("ResumesUpdateDto") ResumesUpdateDto resumesUpdateDto)
+	@PutMapping(value = "/s/resumes/update/{resumesId}")
+	public ResponseDto<?> updateResumes(@PathVariable Integer resumesId,
+			@RequestPart(value = "file", required = false) MultipartFile file,
+			@RequestPart("resumesUpdateReqDto") ResumesUpdateReqDto resumesUpdateReqDto)
 			throws Exception {
-		int pos = file.getOriginalFilename().lastIndexOf('.');
-		String extension = file.getOriginalFilename().substring(pos + 1);
-		String filePath = "C:\\Temp\\img\\";
-		// String filePath = "/Users/ihyeonseong/Desktop/img";//Mac전용 경로
-		String imgSaveName = UUID.randomUUID().toString();
-		String imgName = imgSaveName + "." + extension;
-		File makeFileFolder = new File(filePath);
-		if (!makeFileFolder.exists()) {
-			if (!makeFileFolder.mkdir()) {
-				throw new Exception("File.mkdir():Fail.");
-			}
-		}
-		File dest = new File(filePath, imgName);
-		try {
-			Files.copy(file.getInputStream(), dest.toPath());
-		} catch (IOException e) {
-			e.printStackTrace();
-		}
-		resumesUpdateDto.setResumesPicture(imgName);
-		personalService.updateResumes(resumesId, resumesUpdateDto);
-		return new ResponseDto<>(1, "이력서 수정 성공", null);
+		resumesUpdateReqDto.setFile(file);
+		resumesUpdateReqDto.setResumesId(resumesId);
+		ResumesUpdateRespDto resumesUpdateRespDto = personalService.updateResumes(resumesUpdateReqDto);
+		return new ResponseDto<>(1, "이력서 수정 성공", resumesUpdateRespDto);
 	}
 
 	// 이력서 삭제 하기
-	@DeleteMapping("/personal/resumes/delete/{resumesId}")
-	public @ResponseBody ResponseDto<?> deleteResumes(@PathVariable Integer resumesId) {
+	@DeleteMapping("/s/resumes/delete/{resumesId}")
+	public ResponseDto<?> deleteResumes(@PathVariable Integer resumesId) {
 		personalService.deleteResumes(resumesId);
 		return new ResponseDto<>(1, "이력서 삭제 성공", null);
 	}
