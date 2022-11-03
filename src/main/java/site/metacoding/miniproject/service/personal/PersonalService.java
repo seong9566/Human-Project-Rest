@@ -184,7 +184,7 @@ public class PersonalService {
 
 		// user패스워드 수정
 		Users personalUserPS = usersDao.findById(userId);
-		personalUserPS.update(personalUpdatReqDto);
+		personalUserPS.update(personalUpdatReqDto.personalPassWordUpdateReqDto());
 		usersDao.update(personalUserPS);
 
 		// personal 개인정보 수정

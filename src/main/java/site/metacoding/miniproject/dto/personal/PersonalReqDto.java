@@ -59,12 +59,23 @@ public class PersonalReqDto {
 
         private String loginPassword;
 
-        public Users personalUpdateReqDto() {
+        public Personal personalUpdateDtoToPersonalEntity() {
+            return Personal.builder()
+                    .personalName(personalName)
+                    .personalEmail(personalEmail)
+                    .personalEducation(personalEducation)
+                    .personalPhoneNumber(personalPhoneNumber)
+                    .personalAddress(personalAddress)
+                    .build();
+        }
+
+        public Users personalPassWordUpdateReqDto() {
 
             SHA256 sha256 = new SHA256();
             this.loginPassword = sha256.encrypt(this.loginPassword);
 
             return Users.builder()
+                    .personalId(personalId)
                     .loginPassword(loginPassword)
                     .build();
         }
