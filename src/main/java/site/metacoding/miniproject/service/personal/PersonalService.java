@@ -28,13 +28,13 @@ import site.metacoding.miniproject.dto.personal.PersonalRespDto.PersonalUpdateFo
 import site.metacoding.miniproject.dto.personal.PersonalRespDto.PersonalUpdateRespDto;
 import site.metacoding.miniproject.dto.resumes.ResumesReqDto.ResumesInsertReqDto;
 import site.metacoding.miniproject.dto.resumes.ResumesReqDto.ResumesUpdateReqDto;
+import site.metacoding.miniproject.dto.resumes.ResumesRespDto.PagingDto;
 import site.metacoding.miniproject.dto.resumes.ResumesRespDto.ResumesAllByIdRespDto;
 import site.metacoding.miniproject.dto.resumes.ResumesRespDto.ResumesAllRespDto;
 import site.metacoding.miniproject.dto.resumes.ResumesRespDto.ResumesDetailRespDto;
 import site.metacoding.miniproject.dto.resumes.ResumesRespDto.ResumesInsertRespDto;
 import site.metacoding.miniproject.dto.resumes.ResumesRespDto.ResumesUpdateRespDto;
 import site.metacoding.miniproject.web.dto.response.company.CompanyMainDto;
-import site.metacoding.miniproject.web.dto.response.etc.PagingDto;
 
 @Service
 @RequiredArgsConstructor
@@ -154,11 +154,13 @@ public class PersonalService {
 	// 전체 이력서 목록 보기
 	@Transactional(readOnly = true)
 	public List<ResumesAllRespDto> findAllResumes(ResumesAllRespDto resumesAllRespDto) {
-		List<Resumes> resumesList = resumesDao.findAllResumes();
+		List<Resumes> resumesList = resumesDao.findAllResumes(resumesAllRespDto.getStartNum());
 		List<ResumesAllRespDto> resumesAllRespDtoList = new ArrayList<>();
 		for (Resumes resumes : resumesList) {
 			resumesAllRespDtoList.add(new ResumesAllRespDto(resumes));
 		}
+		PagingDto paging = resumesDao.resumesPaging(resumesAllRespDto.getPage());
+		paging.makeBlockInfo();
 		return resumesAllRespDtoList;
 	}
 
@@ -166,10 +168,10 @@ public class PersonalService {
 	// return resumesDao.findAll(startNum);
 	// }
 
-	// 페이징
-	public PagingDto resumesPaging(Integer page, String keyword) {
-		return resumesDao.resumesPaging(page, keyword);
-	}
+	// // 페이징
+	// public PagingDto resumesPaging(Integer page, String keyword) {
+	// return resumesDao.resumesPaging(page, keyword);
+	// }
 
 	// 검색 결과 목록 보기
 	public List<CompanyMainDto> findSearch(Integer startNum, String keyword) {

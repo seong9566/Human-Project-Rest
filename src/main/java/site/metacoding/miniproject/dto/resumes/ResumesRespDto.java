@@ -159,9 +159,38 @@ public class ResumesRespDto {
         private String resumesTitle;
         private String resumesPlace;
 
+        private Integer page;
+        private Integer startNum;
+
         public ResumesAllRespDto(Resumes resumes) {
             this.resumesTitle = resumes.getResumesTitle();
             this.resumesPlace = resumes.getResumesPlace();
+        }
+    }
+
+    @Setter
+    @Getter
+    public static class PagingDto {
+        private Integer totalCount;
+        private Integer totalPage;
+        private Integer currentPage;
+        private boolean isFirst;
+        private boolean isLast;
+
+        private Integer blockCount;
+        private Integer currentBlock;
+        private Integer startPageNum;
+        private Integer lastPageNum;
+
+        public void makeBlockInfo() {
+            this.blockCount = 5;
+            this.currentBlock = currentPage / blockCount;
+            this.startPageNum = 1 + blockCount * currentBlock;
+            this.lastPageNum = 5 + blockCount * currentBlock;
+
+            if (totalPage < lastPageNum) {
+                this.lastPageNum = totalPage;
+            }
         }
     }
 }

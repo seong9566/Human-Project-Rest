@@ -97,7 +97,12 @@ public class PersonalController {
 
 	// 전체 이력서 목록 보기
 	@GetMapping("/resumes/resumesList")
-	public ResponseDto<?> findAllResumes(ResumesAllRespDto resumesAllRespDto) {
+	public ResponseDto<?> findAllResumes(Integer page, ResumesAllRespDto resumesAllRespDto) {
+		if (page == null)
+			page = 0;
+		int startNum = page * 5;
+		resumesAllRespDto.setPage(page);
+		resumesAllRespDto.setStartNum(startNum);
 		return new ResponseDto<>(1, "전체 이력서 목록 보기 성공", personalService.findAllResumes(resumesAllRespDto));
 	}
 
