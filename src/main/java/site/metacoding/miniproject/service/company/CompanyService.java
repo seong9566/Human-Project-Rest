@@ -176,7 +176,8 @@ public class CompanyService {
 		Career careerPS = careerDao.findById(jobPostingBoardPS.getJobPostingBoardCareerId());
 		careerPS.updateCareer(jobPostingBoardUpdateReqDto);
 		careerDao.jobPostingUpdate(careerPS);
-
+		System.out.println("mmm" + jobPostingBoardUpdateReqDto.getCategoryDevops());
+		System.out.println("mmm" + jobPostingBoardUpdateReqDto.getCategoryBackend());
 		JobPostingBoardUpdateRespDto jobPostingBoardUpdateRespDto = new JobPostingBoardUpdateRespDto(jobPostingBoardPS,
 				categoryPS, careerPS);
 
