@@ -19,7 +19,7 @@ public interface JobPostingBoardDao {
 	public void deleteById(Integer jobPostingBoardId);
 
 	// 회사가 작성한 채용공고 목록 보기
-	public List<JobPostingBoard> jobPostingBoardList(Integer companyId);
+	public List<JobPostingBoardAllRespDto> jobPostingBoardList(Integer jobPostingBoardId);
 
 	// 채용공고 상세보기
 	public JobPostingBoardDetailRespDto findByJobPostingBoard(Integer jobPostingBoardId);

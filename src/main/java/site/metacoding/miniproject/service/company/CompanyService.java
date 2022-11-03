@@ -116,24 +116,24 @@ public class CompanyService {
 
 	// 채용공고 리스트
 	public List<JobPostingBoardAllRespDto> jobPostingBoardList(JobPostingBoardAllRespDto jobPostingBoardAllRespDto) {
-		List<JobPostingBoard> jobPostingBoardList = jobPostingBoardDao
+		List<JobPostingBoardAllRespDto> jobPostingBoardList = jobPostingBoardDao
 				.jobPostingBoardList(jobPostingBoardAllRespDto.getCompanyId());
 
-		List<JobPostingBoardAllRespDto> jobPostingAllRespDtoList = new ArrayList<>();
-		for (JobPostingBoard jobPostingBoard : jobPostingBoardList) {
-			jobPostingAllRespDtoList.add(new JobPostingBoardAllRespDto(jobPostingBoard));
-		}
-
-		// TimeStamp to String
-		// for (JobPostingBoardListDto deadLine : postingList) {
-		// Timestamp ts = deadLine.getJobPostingBoardDeadline();
-		// Date date = new Date();
-		// date.setTime(ts.getTime());
-		// String formattedDate = new SimpleDateFormat("yyyy년MM월dd일").format(date);
-		// deadLine.setFormatDeadLine(formattedDate);
+		// List<JobPostingBoardAllRespDto> jobPostingAllRespDtoList = new ArrayList<>();
+		// for (JobPostingBoard jobPostingBoard : jobPostingBoardList) {
+		// jobPostingAllRespDtoList.add(new JobPostingBoardAllRespDto(jobPostingBoard));
 		// }
 
-		return jobPostingAllRespDtoList;
+		// TimeStamp to String
+		for (JobPostingBoardAllRespDto deadLine : jobPostingBoardList) {
+			Timestamp ts = deadLine.getJobPostingBoardDeadline();
+			Date date = new Date();
+			date.setTime(ts.getTime());
+			String formattedDate = new SimpleDateFormat("yyyy년MM월dd일").format(date);
+			deadLine.setFormatDeadLine(formattedDate);
+		}
+
+		return jobPostingBoardList;
 	}
 
 	// 채용공고 상세 보기

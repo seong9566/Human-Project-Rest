@@ -108,9 +108,6 @@ public class JobPostingBoardRespDto {
         private String jobPostingBoardTitle;
         private Timestamp jobPostingBoardDeadline;
 
-        private Integer jobPostingBoardCategoryId;
-        private Integer jobPostingBoardCareerId;
-
         private Boolean categoryFrontend;
         private Boolean categoryBackend;
         private Boolean categoryDevops;
@@ -120,15 +117,15 @@ public class JobPostingBoardRespDto {
         private Boolean threeYearOver;
         private Boolean fiveYearOver;
 
-        private Integer categoryId;
-        private Integer careerId;
+        // private Integer categoryId;
+        // private Integer careerId;
+
+        private String formatDeadLine;
 
         public JobPostingBoardAllRespDto(JobPostingBoard jobPostingBoard) {
             this.jobPostingBoardId = jobPostingBoard.getJobPostingBoardId();
             this.jobPostingBoardTitle = jobPostingBoard.getJobPostingBoardTitle();
             this.jobPostingBoardDeadline = jobPostingBoard.getJobPostingBoardDeadline();
-            this.jobPostingBoardCategoryId = jobPostingBoard.getJobPostingBoardCategoryId();
-            this.jobPostingBoardCareerId = jobPostingBoard.getJobPostingBoardCareerId();
 
         }
 

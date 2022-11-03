@@ -133,7 +133,7 @@ public class CompanyController {
 		// List<JobPostingBoardAllRespDto> jobPostingBoardList =
 		// companyService.jobPostingBoardList(principal.getCompanyId());
 
-		return new ResponseDto<>(1, "성공", null);
+		return new ResponseDto<>(1, "성공", companyService.jobPostingBoardList(jobPostingBoardAllRespDto));
 	}
 
 	// 내가 쓴 채용 공고 상세보기 - 인증 필요
