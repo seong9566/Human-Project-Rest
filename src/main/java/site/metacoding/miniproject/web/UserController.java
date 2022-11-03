@@ -42,7 +42,7 @@ public class UserController {
 		if (session.getAttribute("principal") != null) {
 			responseDto = new ResponseDto<>(-1, "이미 로그인 되어 있음", null);
 		} else {
-			responseDto = new ResponseDto<>(-1, "성공", null);
+			responseDto = new ResponseDto<>(1, "성공", null);
 		}
 		return responseDto;
 	}
@@ -61,7 +61,7 @@ public class UserController {
 		session.removeAttribute("personalId");
 		session.removeAttribute("subscribe");
 
-		return new ResponseDto<>(-1, "성공", null);
+		return new ResponseDto<>(1, "성공", null);
 	}
 
 	@GetMapping("/company/joinForm")
