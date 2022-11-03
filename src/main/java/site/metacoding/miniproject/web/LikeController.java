@@ -13,6 +13,8 @@ import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.ResponseBody;
 
 import lombok.RequiredArgsConstructor;
+import site.metacoding.miniproject.dto.like.LikeReqDto.CompanyLikeReqDto;
+import site.metacoding.miniproject.dto.user.UserRespDto.SignPersonalDto;
 import site.metacoding.miniproject.dto.user.UserRespDto.SignedDto;
 import site.metacoding.miniproject.service.company.CompanyLikeService;
 import site.metacoding.miniproject.service.personal.PersonalLikeService;
@@ -40,7 +42,7 @@ public class LikeController {
 	@DeleteMapping("/personalLike/{resumesId}/likes")
 	public @ResponseBody ResponseDto<?> deleteLike(@PathVariable Integer resumesId) {
 		SignedDto<?> signUserDto = (SignedDto<?>) session.getAttribute("principal");
-		//personalLikeService.좋아요취소(resumesId, signedDto.getCompanyId());
+		// personalLikeService.좋아요취소(resumesId, signedDto.getCompanyId());
 		return new ResponseDto<>(1, "좋아요취소", null);
 	}
 
@@ -52,14 +54,14 @@ public class LikeController {
 		return "/company/recommendList";
 	}
 
-	@PostMapping("/companyLike/{companyId}/likes")
-	public @ResponseBody ResponseDto<?> insertCompanyLike(@PathVariable Integer companyId) {
+	@PostMapping("/s/api/companyLike/{companyId}/likes")
+	public @ResponseBody ResponseDto<?> insertCompanyLike(@PathVariable Integer companyId,
+			CompanyLikeReqDto companyLikeReqDto) {
+		SignedDto<?> principal = (SignedDto<?>) session.getAttribute("principal");
+		// SignPersonalDto signPersonalDto = (SignPersonalDto) principal.getUserInfo();
+		companyLikeService.좋아요(principal, companyId, companyLikeReqDto);
 
-		SignedDto<?> signUserDto = (SignedDto<?>) session.getAttribute("principal");
-
-		companyLikeService.좋아요(signUserDto, companyId);
-
-		return new ResponseDto<>(1, "좋아요성공", null);
+		return new ResponseDto<>(1, "좋아요성공", companyLikeReqDto);
 
 	}
 
@@ -68,7 +70,7 @@ public class LikeController {
 
 		SignedDto<?> signUserDto = (SignedDto<?>) session.getAttribute("principal");
 
-		//companyLikeService.좋아요취소(companyId, signedDto.getPersonalId());
+		// companyLikeService.좋아요취소(companyId, signedDto.getPersonalId());
 		return new ResponseDto<>(1, "좋아요취소", null);
 	}
 
@@ -77,9 +79,10 @@ public class LikeController {
 
 		SignedDto<?> signUserDto = (SignedDto<?>) session.getAttribute("principal");
 
-		//CompanyLike companyLike = companyLikeService.좋아요확인(companyId, signedDto.getPersonalId());
+		// CompanyLike companyLike = companyLikeService.좋아요확인(companyId,
+		// signedDto.getPersonalId());
 
-		//model.addAttribute("companyLike", companyLike);
+		// model.addAttribute("companyLike", companyLike);
 
 		return "/personal/jobPostingViewApply";
 	}
