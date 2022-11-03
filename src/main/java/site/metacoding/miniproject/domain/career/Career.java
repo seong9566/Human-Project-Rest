@@ -20,7 +20,7 @@ public class Career {
 	private Boolean fiveYearOver;
 	private Timestamp createdAt;
 
-	// 이력서 작성, 수정
+	// 이력서 작성
 	@Builder
 	public Career(Boolean oneYearLess, Boolean twoYearOver, Boolean threeYearOver, Boolean fiveYearOver) {
 		this.oneYearLess = oneYearLess;
@@ -29,15 +29,16 @@ public class Career {
 		this.fiveYearOver = fiveYearOver;
 	}
 
-	// // 이력서 수정
-	// @Builder
-	// public Career(Integer careerId, ResumesUpdateDto updateResumesDto) {
-	// this.careerId = careerId;
-	// this.oneYearLess = updateResumesDto.getOneYearLess();
-	// this.twoYearOver = updateResumesDto.getTwoYearOver();
-	// this.threeYearOver = updateResumesDto.getThreeYearOver();
-	// this.fiveYearOver = updateResumesDto.getFiveYearOver();
-	// }
+	// 이력서 수정
+	@Builder
+	public Career(Integer careerId, Boolean oneYearLess, Boolean twoYearOver, Boolean threeYearOver,
+			Boolean fiveYearOver) {
+		this.careerId = careerId;
+		this.oneYearLess = oneYearLess;
+		this.twoYearOver = twoYearOver;
+		this.threeYearOver = threeYearOver;
+		this.fiveYearOver = fiveYearOver;
+	}
 
 	public Career(JobPostingBoardInsertReqDto jobPostingBoardInsertReqDto) {
 		this.oneYearLess = jobPostingBoardInsertReqDto.getOneYearLess();

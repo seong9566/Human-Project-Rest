@@ -94,7 +94,6 @@ public class PersonalController {
 			throws Exception {
 		resumesUpdateReqDto.setFile(file);
 		resumesUpdateReqDto.setResumesId(resumesId);
-
 		ResumesUpdateRespDto resumesUpdateRespDto = personalService.updateResumes(resumesUpdateReqDto);
 		return new ResponseDto<>(1, "이력서 수정 성공", resumesUpdateRespDto);
 	}

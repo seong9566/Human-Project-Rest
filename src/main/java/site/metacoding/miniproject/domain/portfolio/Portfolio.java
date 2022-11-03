@@ -14,20 +14,19 @@ public class Portfolio {
 	private String portfolioFile;
 	private Timestamp createdAt;
 
-	// 이력서 작성, 수정
+	// 이력서 작성
 	@Builder
 	public Portfolio(String portfolioSource, String portfolioFile) {
 		this.portfolioSource = portfolioSource;
 		this.portfolioFile = portfolioFile;
 	}
 
-	// // 이력서 수정
-	// @Builder
-	// public Portfolio(Integer portfolioId, String portfolioSource, String
-	// portfolioFile) {
-	// this.portfolioId = portfolioId;
-	// this.portfolioSource = portfolioSource;
-	// this.portfolioFile = portfolioFile;
-	// }
+	// 이력서 수정
+	@Builder
+	public Portfolio(Integer portfolioId, String portfolioSource, String portfolioFile) {
+		this.portfolioId = portfolioId;
+		this.portfolioSource = portfolioSource;
+		this.portfolioFile = portfolioFile;
+	}
 
 }

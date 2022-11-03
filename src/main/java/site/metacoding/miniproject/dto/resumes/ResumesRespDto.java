@@ -1,11 +1,5 @@
 package site.metacoding.miniproject.dto.resumes;
 
-import java.io.File;
-import java.nio.file.Files;
-import java.util.UUID;
-
-import org.springframework.web.multipart.MultipartFile;
-
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
@@ -141,12 +135,6 @@ public class ResumesRespDto {
         private Boolean categoryFrontend;
         private Boolean categoryBackend;
         private Boolean categoryDevops;
-
-        private Integer resumesId;
-        private Integer careerId;
-        private Integer portfolioId;
-        private Integer categoryId;
-        private Integer resumesCategoryId;
 
         public ResumesUpdateRespDto(Resumes resumes, Category category, Career career, Portfolio portfolio) {
             this.resumesTitle = resumes.getResumesTitle();
