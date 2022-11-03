@@ -151,31 +151,29 @@ public class PersonalService {
 		resumesDao.deleteById(resumesId);
 	}
 
-	// 전체 이력서 목록 보기
+	// 전체 이력서 목록 보기 (페이징+검색)
 	@Transactional(readOnly = true)
 	public List<ResumesAllRespDto> findAllResumes(ResumesAllRespDto resumesAllRespDto) {
-		List<Resumes> resumesList = resumesDao.findAllResumes(resumesAllRespDto.getStartNum());
-		List<ResumesAllRespDto> resumesAllRespDtoList = new ArrayList<>();
-		for (Resumes resumes : resumesList) {
-			resumesAllRespDtoList.add(new ResumesAllRespDto(resumes));
+		if (resumesAllRespDto.getKeyword() == null || resumesAllRespDto.getKeyword().isEmpty()) {
+			List<Resumes> resumesList = resumesDao.findAllResumes(resumesAllRespDto.getStartNum());
+			List<ResumesAllRespDto> resumesAllRespDtoList = new ArrayList<>();
+			for (Resumes resumes : resumesList) {
+				resumesAllRespDtoList.add(new ResumesAllRespDto(resumes));
+			}
+			PagingDto paging = resumesDao.resumesPaging(resumesAllRespDto.getPage(), resumesAllRespDto.getKeyword());
+			paging.makeBlockInfo(resumesAllRespDto.getKeyword());
+			return resumesAllRespDtoList;
+		} else {
+			List<Resumes> resumesList = resumesDao.findSearch(resumesAllRespDto.getStartNum(),
+					resumesAllRespDto.getKeyword());
+			List<ResumesAllRespDto> resumesAllRespDtoList = new ArrayList<>();
+			for (Resumes resumes : resumesList) {
+				resumesAllRespDtoList.add(new ResumesAllRespDto(resumes));
+			}
+			PagingDto paging = resumesDao.resumesPaging(resumesAllRespDto.getPage(), resumesAllRespDto.getKeyword());
+			paging.makeBlockInfo(resumesAllRespDto.getKeyword());
+			return resumesAllRespDtoList;
 		}
-		PagingDto paging = resumesDao.resumesPaging(resumesAllRespDto.getPage());
-		paging.makeBlockInfo();
-		return resumesAllRespDtoList;
-	}
-
-	// public List<CompanyMainDto> resumesAll(Integer startNum) {
-	// return resumesDao.findAll(startNum);
-	// }
-
-	// // 페이징
-	// public PagingDto resumesPaging(Integer page, String keyword) {
-	// return resumesDao.resumesPaging(page, keyword);
-	// }
-
-	// 검색 결과 목록 보기
-	public List<CompanyMainDto> findSearch(Integer startNum, String keyword) {
-		return resumesDao.findSearch(startNum, keyword);
 	}
 
 	// 카테고리 별 리스트 보기
