@@ -15,7 +15,7 @@
 	</update>
 
 	<select id="findAll" resultType="site.metacoding.miniproject.dto.like.LikeReqDto$PersonalLikeReqDto">
-		SELECT p.resumes_id, r.resumes_title as resumesTitle
+		SELECT r.resumes_id, p.company_id
 		FROM personal_like p
 		INNER
 		JOIN resumes r

@@ -1,5 +1,6 @@
 package site.metacoding.miniproject.web;
 
+import java.security.Principal;
 import java.util.List;
 
 import javax.servlet.http.HttpSession;
@@ -14,6 +15,9 @@ import org.springframework.web.bind.annotation.RestController;
 
 import lombok.RequiredArgsConstructor;
 import site.metacoding.miniproject.dto.like.LikeReqDto.CompanyLikeReqDto;
+import site.metacoding.miniproject.dto.like.LikeReqDto.PersonalLikeReqDto;
+import site.metacoding.miniproject.dto.like.LikeRespDto.CompanyLikeRespDto;
+import site.metacoding.miniproject.dto.user.UserRespDto.SignCompanyDto;
 import site.metacoding.miniproject.dto.user.UserRespDto.SignPersonalDto;
 import site.metacoding.miniproject.dto.user.UserRespDto.SignedDto;
 import site.metacoding.miniproject.service.company.CompanyLikeService;
@@ -28,30 +32,31 @@ public class LikeController {
 	private final PersonalLikeService personalLikeService;
 	private final CompanyLikeService companyLikeService;
 
-	@PostMapping("/personalLike/{resumesId}/likes")
-	public @ResponseBody ResponseDto<?> insertLike(@PathVariable Integer resumesId) {
-		// Company company = (Company) session.getAttribute("principal");
-		System.out.println(resumesId);
-		SignedDto<?> signUserDto = (SignedDto<?>) session.getAttribute("principal");
-
-		personalLikeService.좋아요(resumesId, signUserDto);
-		return new ResponseDto<>(1, "좋아요성공", null);
+	@PostMapping("/s/api/personalLike/{resumesId}")
+	public ResponseDto<?> insertPersonalLike(@PathVariable Integer resumesId,
+			PersonalLikeReqDto personalLikeReqDto) {
+		SignedDto<?> principal = (SignedDto<?>) session.getAttribute("principal");
+		SignCompanyDto signCompanyDto = (SignCompanyDto) principal.getUserInfo();
+		personalLikeReqDto.setCompanyId(signCompanyDto.getCompanyId());
+		return new ResponseDto<>(1, "좋아요성공", personalLikeService.좋아요(resumesId, personalLikeReqDto));
 
 	}
 
-	@DeleteMapping("/personalLike/{resumesId}/likes")
-	public @ResponseBody ResponseDto<?> deleteLike(@PathVariable Integer resumesId) {
-		SignedDto<?> signUserDto = (SignedDto<?>) session.getAttribute("principal");
-		// personalLikeService.좋아요취소(resumesId, signedDto.getCompanyId());
+	@DeleteMapping("/s/api/personalLike/{resumesId}")
+	public ResponseDto<?> deletePersonalLike(@PathVariable Integer resumesId,
+			PersonalLikeReqDto personalLikeReqDto) {
+		SignedDto<?> principal = (SignedDto<?>) session.getAttribute("principal");
+		SignCompanyDto signCompanyDto = (SignCompanyDto) principal.getUserInfo();
+		personalLikeReqDto.setCompanyId(signCompanyDto.getCompanyId());
+		personalLikeService.좋아요취소(resumesId, personalLikeReqDto);
 		return new ResponseDto<>(1, "좋아요취소", null);
 	}
 
-	@GetMapping("/recommendList")
-	public String recommend(Model model) {
-		Integer companyId = (Integer) session.getAttribute("companyId");
-		List<PersonalLikeDto> personalLikeDto = personalLikeService.좋아요이력서(companyId);
-		model.addAttribute("personalLikeList", personalLikeDto);
-		return "/company/recommendList";
+	@GetMapping("/s/api/resumeList")
+	public ResponseDto<?> findAllPersonalLike(Integer companyId) {
+		SignedDto<?> principal = (SignedDto<?>) session.getAttribute("principal");
+		SignCompanyDto signCompanyDto = (SignCompanyDto) principal.getUserInfo();
+		return new ResponseDto<>(1, "좋아요 ", personalLikeService.좋아요이력서(signCompanyDto.getCompanyId()));
 	}
 
 	@PostMapping("/s/api/companyLike/{companyId}")
@@ -74,17 +79,11 @@ public class LikeController {
 		return new ResponseDto<>(1, "좋아요취소", null);
 	}
 
-	@GetMapping("/s/api/companyLike/{companyId}")
-	public ResponseDto<?> findByCompanyLike(@PathVariable Integer companyId, CompanyLikeReqDto companyLikeReqDto) {
-		SignedDto<?> signUserDto = (SignedDto<?>) session.getAttribute("principal");
-		SignPersonalDto signPersonalDto = (SignPersonalDto) principal.getUserInfo();
-		// CompanyLike companyLike = companyLikeService.좋아요확인(companyId,
-		// signedDto.getPersonalId());
-		companyLikeReqDto.setPersonalId(signPersonalDto.getPersonalId());
-
-		// model.addAttribute("companyLike", companyLike);
-
-		return new ResponseDto<>(companyId, "좋아요 찾기 완료", null);
+	@GetMapping("/api/bestcompany")
+	public ResponseDto<?> bestCompany(Integer companyId) {
+		SignedDto<?> principal = (SignedDto<?>) session.getAttribute("principal");
+		SignCompanyDto signCompanyDto = (SignCompanyDto) principal.getUserInfo();
+		return new ResponseDto<>(1, "좋아요 많이 받은 회사",
+				companyLikeService.bestcompany(signCompanyDto.getCompanyId()));
 	}
-
 }

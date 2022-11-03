@@ -1,13 +1,10 @@
 package site.metacoding.miniproject.dto.like;
 
-import java.sql.Timestamp;
-
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
 import site.metacoding.miniproject.domain.like.companylike.CompanyLike;
 import site.metacoding.miniproject.domain.like.personalike.PersonalLike;
-import site.metacoding.miniproject.domain.resumes.Resumes;
 
 public class LikeReqDto {
 
@@ -20,41 +17,28 @@ public class LikeReqDto {
         private Integer alarmId;
 
         public CompanyLike companyLikeEntity() {
-            return CompanyLike.builder().companyId(companyId).personalId(personalId).alarmId(alarmId).build();
+            return CompanyLike.builder()
+                    .companyId(companyId)
+                    .personalId(personalId)
+                    .alarmId(alarmId).build();
         }
+
     }
 
     @Getter
     @Setter
-    public class PersonalLikeReqDto {
-        private Integer resumesId;
-        private Integer personalId;
-        private String resumesTitle;
-        private String resumesPicture;
-        private String resumesIntroduce;
-        private Timestamp createdAt;
+    @NoArgsConstructor
+    public static class PersonalLikeReqDto {
 
-        private Integer personalLikeId;
+        private Integer resumesId;
         private Integer companyId;
         private Integer alarmId;
 
-        public Resumes PersonalLikePersonalEntity() {
-            return Resumes.builder()
-                    .resumesId(resumesId)
-                    .personalId(personalId)
-                    .resumesIntroduce(resumesIntroduce)
-                    .resumesTitle(resumesTitle)
-                    .resumesPicture(resumesPicture)
-                    .resumesIntroduce(resumesIntroduce)
-                    .createdAt(createdAt)
-                    .build();
-        }
-
-        public PersonalLike PersonalLikeEntity() {
+        public PersonalLike personalLikeEntity() {
             return PersonalLike.builder()
-                    .alarmId(alarmId)
+                    .resumesId(resumesId)
                     .companyId(companyId)
-                    .personalLikeId(personalLikeId)
+                    .alarmId(alarmId)
                     .build();
         }
     }

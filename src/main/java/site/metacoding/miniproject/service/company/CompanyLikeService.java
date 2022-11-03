@@ -1,8 +1,7 @@
 package site.metacoding.miniproject.service.company;
 
 import java.util.HashMap;
-
-import javax.servlet.http.HttpSession;
+import java.util.List;
 
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -18,14 +17,11 @@ import site.metacoding.miniproject.domain.users.Users;
 import site.metacoding.miniproject.domain.users.UsersDao;
 import site.metacoding.miniproject.dto.like.LikeReqDto.CompanyLikeReqDto;
 import site.metacoding.miniproject.dto.like.LikeRespDto.CompanyLikeRespDto;
-import site.metacoding.miniproject.dto.user.UserRespDto.SignPersonalDto;
-import site.metacoding.miniproject.dto.user.UserRespDto.SignedDto;
 import site.metacoding.miniproject.utill.AlarmEnum;
 
 @RequiredArgsConstructor
 @Service
 public class CompanyLikeService {
-	private final HttpSession session;
 	private final CompanyLikesDao companyLikesDao;
 	private final UsersDao usersDao;
 	private final AlarmDao alarmDao;
@@ -54,15 +50,17 @@ public class CompanyLikeService {
 
 	public CompanyLikeRespDto 좋아요취소(Integer companyId, CompanyLikeReqDto companyLikeReqDto) {
 		CompanyLike companyLikePS = companyLikeReqDto.companyLikeEntity();
+		if (companyLikePS == null) {
+			throw new RuntimeException("해당" + companyId + "좋아요를 삭제할수 없습니다.");
+		}
 		companyLikesDao.deleteById(companyLikePS);
 		CompanyLikeRespDto companyLikeRespDto = new CompanyLikeRespDto(companyLikePS);
 		return companyLikeRespDto;
 	}
 
-	public CompanyLikeRespDto 좋아요확인(Integer companyId, CompanyLikeReqDto companyLikeReqDto) {
-		CompanyLike companyLikePS = companyLikeReqDto.companyLikeEntity();
-		companyLikesDao.findById(companyLikePS);
-		CompanyLikeRespDto companyLikeRespDto = new CompanyLikeRespDto(companyLikePS);
-		return companyLikeRespDto;
+	@Transactional(readOnly = true)
+	public List<CompanyLikeRespDto> bestcompany(Integer companyId) {
+		List<CompanyLikeRespDto> PersonalLikeDtoList = companyLikesDao.bestcompany(companyId);
+		return PersonalLikeDtoList;
 	}
 }
