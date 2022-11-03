@@ -21,13 +21,13 @@ public class JWTToken {
 
     public static class CreateJWTToken {
 
-        static Date expire = new Date(System.currentTimeMillis() + (1000 * 60 * 60));
+        static Date expire = new Date(System.currentTimeMillis() + (1000 * 60 * 60)); // 1시간 토큰값
 
         public static String createToken(SignedDto<?> signedDto) {
 
             HashMap<String, Object> map = new HashMap<>();
             map.put("usersId", signedDto.getUsersId());
-            map.put("LoginId", signedDto.getLoginId());
+            map.put("loginId", signedDto.getLoginId());
 
             // casting exception 발생
             try {
@@ -39,6 +39,8 @@ public class JWTToken {
                 map.put("personalId", signPersonalDto.getPersonalId());
             }
 
+            //map type 저장시 primitive type(또는 해당 Wrapping class)만 지원한다.
+            //커스텀 오브젝트는 저장을 지원하지 않는다. - 에러발생
             String jwtToken = JWT.create()
                     .withSubject("userinfo")
                     .withExpiresAt(expire)
@@ -53,7 +55,7 @@ public class JWTToken {
 
         public static Cookie setCookie(String token) {
             Cookie cookie = new Cookie("Authorization", token); // Cookie에 Bearer 추가하면 안됨 - 최대 공간 초과....
-            cookie.setMaxAge(60 * 60);
+            cookie.setMaxAge(6 * 100 * 60); // 토큰값도 1시간이기에....
             return cookie;
         }
 
@@ -102,7 +104,7 @@ public class JWTToken {
                 }
 
             } catch (Exception e) {
-                throw new ApiException("잘못된 토큰이 입력되었습니다.");
+                throw new ApiException("만료된 토큰 혹은 잘못된 토큰이 입력되었습니다.");
             }
 
             return false;
@@ -116,7 +118,7 @@ public class JWTToken {
         SignPersonalDto signPersonalDto = new SignPersonalDto();
         SignCompanyDto signCompanyDto = new SignCompanyDto();
 
-        // 토큰 -> 로그인값으로 변경 로직 ..... 뭔가 더러움
+        // 토큰 -> 로그인Dto 변경 로직 ..... 뭔가 더러움
         public SignedDto<?> tokenToSignedDto(Map<String, Object> getSigned) {
             for (String key : getSigned.keySet()) {
 
@@ -135,7 +137,6 @@ public class JWTToken {
                 } else if (key.equals("companyId")) {
 
                     signCompanyDto.setCompanyId((Integer) getSigned.get(key));
-
                 }
             }
 

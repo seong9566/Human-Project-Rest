@@ -33,7 +33,8 @@ public class JwtAuthenticationFilter implements Filter {
         if (tokenVerification.Verification(token)) {
             throw new ApiException("만료되지않은 토큰값이 존재합니다");
         }
-
+        
+        //이터레이터 값 확인
         // req.getAttributeNames().asIterator()
         // .forEachRemaining(attribute -> log.debug("디버그 : " + attribute + " : " +
         // req.getAttribute(attribute)));
