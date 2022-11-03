@@ -43,7 +43,7 @@ public class CompanyController {
 	private final CompanyService companyService;
 
 	// 회사 정보 보기
-	@GetMapping("/api/company/detail")
+	@GetMapping("/s/api/company/detail")
 	public ResponseDto<?> findByCompany() {
 		SignedDto principal = (SignedDto<?>) session.getAttribute("principal");
 		SignCompanyDto signCompanyDto = (SignCompanyDto) principal.getUserInfo();
@@ -105,14 +105,14 @@ public class CompanyController {
 	// }
 
 	// 채용 공고 작성 폼
-	@GetMapping("/api/jobpostingboard/insert")
+	@GetMapping("/s/api/jobpostingboard/insert")
 	public ResponseDto<?> insertjobPostingBoardForm() {
 		SignedDto<?> principal = (SignedDto<?>) session.getAttribute("principal");
 		SignCompanyDto signCompanyDto = (SignCompanyDto) principal.getUserInfo();
 		return new ResponseDto<>(1, "채용 공고 작성 폼 데이터 ", companyService.findByCompany(signCompanyDto.getCompanyId()));
 	}
 
-	@PostMapping("/api/jobpostingboard/insert")
+	@PostMapping("/s/api/jobpostingboard/insert")
 	public @ResponseBody ResponseDto<?> insertJobPostingBoard(
 			@RequestBody JobPostingBoardInsertReqDto jobPostingBoardInsertReqDto) {
 		SignedDto<?> principal = (SignedDto<?>) session.getAttribute("principal");
@@ -130,21 +130,11 @@ public class CompanyController {
 		return "company/jobPostingBoardList";
 	}
 
-	// 채용 공고 상세보기
-	// @GetMapping("/api/company/jobPostingBoardDetail/{jobPostingBoardId}")
-	// public String jobPostingBoardDetail(Model model, @PathVariable Integer
-	// jobPostingBoardId) {
-	// return new ResponseDto<>(1, "성공",
-	// companyService.findByCompany(principal.getCompanyId()));
-	// JobPostingBoardDetailDto jobPostingPS =
-	// companyService.jobPostingOne(jobPostingBoardId);
-	// SignedDto<?> principal = (SignedDto<?>) session.getAttribute("principal");
-	// CompanyAddressDto addressPS =
-	// companyService.findByAddress(principal.getCompanyId());
-	// model.addAttribute("address", addressPS);
-	// model.addAttribute("jobPostingPS", jobPostingPS);
-	// return "company/jobPostingBoardDetail";
-	// }
+	// 내가 쓴 채용 공고 상세보기 - 인증 필요
+	@GetMapping("/s/api/jobPostingBoard/detail/{jobPostingBoardId}")
+	public ResponseDto<?> findByjobPostingBoard(@PathVariable Integer jobPostingBoardId) {
+		return new ResponseDto<>(1, "채용공고 상세보기", companyService.jobPostingBoardDetail(jobPostingBoardId));
+	}
 
 	// 채용 공고 수정 폼
 	@GetMapping("/company/jobPostingBoardUpdate/{jobPostingBoardId}")

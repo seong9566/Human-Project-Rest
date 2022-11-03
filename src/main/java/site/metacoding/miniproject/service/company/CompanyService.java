@@ -127,12 +127,20 @@ public class CompanyService {
 	}
 
 	// 채용공고 상세 보기
+	@Transactional(readOnly = true)
 	public JobPostingBoardDetailRespDto jobPostingBoardDetail(Integer jobPostingBoardId) {
-		JobPostingBoardDetailRespDto jobPostingBoardDetailRespDto = jobPostingBoardDao.findByDetail(jobPostingBoardId);
+		Company companyPS = companyDao.findById(companyId);
+		if (companyPS.getCompanyId() == null) {
+			throw new ApiException("Companyid가 없음");
+		}
+
+		JobPostingBoardDetailRespDto jobPostingBoardDetailRespDto = jobPostingBoardDao
+				.findByJobPostingBoard(jobPostingBoardId);
 		Timestamp ts = jobPostingBoardDetailRespDto.getJobPostingBoardDeadline();
 		Date date = new Date();
 		date.setTime(ts.getTime());
 		String formattedDate = new SimpleDateFormat("yyyy년MM월dd일").format(date);
+
 		jobPostingBoardDetailRespDto.setFormatDeadLine(formattedDate);
 		return jobPostingBoardDetailRespDto;
 	}
