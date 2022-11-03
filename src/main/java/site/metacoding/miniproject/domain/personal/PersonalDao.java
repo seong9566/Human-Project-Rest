@@ -3,7 +3,6 @@ package site.metacoding.miniproject.domain.personal;
 import java.util.List;
 
 import site.metacoding.miniproject.dto.personal.PersonalRespDto.PersonalAddressRespDto;
-import site.metacoding.miniproject.dto.personal.PersonalRespDto.PersonalDetailRespDto;
 import site.metacoding.miniproject.dto.personal.PersonalRespDto.PersonalUpdateFormRespDto;
 import site.metacoding.miniproject.web.dto.response.personal.PersonalInfoDto;
 

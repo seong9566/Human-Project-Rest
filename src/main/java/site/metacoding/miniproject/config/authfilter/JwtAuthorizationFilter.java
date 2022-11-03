@@ -17,8 +17,8 @@ import com.auth0.jwt.algorithms.Algorithm;
 import com.auth0.jwt.interfaces.DecodedJWT;
 
 import lombok.extern.slf4j.Slf4j;
-import site.metacoding.miniproject.config.handler.exception.ApiException;
 import site.metacoding.miniproject.dto.user.UserRespDto.SignedDto;
+import site.metacoding.miniproject.exception.ApiException;
 import site.metacoding.miniproject.utill.SecretKey;
 import site.metacoding.miniproject.utill.JWTToken.CookieForToken;
 import site.metacoding.miniproject.utill.JWTToken.TokenToSinedDto;

@@ -44,7 +44,6 @@ public class UsersController {
 	@GetMapping("/logout")
 	public ResponseDto<?> logout(HttpServletResponse resp) {
 
-		
 		Cookie cookie = new Cookie("Authorization", null);
 		cookie.setMaxAge(0);
 		cookie.setPath("/");
@@ -76,16 +75,16 @@ public class UsersController {
 		ResponseDto<?> responseDto;
 
 		if (loginId == null || loginId == "") {
-			responseDto = new ResponseDto<>(-1, "아이디를 입력하여 주세요", null);
+			responseDto = new ResponseDto<>(-1, "아이디를 입력하여 주세요", false);
 			return responseDto;
 		}
 
-		Integer userCheck = userService.checkUserId(loginId);
+		Boolean userCheck = userService.checkUserId(loginId);
 
-		if (userCheck == null) {
-			responseDto = new ResponseDto<>(1, "아이디 중복 없음 사용하셔도 좋습니다.", null);
+		if (userCheck) {
+			responseDto = new ResponseDto<>(1, "아이디 중복 없음 사용하셔도 좋습니다.", true);
 		} else {
-			responseDto = new ResponseDto<>(-1, "아이디 중복이 확인됨", null);
+			responseDto = new ResponseDto<>(-1, "아이디 중복이 확인됨", false);
 		}
 
 		return responseDto;
