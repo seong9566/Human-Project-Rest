@@ -5,7 +5,6 @@ import lombok.NoArgsConstructor;
 import lombok.Setter;
 import site.metacoding.miniproject.domain.company.Company;
 import site.metacoding.miniproject.domain.users.Users;
-import site.metacoding.miniproject.utill.SHA256;
 
 public class CompanyRespDto {
 

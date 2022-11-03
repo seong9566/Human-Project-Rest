@@ -74,6 +74,36 @@ public class CompanyController {
 				companyUpdateRespDto);
 	}
 
+	// @PutMapping(value = "/company/companyInform/update")
+	// public @ResponseBody ResponseDto<?> companyUpdate(@RequestPart("file")
+	// MultipartFile file,
+	// @RequestPart("companyUpdateDto") CompanyUpdateDto companyUpdateDto) throws
+	// Exception {
+	// int pos = file.getOriginalFilename().lastIndexOf('.');
+	// String extension = file.getOriginalFilename().substring(pos + 1);
+	// String filePath = "C:\\Temp\\img\\";
+	// // String filePath = "/Users/ihyeonseong/Desktop/img";//Mac전용 경로
+	// String imgSaveName = UUID.randomUUID().toString();
+	// String imgName = imgSaveName + "." + extension;
+	// File makeFileFolder = new File(filePath);
+	// if (!makeFileFolder.exists()) {
+	// if (!makeFileFolder.mkdir()) {
+	// throw new Exception("File.mkdir():Fail.");
+	// }
+	// }
+	// File dest = new File(filePath, imgName);
+	// try {
+	// Files.copy(file.getInputStream(), dest.toPath());
+	// } catch (IOException e) {
+	// e.printStackTrace();
+	// }
+	// companyUpdateDto.setCompanyPicture(imgName);
+	// SignedDto<?> principal = (SignedDto<?>) session.getAttribute("principal");
+	// companyService.updateCompany(principal.getUsersId(),
+	// principal.getCompanyId(), companyUpdateDto);
+	// return new ResponseDto<>(1, "수정 성공", null);
+	// }
+
 	// 채용 공고 작성 폼
 	@GetMapping("/api/jobpostingboard/insert")
 	public ResponseDto<?> insertjobPostingBoardForm() {

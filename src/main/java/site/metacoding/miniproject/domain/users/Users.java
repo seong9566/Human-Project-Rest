@@ -8,8 +8,6 @@ import lombok.NoArgsConstructor;
 import lombok.Setter;
 import site.metacoding.miniproject.dto.company.CompanyReqDto.CompanyUpdateReqDto;
 import site.metacoding.miniproject.dto.personal.PersonalReqDto.PersonalUpdatReqDto;
-import site.metacoding.miniproject.web.dto.request.company.CompanyUpdateDto;
-import site.metacoding.miniproject.web.dto.request.personal.PersonalUpdateDto;
 
 @Getter
 @Setter
@@ -35,10 +33,6 @@ public class Users {
 
 	public void update(PersonalUpdatReqDto personalUpdatReqDto) {
 		this.loginPassword = personalUpdatReqDto.getLoginPassword();
-	}
-
-	public void update(CompanyUpdateReqDto companyUpdateReqDto) {
-		this.loginPassword = companyUpdateReqDto.getLoginPassword();
 	}
 
 	public void update(Users companyPassWordUpdateReqDto) {
