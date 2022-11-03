@@ -37,6 +37,7 @@ public class JobPostingBoardReqDto {
 
         public JobPostingBoard JobPostingBoardInsertReqDtoJobPostingBoardToEntity() {
             return JobPostingBoard.builder()
+                    .companyId(companyId)
                     .jobPostingBoardTitle(jobPostingBoardTitle)
                     .jobPostingBoardContent(jobPostingBoardContent)
                     .jobPostingBoardPlace(jobPostingBoardPlace)

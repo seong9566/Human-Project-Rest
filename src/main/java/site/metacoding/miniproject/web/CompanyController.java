@@ -43,21 +43,22 @@ public class CompanyController {
 	private final CompanyService companyService;
 
 	// 회사 정보 보기
-	@GetMapping("/api/company/detail")
+	@GetMapping("/s/api/company/detail")
 	public ResponseDto<?> findByCompany() {
 		SignedDto principal = (SignedDto<?>) session.getAttribute("principal");
 		SignCompanyDto signCompanyDto = (SignCompanyDto) principal.getUserInfo();
 		return new ResponseDto<>(1, "성공", companyService.findByCompany(signCompanyDto.getCompanyId()));
 	}
 
-	// 내정보 수정 보기
-	@GetMapping("/s/api/company/update")
-	public ResponseDto<?> companyInformUpdate() {
-		SignedDto<?> principal = (SignedDto<?>) session.getAttribute("principal");
-		SignCompanyDto signCompanyDto = (SignCompanyDto) principal.getUserInfo();
-		return new ResponseDto<>(1, "성공", companyService.companyUpdateById(signCompanyDto.getCompanyId()));
+	// // 내정보 수정 폼
+	// @GetMapping("/s/api/company/update")
+	// public ResponseDto<?> companyInformUpdate() {
+	// SignedDto<?> principal = (SignedDto<?>) session.getAttribute("principal");
+	// SignCompanyDto signCompanyDto = (SignCompanyDto) principal.getUserInfo();
+	// return new ResponseDto<>(1, "성공",
+	// companyService.companyUpdateById(signCompanyDto.getCompanyId()));
 
-	}
+	// }
 
 	// 내정보 수정
 	@PutMapping(value = "/s/api/company/update")
@@ -104,15 +105,16 @@ public class CompanyController {
 	// return new ResponseDto<>(1, "수정 성공", null);
 	// }
 
-	// 채용 공고 작성 폼
-	@GetMapping("/api/jobpostingboard/insert")
-	public ResponseDto<?> insertjobPostingBoardForm() {
-		SignedDto<?> principal = (SignedDto<?>) session.getAttribute("principal");
-		SignCompanyDto signCompanyDto = (SignCompanyDto) principal.getUserInfo();
-		return new ResponseDto<>(1, "채용 공고 작성 폼 데이터 ", companyService.findByCompany(signCompanyDto.getCompanyId()));
-	}
+	// // 채용 공고 작성 폼
+	// @GetMapping("/s/api/jobpostingboard/insert")
+	// public ResponseDto<?> insertjobPostingBoardForm() {
+	// SignedDto<?> principal = (SignedDto<?>) session.getAttribute("principal");
+	// SignCompanyDto signCompanyDto = (SignCompanyDto) principal.getUserInfo();
+	// return new ResponseDto<>(1, "채용 공고 작성 폼 데이터 ",
+	// companyService.findByCompany(signCompanyDto.getCompanyId()));
+	// }
 
-	@PostMapping("/api/jobpostingboard/insert")
+	@PostMapping("/s/api/jobpostingboard/insert")
 	public @ResponseBody ResponseDto<?> insertJobPostingBoard(
 			@RequestBody JobPostingBoardInsertReqDto jobPostingBoardInsertReqDto) {
 		SignedDto<?> principal = (SignedDto<?>) session.getAttribute("principal");
@@ -130,32 +132,28 @@ public class CompanyController {
 		return "company/jobPostingBoardList";
 	}
 
-	// 채용 공고 상세보기
-	// @GetMapping("/api/company/jobPostingBoardDetail/{jobPostingBoardId}")
-	// public String jobPostingBoardDetail(Model model, @PathVariable Integer
+	// 내가 쓴 채용 공고 상세보기 - 인증 필요
+	@GetMapping("/s/api/jobPostingBoard/detail/{jobPostingBoardId}")
+	public ResponseDto<?> findByjobPostingBoard(@PathVariable Integer jobPostingBoardId) {
+		SignedDto<?> principal = (SignedDto<?>) session.getAttribute("principal");
+		SignCompanyDto signCompanyDto = (SignCompanyDto) principal.getUserInfo();
+		Integer companyId = signCompanyDto.getCompanyId();
+		return new ResponseDto<>(1, "채용공고 상세보기", companyService.jobPostingBoardDetail(jobPostingBoardId, companyId));
+	}
+
+	// // 채용 공고 수정 폼
+	// @GetMapping("/company/jobPostingBoardUpdate/{jobPostingBoardId}")
+	// public String jobPostingBoardUpdate(Model model, @PathVariable Integer
 	// jobPostingBoardId) {
-	// return new ResponseDto<>(1, "성공",
-	// companyService.findByCompany(principal.getCompanyId()));
 	// JobPostingBoardDetailDto jobPostingPS =
 	// companyService.jobPostingOne(jobPostingBoardId);
 	// SignedDto<?> principal = (SignedDto<?>) session.getAttribute("principal");
-	// CompanyAddressDto addressPS =
+	// CompanyAddressRespDto addressPS =
 	// companyService.findByAddress(principal.getCompanyId());
 	// model.addAttribute("address", addressPS);
 	// model.addAttribute("jobPostingPS", jobPostingPS);
-	// return "company/jobPostingBoardDetail";
+	// return "company/jobPostingBoardUpdate";
 	// }
-
-	// 채용 공고 수정 폼
-	@GetMapping("/company/jobPostingBoardUpdate/{jobPostingBoardId}")
-	public String jobPostingBoardUpdate(Model model, @PathVariable Integer jobPostingBoardId) {
-		JobPostingBoardDetailDto jobPostingPS = companyService.jobPostingOne(jobPostingBoardId);
-		SignedDto<?> principal = (SignedDto<?>) session.getAttribute("principal");
-		CompanyAddressRespDto addressPS = companyService.findByAddress(principal.getCompanyId());
-		model.addAttribute("address", addressPS);
-		model.addAttribute("jobPostingPS", jobPostingPS);
-		return "company/jobPostingBoardUpdate";
-	}
 
 	@PutMapping("/company/jobPostingBoardUpdate/{jobPostingBoardId}")
 	public @ResponseBody ResponseDto<?> companyUpdate(@PathVariable Integer jobPostingBoardId,

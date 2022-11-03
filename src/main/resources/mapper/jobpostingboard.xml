@@ -79,7 +79,7 @@
 		job_posting_board_id = #{jobPostingBoardId}
 	</update>
 
-	<select id="findByDetail"
+	<select id="findByJobPostingBoard"
 		resultType="site.metacoding.miniproject.dto.jobpostingboard.JobPostingBoardRespDto$JobPostingBoardDetailRespDto">
 			SELECT 
 		jpb.job_posting_board_id,
