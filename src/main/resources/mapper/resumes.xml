@@ -73,14 +73,6 @@
 		#{startNum} ROWS FETCH NEXT 5 ROWS ONLY
 	</select>
 
-	<select id="findAll"
-		resultType="site.metacoding.miniproject.web.dto.response.company.CompanyMainDto">
-		SELECT * FROM resumes
-		ORDER BY resumes_id DESC
-		OFFSET
-		#{startNum} ROWS FETCH NEXT 5 ROWS ONLY
-	</select>
-
 	<select id="resumesPaging"
 		resultType="site.metacoding.miniproject.dto.resumes.ResumesRespDto$PagingDto">
 		SELECT totalCount, totalPage, currentPage,
@@ -95,9 +87,6 @@
 		0 first,
 		0 last
 		FROM resumes
-		<if test="keyword != null">
-			WHERE resumes_title like CONCAT('%', #{keyword}, '%')
-		</if>
 		) paging
 	</select>
 

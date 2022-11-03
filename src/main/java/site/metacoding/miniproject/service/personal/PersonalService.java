@@ -176,11 +176,6 @@ public class PersonalService {
 		}
 	}
 
-	// // 검색 결과 목록 보기
-	// public List<CompanyMainDto> findSearch(Integer startNum, String keyword) {
-	// return resumesDao.findSearch(startNum, keyword);
-	// }
-
 	// 카테고리 별 리스트 보기
 	public List<CompanyMainDto> findCategory(int startNum, Integer id) {
 		return resumesDao.findCategory(startNum, id);

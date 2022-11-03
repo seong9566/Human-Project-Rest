@@ -10,7 +10,13 @@
 		SELECT if(COUNT(*) = 1, 1, 0) FROM alarm WHERE users_id = #{usersId} AND alarm_check = false
 	</select>
 
-	<select id="findById" resultType="site.metacoding.miniproject.domain.alarm.Alarm"></select>
+	<select id="findByUsersIdForUnCheckedAlarm" resultType="site.metacoding.miniproject.domain.alarm.Alarm">
+		SELECT * FROM alarm WHERE users_id = #{usersId} AND alarm_check = FALSE 
+	</select>
+
+	<select id="findById" resultType="site.metacoding.miniproject.domain.alarm.Alarm">
+		SELECT * FROM alarm WHERE alarm_id = #{alarmId}
+	</select>
 
 	<select id="findByusersId" resultType="site.metacoding.miniproject.domain.alarm.Alarm">
 		SELECT * FROM alarm WHERE users_id = #{usersId}
