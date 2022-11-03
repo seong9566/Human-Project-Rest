@@ -25,11 +25,11 @@ public class JwtAuthenticationFilter implements Filter {
         HttpServletResponse resp = (HttpServletResponse) response;
         TokenVerification tokenVerification = new TokenVerification();
         String token = CookieForToken.cookieToToken(req.getCookies());
+
         if (!req.getMethod().equals("POST")) {
             throw new ApiException("잘못된 접근입니다. POST 메서드로 접근해주세요");
         }
-        
-        
+
         if (tokenVerification.Verification(token)) {
             throw new ApiException("만료되지않은 토큰값이 존재합니다");
         }
@@ -37,7 +37,8 @@ public class JwtAuthenticationFilter implements Filter {
         // req.getAttributeNames().asIterator()
         // .forEachRemaining(attribute -> log.debug("디버그 : " + attribute + " : " +
         // req.getAttribute(attribute)));
-        //req.getParameterMap().forEach((key, value) -> log.debug("디버그 : " + req.getParameter(key) + " = " + value));
+        // req.getParameterMap().forEach((key, value) -> log.debug("디버그 : " +
+        // req.getParameter(key) + " = " + value));
 
         chain.doFilter(req, resp);
     }
