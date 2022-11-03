@@ -7,6 +7,7 @@ import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
 import site.metacoding.miniproject.dto.jobpostingboard.JobPostingBoardReqDto.JobPostingBoardInsertReqDto;
+import site.metacoding.miniproject.dto.jobpostingboard.JobPostingBoardReqDto.JobPostingBoardUpdateReqDto;
 import site.metacoding.miniproject.web.dto.request.jobpostingboard.JobPostingBoardUpdateDto;
 
 @NoArgsConstructor
@@ -50,11 +51,10 @@ public class Career {
 	private Integer jobPostingBoardCareerId;
 
 	// 채용 공고 수정
-	public Career(JobPostingBoardUpdateDto updateDto) {
-		this.jobPostingBoardCareerId = updateDto.getJobPostingBoardCareerId();
-		this.oneYearLess = updateDto.getOneYearLess();
-		this.twoYearOver = updateDto.getTwoYearOver();
-		this.threeYearOver = updateDto.getThreeYearOver();
-		this.fiveYearOver = updateDto.getFiveYearOver();
+	public void updateCareer(JobPostingBoardUpdateReqDto jobPostingBoardUpdateReqDto) {
+		this.oneYearLess = jobPostingBoardUpdateReqDto.getOneYearLess();
+		this.twoYearOver = jobPostingBoardUpdateReqDto.getTwoYearOver();
+		this.threeYearOver = jobPostingBoardUpdateReqDto.getThreeYearOver();
+		this.fiveYearOver = jobPostingBoardUpdateReqDto.getFiveYearOver();
 	}
 }

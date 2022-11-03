@@ -131,4 +131,48 @@ public class JobPostingBoardRespDto {
 
     }
 
+    @Getter
+    @Setter
+    @NoArgsConstructor
+    public static class JobPostingBoardUpdateRespDto {
+
+        // postingBoard 테이블
+        private Integer jobPostingBoardId;
+        private Integer companyId;
+        private Integer jobPostingBoardCategoryId;
+        private Integer jobPostingBoardCareerId;
+        private String jobPostingBoardTitle;
+        private String jobPostingBoardContent;
+        private Integer jobPostingSalary;
+        private String jobPostingBoardPlace;
+        private Timestamp jobPostingBoardDeadline;
+
+        // Category테이블
+        private Boolean categoryFrontend;
+        private Boolean categoryBackend;
+        private Boolean categoryDevops;
+
+        // Career테이블
+        private Boolean oneYearLess;
+        private Boolean twoYearOver;
+        private Boolean threeYearOver;
+        private Boolean fiveYearOver;
+
+        // TimeStamp > String
+        private String formatDeadLine;
+
+        public JobPostingBoardUpdateRespDto(JobPostingBoard jobPostingBoard, Category category, Career career) {
+            this.jobPostingBoardId = jobPostingBoard.getJobPostingBoardId();
+            this.jobPostingBoardContent = jobPostingBoard.getJobPostingBoardContent();
+            this.jobPostingBoardDeadline = jobPostingBoard.getJobPostingBoardDeadline();
+            this.categoryBackend = category.getCategoryBackend();
+            this.categoryDevops = category.getCategoryDevops();
+            this.categoryFrontend = category.getCategoryFrontend();
+            this.oneYearLess = career.getOneYearLess();
+            this.twoYearOver = career.getTwoYearOver();
+            this.threeYearOver = career.getThreeYearOver();
+            this.fiveYearOver = career.getFiveYearOver();
+
+        }
+    }
 }

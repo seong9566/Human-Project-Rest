@@ -1,13 +1,7 @@
 package site.metacoding.miniproject.web;
 
-import java.io.File;
-import java.io.IOException;
-import java.nio.file.Files;
-import java.util.UUID;
-
 import javax.servlet.http.HttpSession;
 
-import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
@@ -21,18 +15,14 @@ import org.springframework.web.multipart.MultipartFile;
 
 import lombok.RequiredArgsConstructor;
 import site.metacoding.miniproject.dto.company.CompanyReqDto.CompanyUpdateReqDto;
-import site.metacoding.miniproject.dto.company.CompanyRespDto.CompanyAddressRespDto;
 import site.metacoding.miniproject.dto.company.CompanyRespDto.CompanyUpdateRespDto;
 import site.metacoding.miniproject.dto.jobpostingboard.JobPostingBoardReqDto.JobPostingBoardInsertReqDto;
-import site.metacoding.miniproject.dto.jobpostingboard.JobPostingBoardRespDto.JobPostingBoardAllRespDto;
+import site.metacoding.miniproject.dto.jobpostingboard.JobPostingBoardReqDto.JobPostingBoardUpdateReqDto;
 import site.metacoding.miniproject.dto.user.UserRespDto.SignCompanyDto;
 import site.metacoding.miniproject.dto.user.UserRespDto.SignedDto;
 import site.metacoding.miniproject.service.company.CompanyService;
-import site.metacoding.miniproject.web.dto.request.company.CompanyUpdateDto;
-import site.metacoding.miniproject.web.dto.request.jobpostingboard.JobPostingBoardUpdateDto;
+import site.metacoding.miniproject.service.personal.PersonalService;
 import site.metacoding.miniproject.web.dto.response.ResponseDto;
-import site.metacoding.miniproject.web.dto.response.company.CompanyInfoDto;
-import site.metacoding.miniproject.web.dto.response.jobpostingboard.JobPostingBoardDetailDto;
 
 @RestController
 @RequiredArgsConstructor
@@ -159,12 +149,15 @@ public class CompanyController {
 	// return "company/jobPostingBoardUpdate";
 	// }
 
-	@PutMapping("/company/jobPostingBoardUpdate/{jobPostingBoardId}")
-	public @ResponseBody ResponseDto<?> companyUpdate(@PathVariable Integer jobPostingBoardId,
-			@RequestBody JobPostingBoardUpdateDto jobPostingBoardUdateDto) {
+	@PutMapping("/api/jobposting/update/{jobPostingBoardId}")
+	public ResponseDto<?> companyUpdate(@PathVariable Integer jobPostingBoardId,
+			@RequestBody JobPostingBoardUpdateReqDto jobPostingBoardUpdateReqDto) {
 		// @Param("categoryId") Integer categoryId, @Param("careerId")Integer careerId,
-		companyService.updateJobPostingBoard(jobPostingBoardId, jobPostingBoardUdateDto);
-		return new ResponseDto<>(1, "수정 성공", null);
+
+		System.out.println("kkkservice" + jobPostingBoardUpdateReqDto.getCareerId());
+
+		return new ResponseDto<>(1, "수정 성공",
+				companyService.updateJobPostingBoard(jobPostingBoardUpdateReqDto, jobPostingBoardId));
 	}
 
 	// 채용 공고 삭제

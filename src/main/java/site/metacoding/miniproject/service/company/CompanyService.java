@@ -2,7 +2,6 @@ package site.metacoding.miniproject.service.company;
 
 import java.sql.Timestamp;
 import java.text.SimpleDateFormat;
-import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
 
@@ -27,12 +26,12 @@ import site.metacoding.miniproject.dto.company.CompanyRespDto.CompanyDetailRespD
 import site.metacoding.miniproject.dto.company.CompanyRespDto.CompanyUpdateFormRespDto;
 import site.metacoding.miniproject.dto.company.CompanyRespDto.CompanyUpdateRespDto;
 import site.metacoding.miniproject.dto.jobpostingboard.JobPostingBoardReqDto.JobPostingBoardInsertReqDto;
+import site.metacoding.miniproject.dto.jobpostingboard.JobPostingBoardReqDto.JobPostingBoardUpdateReqDto;
 import site.metacoding.miniproject.dto.jobpostingboard.JobPostingBoardRespDto.JobPostingBoardAllRespDto;
 import site.metacoding.miniproject.dto.jobpostingboard.JobPostingBoardRespDto.JobPostingBoardDetailRespDto;
 import site.metacoding.miniproject.dto.jobpostingboard.JobPostingBoardRespDto.JobPostingBoardInsertRespDto;
-import site.metacoding.miniproject.web.dto.request.jobpostingboard.JobPostingBoardUpdateDto;
+import site.metacoding.miniproject.dto.jobpostingboard.JobPostingBoardRespDto.JobPostingBoardUpdateRespDto;
 import site.metacoding.miniproject.web.dto.response.etc.PagingDto;
-import site.metacoding.miniproject.web.dto.response.jobpostingboard.JobPostingBoardListDto;
 import site.metacoding.miniproject.web.dto.response.personal.PersonalMainDto;
 
 @Service
@@ -161,16 +160,29 @@ public class CompanyService {
 
 	// 채용공고 수정 (jobpostingboard,career,Category)
 	@Transactional(rollbackFor = Exception.class)
-	public void updateJobPostingBoard(Integer jobPostingBoardId, JobPostingBoardUpdateDto updateDto) {
+	public JobPostingBoardUpdateRespDto updateJobPostingBoard(
+			JobPostingBoardUpdateReqDto jobPostingBoardUpdateReqDto, Integer jobPostingBoardId) {
 		// Integer categoryId,Integer careerId,
-		Category category = new Category(updateDto);
-		categoryDao.jobPostingUpdate(category);
 
-		Career career = new Career(updateDto);
-		careerDao.jobPostingUpdate(career);
+		JobPostingBoard jobPostingBoardPS = jobPostingBoardDao.findById(jobPostingBoardId);
 
-		JobPostingBoard jobPostingBoard = new JobPostingBoard(jobPostingBoardId, updateDto);
-		jobPostingBoardDao.update(jobPostingBoard);
+		jobPostingBoardDao.update(jobPostingBoardPS);
+
+		Category categoryPS = categoryDao.findById(jobPostingBoardPS.getJobPostingBoardCategoryId());
+		categoryPS = jobPostingBoardUpdateReqDto.jobPostingUpdateReqDtoToCategoryEntity();
+		categoryDao.update(categoryPS);
+
+		Career careerPS = careerDao.findById(jobPostingBoardPS.getJobPostingBoardCareerId());
+		careerPS.updateCareer(jobPostingBoardUpdateReqDto);
+		careerDao.jobPostingUpdate(careerPS);
+		System.out.println("kkk" + jobPostingBoardUpdateReqDto.getCareerId());
+
+		JobPostingBoardUpdateRespDto jobPostingBoardUpdateRespDto = new JobPostingBoardUpdateRespDto(
+				jobPostingBoardPS,
+				categoryPS, careerPS);
+
+		return jobPostingBoardUpdateRespDto;
+
 	}
 
 	// 채용 공고 삭제
@@ -180,7 +192,6 @@ public class CompanyService {
 		if (jobPostingBoard == null) {
 			throw new RuntimeException("해당" + jobPostingBoardId + "로 삭제할수 없습니다.");
 		}
-
 		jobPostingBoardDao.deleteById(jobPostingBoardId);
 	}
 

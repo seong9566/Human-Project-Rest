@@ -67,12 +67,33 @@ public class JobPostingBoardReqDto {
     @Getter
     @Setter
     public static class JobPostingBoardUpdateReqDto {
-        private Integer jobPostingBoardId;
+        // postingBoard 테이블
         private String jobPostingBoardTitle;
         private String jobPostingBoardContent;
         private Integer jobPostingSalary;
         private String jobPostingBoardPlace;
         private Timestamp jobPostingBoardDeadline;
+        private Integer jobPostingBoardId;
+
+        // Category테이블
+        private Boolean categoryFrontend;
+        private Boolean categoryBackend;
+        private Boolean categoryDevops;
+
+        // Career테이블
+        private Boolean oneYearLess;
+        private Boolean twoYearOver;
+        private Boolean threeYearOver;
+        private Boolean fiveYearOver;
+
+        // company테이블
+        private String companyPicture;
+        private String companyName;
+        private String companyEmail;
+        private String companyPhoneNumber;
+
+        private Integer CategoryId;
+        private Integer CareerId;
 
         public JobPostingBoard jobPostingBoardUpdate() {
             return JobPostingBoard.builder()
@@ -81,6 +102,23 @@ public class JobPostingBoardReqDto {
                     .jobPostingSalary(jobPostingSalary)
                     .jobPostingBoardPlace(jobPostingBoardPlace)
                     .jobPostingBoardDeadline(jobPostingBoardDeadline)
+                    .build();
+        }
+
+        public Category jobPostingUpdateReqDtoToCategoryEntity() {
+            return Category.builder()
+                    .categoryBackend(categoryBackend)
+                    .categoryDevops(categoryDevops)
+                    .categoryFrontend(categoryFrontend)
+                    .build();
+        }
+
+        public Career jobPostingUpdateReqDtoToCareerEntity() {
+            return Career.builder()
+                    .oneYearLess(oneYearLess)
+                    .twoYearOver(twoYearOver)
+                    .threeYearOver(threeYearOver)
+                    .fiveYearOver(fiveYearOver)
                     .build();
         }
 
