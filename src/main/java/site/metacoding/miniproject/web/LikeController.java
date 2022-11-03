@@ -4,17 +4,16 @@ import java.util.List;
 
 import javax.servlet.http.HttpSession;
 
-import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.ResponseBody;
+import org.springframework.web.bind.annotation.RestController;
 
 import lombok.RequiredArgsConstructor;
 import site.metacoding.miniproject.dto.like.LikeReqDto.CompanyLikeReqDto;
-import site.metacoding.miniproject.dto.like.LikeRespDto.CompanyLikeRespDto;
 import site.metacoding.miniproject.dto.user.UserRespDto.SignPersonalDto;
 import site.metacoding.miniproject.dto.user.UserRespDto.SignedDto;
 import site.metacoding.miniproject.service.company.CompanyLikeService;
@@ -23,7 +22,7 @@ import site.metacoding.miniproject.web.dto.request.personal.PersonalLikeDto;
 import site.metacoding.miniproject.web.dto.response.ResponseDto;
 
 @RequiredArgsConstructor
-@Controller
+@RestController
 public class LikeController {
 	private final HttpSession session;
 	private final PersonalLikeService personalLikeService;
@@ -60,17 +59,18 @@ public class LikeController {
 			CompanyLikeReqDto companyLikeReqDto) {
 		SignedDto<?> principal = (SignedDto<?>) session.getAttribute("principal");
 		SignPersonalDto signPersonalDto = (SignPersonalDto) principal.getUserInfo();
-		Integer personalId = signPersonalDto.getPersonalId();
-		return new ResponseDto<>(1, "좋아요 성공", companyLikeService.좋아요(personalId, companyId));
+		companyLikeReqDto.setPersonalId(signPersonalDto.getPersonalId());
+		return new ResponseDto<>(1, "좋아요 성공", companyLikeService.좋아요(companyId, companyLikeReqDto));
 
 	}
 
-	@DeleteMapping("/companyLike/{companyId}/likes")
-	public @ResponseBody ResponseDto<?> deleteCompanyLike(@PathVariable Integer companyId) {
-
-		SignedDto<?> signUserDto = (SignedDto<?>) session.getAttribute("principal");
-
-		// companyLikeService.좋아요취소(companyId, signedDto.getPersonalId());
+	@DeleteMapping("/s/api/companyLike/{companyId}")
+	public @ResponseBody ResponseDto<?> deleteCompanyLike(@PathVariable Integer companyId,
+			CompanyLikeReqDto companyLikeReqDto) {
+		SignedDto<?> principal = (SignedDto<?>) session.getAttribute("principal");
+		SignPersonalDto signPersonalDto = (SignPersonalDto) principal.getUserInfo();
+		companyLikeReqDto.setPersonalId(signPersonalDto.getPersonalId());
+		companyLikeService.좋아요취소(companyId, companyLikeReqDto);
 		return new ResponseDto<>(1, "좋아요취소", null);
 	}
 

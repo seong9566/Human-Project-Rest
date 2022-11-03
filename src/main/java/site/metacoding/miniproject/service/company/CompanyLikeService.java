@@ -32,32 +32,31 @@ public class CompanyLikeService {
 	private final PersonalDao personalDao;
 
 	@Transactional(rollbackFor = RuntimeException.class)
-	public CompanyLikeRespDto 좋아요(Integer personalId, Integer companyId) {
+	public CompanyLikeRespDto 좋아요(Integer companyId, CompanyLikeReqDto companyLikeReqDto) {
 		HashMap<String, Integer> companylikes = new HashMap<>();
-		SignedDto<?> principal = (SignedDto<?>) session.getAttribute("principal");
-		SignPersonalDto signPersonalDto = (SignPersonalDto) principal.getUserInfo();
-		CompanyLikeReqDto companyLikeReqDto = new CompanyLikeReqDto();
-		CompanyLike companyLike = new CompanyLike(companyId, signPersonalDto.getPersonalId());
-		CompanyLikeRespDto companyLikeRespDto = companyLikesDao.insert(companyLike);
-		companylikes.put(AlarmEnum.ALARMCOMPANYLIKEID.key(),
-				companyLike.getCompanyLikeId());
+
+		CompanyLike companyLikePS = companyLikeReqDto.companyLikeEntity();
+		companyLikesDao.insert(companyLikePS);
+
+		companylikes.put(AlarmEnum.ALARMCOMPANYLIKEID.key(), companyLikePS.getCompanyLikeId());
 
 		Users users = usersDao.findByCompanyId(companyId);
-		Personal personalPS = personalDao.findById(signPersonalDto.getPersonalId());
+		Personal personalPS = personalDao.findById(companyLikePS.getPersonalId());
 		Alarm alarm = new Alarm(users.getUsersId(), companylikes, personalPS.getPersonalName());
 
 		alarmDao.insert(alarm);
-
-		companyLike.setAlarmId(alarm.getAlarmId());
-		companyLikesDao.update(companyLike);
-
-		return 
+		companyLikePS.setAlarmId(alarm.getAlarmId());
+		companyLikesDao.update(companyLikePS);
+		CompanyLikeRespDto companyLikeRespDto = new CompanyLikeRespDto(companyLikePS);
+		return companyLikeRespDto;
 
 	}
 
-	public void 좋아요취소(Integer personalId, Integer companyId, CompanyLikeReqDto companyLikeReqDto) {
-		CompanyLike companyLike = companyLikeReqDto.CompanyLikeEntity();
-		companyLikesDao.deleteById(companyLike);
+	public CompanyLikeRespDto 좋아요취소(Integer companyId, CompanyLikeReqDto companyLikeReqDto) {
+		CompanyLike companyLikePS = companyLikeReqDto.companyLikeEntity();
+		companyLikesDao.deleteById(companyLikePS);
+		CompanyLikeRespDto companyLikeRespDto = new CompanyLikeRespDto(companyLikePS);
+		return companyLikeRespDto;
 	}
 
 	public CompanyLike 좋아요확인(Integer personalId, Integer companyId, CompanyLikeReqDto companyLikeReqDto) {
