@@ -5,7 +5,6 @@ import java.sql.Timestamp;
 import lombok.Builder;
 import lombok.Getter;
 import lombok.Setter;
-import site.metacoding.miniproject.web.dto.request.resume.ResumesUpdateDto;
 
 @Getter
 @Setter
@@ -23,10 +22,11 @@ public class Portfolio {
 	}
 
 	// 이력서 수정
-	public Portfolio(Integer portfolioId, ResumesUpdateDto updateResumesDto) {
+	@Builder
+	public Portfolio(Integer portfolioId, String portfolioSource, String portfolioFile) {
 		this.portfolioId = portfolioId;
-		this.portfolioSource = updateResumesDto.getPortfolioSource();
-		this.portfolioFile = updateResumesDto.getPortfolioFile();
+		this.portfolioSource = portfolioSource;
+		this.portfolioFile = portfolioFile;
 	}
 
 }
