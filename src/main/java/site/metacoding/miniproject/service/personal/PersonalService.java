@@ -32,6 +32,7 @@ import site.metacoding.miniproject.dto.resumes.ResumesRespDto.ResumesAllRespDto;
 import site.metacoding.miniproject.dto.resumes.ResumesRespDto.ResumesDetailRespDto;
 import site.metacoding.miniproject.dto.resumes.ResumesRespDto.ResumesInsertRespDto;
 import site.metacoding.miniproject.dto.resumes.ResumesRespDto.ResumesUpdateRespDto;
+import site.metacoding.miniproject.dto.user.UserRespDto.SignPersonalDto;
 import site.metacoding.miniproject.web.dto.response.company.CompanyMainDto;
 import site.metacoding.miniproject.web.dto.response.etc.PagingDto;
 
@@ -72,6 +73,7 @@ public class PersonalService {
 		}
 
 		Resumes resumesPS = resumesInsertReqDto.ResumesInsertReqDtoToResumesEntity();
+		resumesPS.setPersonalId(resumesInsertReqDto.getPersonalId());
 		resumesPS.setCareerId(careerPS.getCareerId());
 		resumesPS.setPortfolioId(portfolioPS.getPortfolioId());
 		resumesPS.setResumesCategoryId(categoryPS.getCategoryId());
@@ -139,7 +141,12 @@ public class PersonalService {
 	}
 
 	// 이력서 삭제
+	@Transactional
 	public void deleteResumes(@PathVariable Integer resumesId) {
+		Resumes resumes = resumesDao.findById(resumesId);
+		if (resumes == null) {
+			throw new RuntimeException("해당 " + resumesId + "로 삭제를 할 수 없습니다.");
+		}
 		resumesDao.deleteById(resumesId);
 	}
 

@@ -76,7 +76,7 @@ public class PersonalController {
 		// PersonalLike personalLike = personalLikeService.좋아요확인(resumesId,
 		// signedDto.getCompanyId());
 		// model.addAttribute("personalLike", personalLike);
-		return new ResponseDto<>(1, "내 이력서 목록 보기 성공", personalService.findByResumesId(resumesId));
+		return new ResponseDto<>(1, "내 이력서 상세 보기 성공", personalService.findByResumesId(resumesId));
 	}
 
 	// 이력서 수정
@@ -98,8 +98,8 @@ public class PersonalController {
 	}
 
 	// 이력서 삭제 하기
-	@DeleteMapping("/personal/resumes/delete/{resumesId}")
-	public @ResponseBody ResponseDto<?> deleteResumes(@PathVariable Integer resumesId) {
+	@DeleteMapping("/s/resumes/delete/{resumesId}")
+	public ResponseDto<?> deleteResumes(@PathVariable Integer resumesId) {
 		personalService.deleteResumes(resumesId);
 		return new ResponseDto<>(1, "이력서 삭제 성공", null);
 	}
