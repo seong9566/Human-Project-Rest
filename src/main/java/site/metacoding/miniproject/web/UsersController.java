@@ -26,7 +26,7 @@ import site.metacoding.miniproject.web.dto.response.ResponseDto;
 @RestController
 @RequiredArgsConstructor
 @Slf4j
-public class UserController {
+public class UsersController {
 	private final UsersService userService;
 	private final HttpSession session;
 
