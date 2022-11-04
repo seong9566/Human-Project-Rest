@@ -18,13 +18,10 @@ public class PersonalLike {
 	private Timestamp createdAt;
 
 	@Builder
-	public PersonalLike(Integer personalLikeId, Integer resumesId, Integer companyId, Integer alarmId,
-			Timestamp createdAt) {
-		this.personalLikeId = personalLikeId;
+	public PersonalLike(Integer resumesId, Integer companyId, Integer alarmId) {
 		this.resumesId = resumesId;
 		this.companyId = companyId;
 		this.alarmId = alarmId;
-		this.createdAt = createdAt;
 	}
 
 }
