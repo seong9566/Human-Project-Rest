@@ -237,17 +237,19 @@ public class PersonalController {
 
 	}
 
-	// 내정보 수정 보기
-	@GetMapping("/s/api/personal/update")
-	public ResponseDto<?> personalInformUpdate() {
-		SignedDto<?> principal = (SignedDto<?>) session.getAttribute("principal");
-		SignPersonalDto signPersonalDto = (SignPersonalDto) principal.getUserInfo();
+	// // 내정보 수정 보기
+	// @GetMapping("/s/api/personal/update")
+	// public ResponseDto<?> personalInformUpdate() {
+	// SignedDto<?> principal = (SignedDto<?>) session.getAttribute("principal");
+	// SignPersonalDto signPersonalDto = (SignPersonalDto) principal.getUserInfo();
 
-		return new ResponseDto<>(1, "성공", personalService.personalUpdateById(signPersonalDto.getPersonalId()));
-		// return new ResponseDto<>(1, "성공",
-		// personalService.personalUpdateById(principal.getUserInfo().getPersonalId()));
+	// return new ResponseDto<>(1, "성공",
+	// personalService.personalUpdateById(signPersonalDto.getPersonalId()));
+	// // return new ResponseDto<>(1, "성공",
+	// //
+	// personalService.personalUpdateById(principal.getUserInfo().getPersonalId()));
 
-	}
+	// }
 
 	// 내정보 수정
 	@PutMapping("/s/api/personal/update")

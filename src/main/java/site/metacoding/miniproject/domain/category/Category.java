@@ -7,6 +7,7 @@ import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
 import site.metacoding.miniproject.dto.jobpostingboard.JobPostingBoardReqDto.JobPostingBoardInsertReqDto;
+import site.metacoding.miniproject.dto.jobpostingboard.JobPostingBoardReqDto.JobPostingBoardUpdateReqDto;
 import site.metacoding.miniproject.web.dto.request.jobpostingboard.JobPostingBoardUpdateDto;
 
 @Getter
@@ -46,10 +47,10 @@ public class Category {
 	private Integer jobPostingBoardCategoryId;
 
 	// 채용 공고 수정
-	public Category(JobPostingBoardUpdateDto updateDto) {
-		this.jobPostingBoardCategoryId = updateDto.getJobPostingBoardCategoryId();
-		this.categoryFrontend = updateDto.getCategoryFrontend();
-		this.categoryBackend = updateDto.getCategoryBackend();
-		this.categoryDevops = updateDto.getCategoryDevops();
+	public Category(JobPostingBoardUpdateReqDto jobPostingBoardUpdateReqDto) {
+		this.categoryFrontend = jobPostingBoardUpdateReqDto.getCategoryFrontend();
+		this.categoryBackend = jobPostingBoardUpdateReqDto.getCategoryBackend();
+		this.categoryDevops = jobPostingBoardUpdateReqDto.getCategoryDevops();
 	}
+
 }

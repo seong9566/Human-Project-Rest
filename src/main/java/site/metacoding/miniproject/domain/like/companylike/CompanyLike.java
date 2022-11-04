@@ -24,8 +24,4 @@ public class CompanyLike {
 		this.alarmId = alarmId;
 	}
 
-	public CompanyLike(Integer companyId, Integer personalId) {
-		this.companyId = companyId;
-		this.personalId = personalId;
-	}
 }

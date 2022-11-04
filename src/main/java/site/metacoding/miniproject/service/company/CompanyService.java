@@ -26,13 +26,20 @@ import site.metacoding.miniproject.dto.company.CompanyRespDto.CompanyDetailRespD
 import site.metacoding.miniproject.dto.company.CompanyRespDto.CompanyUpdateFormRespDto;
 import site.metacoding.miniproject.dto.company.CompanyRespDto.CompanyUpdateRespDto;
 import site.metacoding.miniproject.dto.jobpostingboard.JobPostingBoardReqDto.JobPostingBoardInsertReqDto;
+
+import site.metacoding.miniproject.dto.jobpostingboard.JobPostingBoardReqDto.JobPostingBoardUpdateReqDto;
+import site.metacoding.miniproject.dto.jobpostingboard.JobPostingBoardRespDto.JobPostingBoardAllRespDto;
+import site.metacoding.miniproject.dto.jobpostingboard.JobPostingBoardRespDto.JobPostingBoardDetailRespDto;
+import site.metacoding.miniproject.dto.jobpostingboard.JobPostingBoardRespDto.JobPostingBoardInsertRespDto;
+import site.metacoding.miniproject.dto.jobpostingboard.JobPostingBoardRespDto.JobPostingBoardUpdateRespDto;
+
 import site.metacoding.miniproject.dto.jobpostingboard.JobPostingBoardRespDto.JobPostingBoardAllRespDto;
 import site.metacoding.miniproject.dto.jobpostingboard.JobPostingBoardRespDto.JobPostingBoardDetailRespDto;
 import site.metacoding.miniproject.dto.jobpostingboard.JobPostingBoardRespDto.JobPostingBoardInsertRespDto;
 import site.metacoding.miniproject.exception.ApiException;
 import site.metacoding.miniproject.web.dto.request.jobpostingboard.JobPostingBoardUpdateDto;
+
 import site.metacoding.miniproject.web.dto.response.etc.PagingDto;
-import site.metacoding.miniproject.web.dto.response.jobpostingboard.JobPostingBoardListDto;
 import site.metacoding.miniproject.web.dto.response.personal.PersonalMainDto;
 
 @Service
@@ -54,12 +61,6 @@ public class CompanyService {
 		CompanyAddressRespDto companyAddressRespDto = companyDao.findByAddress(companyId);
 		CompanyDetailRespDto companyPS = companyDao.findByCompany(companyId);
 		CompanyDetailRespDto companyDetailRespDto = new CompanyDetailRespDto(companyPS, companyAddressRespDto);
-		System.out.println("디버그 : companyname은?" + companyPS.getCompanyName());
-		// companyDetailRespDto.setZoneCode(companyAddressRespDto.getZoneCode());
-		// companyDetailRespDto.setCompanyForAddressId(companyId);
-		// companyDetailRespDto.setRoadJibunAddr(companyAddressRespDto.getRoadJibunAddr());
-		// companyDetailRespDto.setDetailAddress(companyAddressRespDto.getDetailAddress());
-		System.out.println("디버그: companyID는?" + companyDetailRespDto.getCompanyId());
 		return companyDetailRespDto;
 	}
 
@@ -161,16 +162,27 @@ public class CompanyService {
 
 	// 채용공고 수정 (jobpostingboard,career,Category)
 	@Transactional(rollbackFor = Exception.class)
-	public void updateJobPostingBoard(Integer jobPostingBoardId, JobPostingBoardUpdateDto updateDto) {
+	public JobPostingBoardUpdateRespDto updateJobPostingBoard(
+			JobPostingBoardUpdateReqDto jobPostingBoardUpdateReqDto, Integer jobPostingBoardId) {
 		// Integer categoryId,Integer careerId,
-		Category category = new Category(updateDto);
-		categoryDao.jobPostingUpdate(category);
+		jobPostingBoardUpdateReqDto.setJobPostingBoardId(jobPostingBoardId);
+		JobPostingBoard jobPostingBoardPS2Board = jobPostingBoardUpdateReqDto.jobPostingBoardUpdate();
 
-		Career career = new Career(updateDto);
-		careerDao.jobPostingUpdate(career);
+		jobPostingBoardDao.update(jobPostingBoardPS2Board);
+		JobPostingBoard jobPostingBoardPS = jobPostingBoardDao.findById(jobPostingBoardId);
 
-		JobPostingBoard jobPostingBoard = new JobPostingBoard(jobPostingBoardId, updateDto);
-		jobPostingBoardDao.update(jobPostingBoard);
+		Category categoryPS = categoryDao.findById(jobPostingBoardPS.getJobPostingBoardCategoryId());
+		categoryPS = jobPostingBoardUpdateReqDto.jobPostingUpdateReqDtoToCategoryEntity();
+		categoryDao.update(categoryPS);
+
+		Career careerPS = careerDao.findById(jobPostingBoardPS.getJobPostingBoardCareerId());
+		careerPS.updateCareer(jobPostingBoardUpdateReqDto);
+		careerDao.jobPostingUpdate(careerPS);
+		JobPostingBoardUpdateRespDto jobPostingBoardUpdateRespDto = new JobPostingBoardUpdateRespDto(jobPostingBoardPS,
+				categoryPS, careerPS);
+
+		return jobPostingBoardUpdateRespDto;
+
 	}
 
 	// 채용 공고 삭제
