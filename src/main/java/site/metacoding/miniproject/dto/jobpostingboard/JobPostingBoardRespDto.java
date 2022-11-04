@@ -139,8 +139,7 @@ public class JobPostingBoardRespDto {
         // postingBoard 테이블
         private Integer jobPostingBoardId;
         private Integer companyId;
-        private Integer jobPostingBoardCategoryId;
-        private Integer jobPostingBoardCareerId;
+
         private String jobPostingBoardTitle;
         private String jobPostingBoardContent;
         private Integer jobPostingSalary;
@@ -159,11 +158,10 @@ public class JobPostingBoardRespDto {
         private Boolean fiveYearOver;
 
         // TimeStamp > String
-        private String formatDeadLine;
+        // private String formatDeadLine;
 
         public JobPostingBoardUpdateRespDto(JobPostingBoard jobPostingBoard, Category category, Career career) {
-            this.jobPostingBoardCategoryId = jobPostingBoard.getJobPostingBoardCategoryId();
-            this.jobPostingBoardCareerId = jobPostingBoard.getJobPostingBoardCareerId();
+
             this.companyId = jobPostingBoard.getCompanyId();
             this.jobPostingBoardId = jobPostingBoard.getJobPostingBoardId();
             this.jobPostingBoardTitle = jobPostingBoard.getJobPostingBoardTitle();
@@ -179,7 +177,6 @@ public class JobPostingBoardRespDto {
             this.twoYearOver = career.getTwoYearOver();
             this.threeYearOver = career.getThreeYearOver();
             this.fiveYearOver = career.getFiveYearOver();
-
         }
     }
 }
