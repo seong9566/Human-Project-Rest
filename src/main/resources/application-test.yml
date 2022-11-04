@@ -7,10 +7,13 @@ server:
 
 spring:
   datasource:
-    url: jdbc:h2:mem:test;MODE=MYSQL # MariaDB 가 안됨
+    url: jdbc:h2:mem:test;MODE=MYSQL
     driver-class-name: org.h2.Driver
     username: sa
-    password: 
+    password:
+  sql.init.mode: always
+  sql.init.schema-locations: classpath:testdatabase.sql
+
   redis:
     host: localhost
     port: 6379
