@@ -2,6 +2,9 @@ package site.metacoding.miniproject.web;
 
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
 
+import java.io.FileInputStream;
+
+import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
@@ -13,19 +16,21 @@ import org.springframework.context.annotation.Import;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.MediaType;
 import org.springframework.mock.web.MockHttpSession;
+import org.springframework.mock.web.MockMultipartFile;
 import org.springframework.test.context.ActiveProfiles;
 import org.springframework.test.context.jdbc.Sql;
 import org.springframework.test.web.servlet.MockMvc;
-import org.springframework.test.web.servlet.MvcResult;
 import org.springframework.test.web.servlet.ResultActions;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
 
 import lombok.extern.slf4j.Slf4j;
 import site.metacoding.miniproject.config.MyBatisConfig;
+import site.metacoding.miniproject.dto.company.CompanyReqDto.CompanyJoinDto;
 import site.metacoding.miniproject.dto.personal.PersonalReqDto.PersonalJoinDto;
 import site.metacoding.miniproject.dto.user.UserRespDto.SignPersonalDto;
 import site.metacoding.miniproject.dto.user.UserRespDto.SignedDto;
+import site.metacoding.miniproject.web.dto.response.ResponseDto;
 
 @Slf4j
 @ActiveProfiles("test")
@@ -66,52 +71,57 @@ public class UsersApiControllerTest {
     @Test
     public void joinPersonal_test() throws Exception {
         //given
-        PersonalJoinDto joinDto = new PersonalJoinDto();
-        joinDto.setLoginId("user3");
-        joinDto.setLoginPassword("Qwer1234!!!");
-        joinDto.setPersonalPhoneNumber("000-1111-4444");
-        joinDto.setPersonalEmail("example@example.com");
-        joinDto.setPersonalName("testUsername");
-        joinDto.setPersonalAddress("testAddress");
-        joinDto.setPersonalEducation("test");
+        PersonalJoinDto personalJoinDto = new PersonalJoinDto();
+        personalJoinDto.setLoginId("user1");
+        personalJoinDto.setLoginPassword("Qwer1234!!!");
+        personalJoinDto.setPersonalPhoneNumber("000-1111-4444");
+        personalJoinDto.setPersonalEmail("example@example.com");
+        personalJoinDto.setPersonalName("testUsername");
+        personalJoinDto.setPersonalAddress("testAddress");
+        personalJoinDto.setPersonalEducation("test");
 
-        String body = om.writeValueAsString(joinDto);
+        String body = om.writeValueAsString(personalJoinDto);
 
         //when
         ResultActions resultActions = mvc
                 .perform(post("/join/personal").content(body)
                         .contentType("application/json; charset=utf-8").accept(APPLICATION_JSON));
+        ResponseDto<?> responseDto = new ResponseDto<>(1, "success",
+                resultActions.andReturn().getResponse().getContentAsString());
         //then
-        MvcResult mvcResult = resultActions.andReturn();
-        log.debug("디버그 :  개인 회원가입 - " + mvcResult.getResponse().getContentAsString());
+        //MvcResult mvcResult = resultActions.andReturn();
+        Assertions.assertEquals(1, responseDto.getCode());
+        Assertions.assertEquals("success", responseDto.getMessage());
+        Assertions.assertNotNull(responseDto.getData());
         //assertEquals(null, joinDto);
 
     }
 
     @Test
-    public void joinPersonal_test2() throws Exception {
+    public void joinCompany_test() throws Exception {
+        
         //given
-        PersonalJoinDto joinDto = new PersonalJoinDto();
-        joinDto.setLoginId("user3");
-        joinDto.setLoginPassword("Qwer1234!!!");
-        joinDto.setPersonalPhoneNumber("000-1111-4444");
-        joinDto.setPersonalEmail("example@example.com");
-        joinDto.setPersonalName("testUsername");
-        joinDto.setPersonalAddress("testAddress");
-        joinDto.setPersonalEducation("test");
-
+        CompanyJoinDto joinDto = new CompanyJoinDto();
+        joinDto.setCompanyName("testcompany");
+        joinDto.setCompanyPhoneNumber("010-4444-6666");
+        joinDto.setLoginId("testId");
+        joinDto.setLoginPassword("Qwer1234!");
+        MockMultipartFile file =new MockMultipartFile("image", "test.png", "image/png",
+                new FileInputStream("C:\\Users\\GGG\\Desktop"));
         String body = om.writeValueAsString(joinDto);
-
-        //when
-        ResultActions resultActions = mvc
-                .perform(post("/join/personal").content(body)
-                        .contentType("application/json; charset=utf-8").accept(APPLICATION_JSON));
-        //then
-        MvcResult mvcResult = resultActions.andReturn();
-        log.debug("디버그 :  개인 회원가입 - " + mvcResult.getResponse().getContentAsString());
-        //assertEquals(null, joinDto);
-
+        System.out.println(body);
+        // //when
+        // ResultActions resultActions = mvc
+        //         .perform(post("/join/company").content(body)
+        //                 .contentType("application/json; charset=utf-8").accept(APPLICATION_JSON));
+        // ResponseDto<?> responseDto = new ResponseDto<>(1, "success",
+        //         resultActions.andReturn().getResponse().getContentAsString());
+                
+        // //then
+        // log.debug("디버그 : " );
+        // Assertions.assertEquals(1, responseDto.getCode());
+        // Assertions.assertEquals("success", responseDto.getMessage());
+        // Assertions.assertNotNull(responseDto.getData());
     }
-
 
 }
