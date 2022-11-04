@@ -1,5 +1,3 @@
--- INSERT INTO users (login_id, login_password, users_id, created_at)
--- VALUES('user2', '1234', 1, now());
 SET REFERENTIAL_INTEGRITY FALSE;
 truncate table alarm;
 truncate table apply;

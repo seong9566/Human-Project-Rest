@@ -32,7 +32,7 @@ import site.metacoding.miniproject.dto.user.UserRespDto.SignedDto;
 @AutoConfigureMockMvc
 @SpringBootTest(webEnvironment = WebEnvironment.MOCK)
 @Import(MyBatisConfig.class)
-@Sql({ "classpath:testdatabase.sql"})
+@Sql("classpath:testdatabase.sql")
 public class UsersApiControllerTest {
 
     private static final String APPLICATION_JSON = "application/json; charset=utf-8";
@@ -65,6 +65,31 @@ public class UsersApiControllerTest {
 
     @Test
     public void joinPersonal_test() throws Exception {
+        //given
+        PersonalJoinDto joinDto = new PersonalJoinDto();
+        joinDto.setLoginId("user3");
+        joinDto.setLoginPassword("Qwer1234!!!");
+        joinDto.setPersonalPhoneNumber("000-1111-4444");
+        joinDto.setPersonalEmail("example@example.com");
+        joinDto.setPersonalName("testUsername");
+        joinDto.setPersonalAddress("testAddress");
+        joinDto.setPersonalEducation("test");
+
+        String body = om.writeValueAsString(joinDto);
+
+        //when
+        ResultActions resultActions = mvc
+                .perform(post("/join/personal").content(body)
+                        .contentType("application/json; charset=utf-8").accept(APPLICATION_JSON));
+        //then
+        MvcResult mvcResult = resultActions.andReturn();
+        log.debug("디버그 :  개인 회원가입 - " + mvcResult.getResponse().getContentAsString());
+        //assertEquals(null, joinDto);
+
+    }
+
+    @Test
+    public void joinPersonal_test2() throws Exception {
         //given
         PersonalJoinDto joinDto = new PersonalJoinDto();
         joinDto.setLoginId("user3");
