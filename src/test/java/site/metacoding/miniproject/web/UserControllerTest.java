@@ -1,5 +1,7 @@
 package site.metacoding.miniproject.web;
 
+import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
+
 import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
@@ -7,10 +9,12 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureMockMvc;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.boot.test.context.SpringBootTest.WebEnvironment;
+import org.springframework.context.annotation.Import;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.MediaType;
 import org.springframework.mock.web.MockHttpSession;
 import org.springframework.test.context.ActiveProfiles;
+import org.springframework.test.context.jdbc.Sql;
 import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.test.web.servlet.MvcResult;
 import org.springframework.test.web.servlet.ResultActions;
@@ -18,6 +22,7 @@ import org.springframework.test.web.servlet.ResultActions;
 import com.fasterxml.jackson.databind.ObjectMapper;
 
 import lombok.extern.slf4j.Slf4j;
+import site.metacoding.miniproject.config.MyBatisConfig;
 import site.metacoding.miniproject.dto.personal.PersonalReqDto.PersonalJoinDto;
 import site.metacoding.miniproject.dto.user.UserRespDto.SignPersonalDto;
 import site.metacoding.miniproject.dto.user.UserRespDto.SignedDto;
@@ -26,7 +31,8 @@ import site.metacoding.miniproject.dto.user.UserRespDto.SignedDto;
 @ActiveProfiles("test")
 @AutoConfigureMockMvc
 @SpringBootTest(webEnvironment = WebEnvironment.MOCK)
-//@Import(MyBatisConfig.class)
+@Import(MyBatisConfig.class)
+@Sql({ "classpath:testdatabase.sql", "classpath:truncate.sql" })
 public class UserControllerTest {
 
     private static final String APPLICATION_JSON = "application/json; charset=utf-8";
@@ -35,7 +41,7 @@ public class UserControllerTest {
     private MockMvc mvc;
 
     @Autowired
-    private ObjectMapper om;
+	private ObjectMapper om;
 
     private MockHttpSession session;
 
@@ -61,13 +67,13 @@ public class UserControllerTest {
 	public void joinPersonal_test() throws Exception{
 		//given
 		PersonalJoinDto joinDto = new PersonalJoinDto();
-		joinDto.setLoginId("user1");
+		joinDto.setLoginId("user2");
 		joinDto.setLoginPassword("Qwer1234!!!");
 		joinDto.setPersonalPhoneNumber("000-1111-4444");
 		joinDto.setPersonalEmail("example@example.com");
 		joinDto.setPersonalName("testUsername");
 		joinDto.setPersonalAddress("testAddress");
-		joinDto.setPersonalEducation("test education");
+		joinDto.setPersonalEducation("test");
 
 		String body = om.writeValueAsString(joinDto);
 
