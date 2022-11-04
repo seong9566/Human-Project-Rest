@@ -1,6 +1,5 @@
 package site.metacoding.miniproject.domain.personal;
 
-import java.io.Serializable;
 import java.sql.Timestamp;
 
 import lombok.Builder;
@@ -12,7 +11,7 @@ import site.metacoding.miniproject.dto.personal.PersonalReqDto.PersonalUpdatReqD
 @Getter
 @Setter
 @NoArgsConstructor
-public class Personal implements Serializable {
+public class Personal{
 	private Integer personalId;
 	private String personalName;
 	private String personalEmail;
@@ -20,8 +19,6 @@ public class Personal implements Serializable {
 	private String personalPhoneNumber;
 	private String personalAddress;
 	private Timestamp createdAt;
-
-	private static final long serialVersionUID = 7364337982660485087L; // 시리얼 아이디 - 레디스 서버와 통신을 위함
 
 	@Builder
 	public Personal(Integer personalId, String personalName, String personalEmail, String personalEducation,
