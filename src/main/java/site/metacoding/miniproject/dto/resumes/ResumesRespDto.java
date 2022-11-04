@@ -163,6 +163,8 @@ public class ResumesRespDto {
         private Integer startNum;
         private String keyword;
 
+        private Integer id;
+
         public ResumesAllRespDto(Resumes resumes) {
             this.resumesTitle = resumes.getResumesTitle();
             this.resumesPlace = resumes.getResumesPlace();

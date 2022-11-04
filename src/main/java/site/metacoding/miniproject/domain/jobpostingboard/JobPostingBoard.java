@@ -23,6 +23,11 @@ public class JobPostingBoard {
 	private Timestamp jobPostingBoardDeadline;
 	private Timestamp createdAt;
 
+	// 서비스로직
+	// TimeStamp > String
+	private String formatDeadLine;
+	private String state;
+
 	@Builder
 	public JobPostingBoard(Integer jobPostingBoardId, Integer companyId, Integer jobPostingSalary,
 			Integer jobPostingBoardCareerId, Integer jobPostingBoardCategoryId, String jobPostingBoardTitle,

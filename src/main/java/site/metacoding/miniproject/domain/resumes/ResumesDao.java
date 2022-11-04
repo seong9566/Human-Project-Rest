@@ -27,10 +27,11 @@ public interface ResumesDao {
 	// 이력서 삭제
 	public void deleteById(Integer resumesId);
 
-	// 전체 이력서 목록 보기
-	public List<Resumes> findAllResumes(int startNum);
+	// // 전체 이력서 목록 보기
+	// public List<Resumes> findAllResumes(int startNum);
 
-	public List<Resumes> findSearch(@Param("startNum") int startNum, @Param("keyword") String keyword);
+	// public List<Resumes> findSearch(@Param("startNum") int startNum,
+	// @Param("keyword") String keyword);
 
 	// 페이징
 	public PagingDto resumesPaging(@Param("page") Integer page, @Param("keyword") String keyword);
@@ -39,10 +40,10 @@ public interface ResumesDao {
 	// public List<CompanyMainDto> findSearch(@Param("startNum") int startNum,
 	// @Param("keyword") String keyword);
 
-	// 카테고리별 목록보기
-	public List<CompanyMainDto> findCategory(@Param("startNum") Integer startNum, @Param("id") Integer id);
+	// 전체 이력서 목록 보기(카테고리 별)
+	public List<Resumes> findCategory(@Param("startNum") Integer startNum, @Param("id") Integer id);
 
-	public List<CompanyMainDto> findCategorySearch(@Param("startNum") int startNum, @Param("keyword") String keyword,
+	public List<Resumes> findCategorySearch(@Param("startNum") int startNum, @Param("keyword") String keyword,
 			@Param("id") Integer id);
 
 }
