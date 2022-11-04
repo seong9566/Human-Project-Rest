@@ -151,11 +151,43 @@ public class PersonalService {
 		resumesDao.deleteById(resumesId);
 	}
 
-	// 전체 이력서 목록 보기 (페이징+검색)
+	// // 전체 이력서 목록 보기 (페이징+검색)
+	// @Transactional(readOnly = true)
+	// public List<ResumesAllRespDto> findAllResumes(ResumesAllRespDto
+	// resumesAllRespDto) {
+	// if (resumesAllRespDto.getKeyword() == null ||
+	// resumesAllRespDto.getKeyword().isEmpty()) {
+	// List<Resumes> resumesList =
+	// resumesDao.findAllResumes(resumesAllRespDto.getStartNum());
+	// List<ResumesAllRespDto> resumesAllRespDtoList = new ArrayList<>();
+	// for (Resumes resumes : resumesList) {
+	// resumesAllRespDtoList.add(new ResumesAllRespDto(resumes));
+	// }
+	// PagingDto paging = resumesDao.resumesPaging(resumesAllRespDto.getPage(),
+	// resumesAllRespDto.getKeyword());
+	// paging.makeBlockInfo(resumesAllRespDto.getKeyword());
+	// return resumesAllRespDtoList;
+	// } else {
+	// List<Resumes> resumesList =
+	// resumesDao.findSearch(resumesAllRespDto.getStartNum(),
+	// resumesAllRespDto.getKeyword());
+	// List<ResumesAllRespDto> resumesAllRespDtoList = new ArrayList<>();
+	// for (Resumes resumes : resumesList) {
+	// resumesAllRespDtoList.add(new ResumesAllRespDto(resumes));
+	// }
+	// PagingDto paging = resumesDao.resumesPaging(resumesAllRespDto.getPage(),
+	// resumesAllRespDto.getKeyword());
+	// paging.makeBlockInfo(resumesAllRespDto.getKeyword());
+	// return resumesAllRespDtoList;
+	// }
+	// }
+
+	// 전체 이력서 목록 보기 (페이징+검색+카테고리id별)
 	@Transactional(readOnly = true)
 	public List<ResumesAllRespDto> findAllResumes(ResumesAllRespDto resumesAllRespDto) {
 		if (resumesAllRespDto.getKeyword() == null || resumesAllRespDto.getKeyword().isEmpty()) {
-			List<Resumes> resumesList = resumesDao.findAllResumes(resumesAllRespDto.getStartNum());
+			List<Resumes> resumesList = resumesDao.findCategory(resumesAllRespDto.getStartNum(),
+					resumesAllRespDto.getId());
 			List<ResumesAllRespDto> resumesAllRespDtoList = new ArrayList<>();
 			for (Resumes resumes : resumesList) {
 				resumesAllRespDtoList.add(new ResumesAllRespDto(resumes));
@@ -164,8 +196,8 @@ public class PersonalService {
 			paging.makeBlockInfo(resumesAllRespDto.getKeyword());
 			return resumesAllRespDtoList;
 		} else {
-			List<Resumes> resumesList = resumesDao.findSearch(resumesAllRespDto.getStartNum(),
-					resumesAllRespDto.getKeyword());
+			List<Resumes> resumesList = resumesDao.findCategorySearch(resumesAllRespDto.getStartNum(),
+					resumesAllRespDto.getKeyword(), resumesAllRespDto.getId());
 			List<ResumesAllRespDto> resumesAllRespDtoList = new ArrayList<>();
 			for (Resumes resumes : resumesList) {
 				resumesAllRespDtoList.add(new ResumesAllRespDto(resumes));
@@ -174,17 +206,19 @@ public class PersonalService {
 			paging.makeBlockInfo(resumesAllRespDto.getKeyword());
 			return resumesAllRespDtoList;
 		}
+
 	}
 
-	// 카테고리 별 리스트 보기
-	public List<CompanyMainDto> findCategory(int startNum, Integer id) {
-		return resumesDao.findCategory(startNum, id);
-	}
+	// // 카테고리 별 리스트 보기
+	// public List<CompanyMainDto> findCategory(int startNum, Integer id) {
+	// return resumesDao.findCategory(startNum, id);
+	// }
 
-	// 카테고리 별 검색 결과 리스트
-	public List<CompanyMainDto> findCategorySearch(int startNum, String keyword, Integer id) {
-		return resumesDao.findCategorySearch(startNum, keyword, id);
-	}
+	// // 카테고리 별 검색 결과 리스트
+	// public List<CompanyMainDto> findCategorySearch(int startNum, String keyword,
+	// Integer id) {
+	// return resumesDao.findCategorySearch(startNum, keyword, id);
+	// }
 
 	// 개인 정보에 보기
 	@Transactional(readOnly = true)

@@ -104,7 +104,7 @@
 	</insert>
 
 	<select id="findCategory"
-		resultType="site.metacoding.miniproject.web.dto.response.company.CompanyMainDto">
+		resultType="site.metacoding.miniproject.domain.resumes.Resumes">
 		SELECT r.resumes_id, c.category_id, c.category_frontend, 
 		c.category_backend, c.category_devops, r.resumes_category_id,
 		r.resumes_title, r.resumes_place
@@ -129,7 +129,7 @@
 	</select>
 
 	<select id="findCategorySearch"
-		resultType="site.metacoding.miniproject.web.dto.response.company.CompanyMainDto">
+		resultType="site.metacoding.miniproject.domain.resumes.Resumes">
 		SELECT r.resumes_id, c.category_id, c.category_frontend, 
 		c.category_backend, c.category_devops, r.resumes_category_id,
 		r.resumes_title, r.resumes_place
