@@ -13,7 +13,7 @@ import javax.servlet.http.HttpServletResponse;
 import lombok.extern.slf4j.Slf4j;
 import site.metacoding.miniproject.exception.ApiException;
 import site.metacoding.miniproject.utill.JWTToken.CookieForToken;
-import site.metacoding.miniproject.utill.JWTToken.TokenVerification;
+import site.metacoding.miniproject.utill.JWTToken.TokenVerificationForCookie;
 
 @Slf4j
 public class JwtAuthenticationFilter implements Filter {
@@ -23,7 +23,7 @@ public class JwtAuthenticationFilter implements Filter {
             throws IOException, ServletException {
         HttpServletRequest req = (HttpServletRequest) request;
         HttpServletResponse resp = (HttpServletResponse) response;
-        TokenVerification tokenVerification = new TokenVerification();
+        TokenVerificationForCookie tokenVerification = new TokenVerificationForCookie();
         String token = CookieForToken.cookieToToken(req.getCookies());
 
         if (!req.getMethod().equals("POST")) {

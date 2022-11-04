@@ -110,32 +110,32 @@ public class ValidationCheckUtil {
 		}
 	}
 
-	public static void valCheckToUpdatePersonal(PersonalUpdatReqDto personalUplaReqDto) {
+	public static void valCheckToUpdatePersonal(PersonalUpdatReqDto personalUpdateReqDto) {
 
 		// 검증 오류 결과 보관
 		Map<String, String> errors = new HashMap<>();
 
-		if (personalUplaReqDto == null)
+		if (personalUpdateReqDto == null)
 			throw new NormalException("잘못된 요청입니다.");
 
 		// 패스워드
 		Boolean passwordCheck = Pattern.matches(
 				"^(?=.*[a-z])(?=.*[A-Z])(?=.*\\d)(?=.*[$@$!%*?&])[A-Za-z\\d$@$!%*?&]{8,25}",
-				personalUplaReqDto.getLoginPassword());
-		if (ObjectUtils.isEmpty(personalUplaReqDto.getLoginPassword())
+				personalUpdateReqDto.getLoginPassword());
+		if (ObjectUtils.isEmpty(personalUpdateReqDto.getLoginPassword())
 				|| (!passwordCheck)) {
 			errors.put("loginPassword", "패스워드는 대문자, 소문자, 특수문자가 적어도 하나씩은 있어야 하며 최소 8자리여야 하며 최대 25자리까지 가능합니다.");
 		}
 
 		Boolean phoneNumberCheck = Pattern.matches("\\d{3}-\\d{3,4}-\\d{4}$",
-				personalUplaReqDto.getPersonalPhoneNumber());
-		if (ObjectUtils.isEmpty(personalUplaReqDto.getPersonalPhoneNumber()) || (!phoneNumberCheck)) {
+		personalUpdateReqDto.getPersonalPhoneNumber());
+		if (ObjectUtils.isEmpty(personalUpdateReqDto.getPersonalPhoneNumber()) || (!phoneNumberCheck)) {
 			errors.put("PersonalPhoneNumber", "전화번호 입력 규격에 맞지 않습니다. ex) 010-0000-0000");
 		}
 
 		Boolean emailCheck = Pattern.matches("^[a-zA-Z0-9]+@[a-zA-Z0-9]{4,}.{1}?[a-zA-Z]{2,3}$",
-				personalUplaReqDto.getPersonalEmail());
-		if (ObjectUtils.isEmpty(personalUplaReqDto.getPersonalEmail()) || (!emailCheck)) {
+		personalUpdateReqDto.getPersonalEmail());
+		if (ObjectUtils.isEmpty(personalUpdateReqDto.getPersonalEmail()) || (!emailCheck)) {
 			errors.put("PersonalEmail", "이메일 입력형식으로 해주세요 ex) example@exmple.com");
 		}
 

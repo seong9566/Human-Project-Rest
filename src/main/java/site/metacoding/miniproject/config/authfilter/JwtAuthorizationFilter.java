@@ -33,12 +33,12 @@ public class JwtAuthorizationFilter implements Filter {
         HttpServletRequest req = (HttpServletRequest) request;
         HttpServletResponse resp = (HttpServletResponse) response;
 
-        String token = CookieForToken.cookieToToken(req.getCookies());
-        if (token == null) {
-            throw new ApiException("로그인이 필요한 서비스 입니다.");
+        String tokenForCookie = CookieForToken.cookieToToken(req.getCookies());
+        if (tokenForCookie == null) {
+            
         }
 
-        DecodedJWT decodedJWT = JWT.require(Algorithm.HMAC512(SecretKey.SECRETKEY.key())).build().verify(token);
+        DecodedJWT decodedJWT = JWT.require(Algorithm.HMAC512(SecretKey.SECRETKEY.key())).build().verify(tokenForCookie);
         
         //map 형식으로 저장되어있는 토큰값을 map형식으로 가져온다.
         Map<String, Object> getSigned = decodedJWT.getClaim("sigendDto").asMap();

@@ -11,9 +11,19 @@ spring:
     driver-class-name: org.h2.Driver
     username: sa
     password: 
+  redis:
+    host: localhost
+    port: 6379
   h2:
     console:
       enabled: true
+  # jpa:
+  #   open-in-view: false
+  #   hibernate:
+  #     ddl-auto: none
+  #   properties:
+  #     '[hibernate.format_sql]': true
+
   output:
     ansi:
       enabled: always
