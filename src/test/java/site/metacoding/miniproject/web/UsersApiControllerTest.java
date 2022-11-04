@@ -7,12 +7,12 @@ import java.io.FileInputStream;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.Order;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureMockMvc;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.boot.test.context.SpringBootTest.WebEnvironment;
-import org.springframework.context.annotation.Import;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.MediaType;
 import org.springframework.mock.web.MockHttpSession;
@@ -25,7 +25,6 @@ import org.springframework.test.web.servlet.ResultActions;
 import com.fasterxml.jackson.databind.ObjectMapper;
 
 import lombok.extern.slf4j.Slf4j;
-import site.metacoding.miniproject.config.MyBatisConfig;
 import site.metacoding.miniproject.dto.company.CompanyReqDto.CompanyJoinDto;
 import site.metacoding.miniproject.dto.personal.PersonalReqDto.PersonalJoinDto;
 import site.metacoding.miniproject.dto.user.UserRespDto.SignPersonalDto;
@@ -36,7 +35,6 @@ import site.metacoding.miniproject.web.dto.response.ResponseDto;
 @ActiveProfiles("test")
 @AutoConfigureMockMvc
 @SpringBootTest(webEnvironment = WebEnvironment.MOCK)
-@Import(MyBatisConfig.class)
 @Sql("classpath:testdatabase.sql")
 public class UsersApiControllerTest {
 
@@ -58,7 +56,7 @@ public class UsersApiControllerTest {
 		headers.setContentType(MediaType.APPLICATION_JSON);
 	}
 	
-	@BeforeEach// test메서드 진입전에 트랜잭션 발동
+    @BeforeEach // test메서드 진입전에 트랜잭션 발동
     public void sessionInit() {
         session = new MockHttpSession();
 		SignPersonalDto signPersonalDto = new SignPersonalDto();
@@ -69,10 +67,11 @@ public class UsersApiControllerTest {
 
 
     @Test
+    @Order(2)
     public void joinPersonal_test() throws Exception {
         //given
         PersonalJoinDto personalJoinDto = new PersonalJoinDto();
-        personalJoinDto.setLoginId("user1");
+        personalJoinDto.setLoginId("user2");
         personalJoinDto.setLoginPassword("Qwer1234!!!");
         personalJoinDto.setPersonalPhoneNumber("000-1111-4444");
         personalJoinDto.setPersonalEmail("example@example.com");
@@ -98,6 +97,7 @@ public class UsersApiControllerTest {
     }
 
     @Test
+    @Order(1)
     public void joinCompany_test() throws Exception {
         
         //given
@@ -106,16 +106,18 @@ public class UsersApiControllerTest {
         joinDto.setCompanyPhoneNumber("010-4444-6666");
         joinDto.setLoginId("testId");
         joinDto.setLoginPassword("Qwer1234!");
+        joinDto.setCompanyEmail("example@example.com");
         MockMultipartFile file =new MockMultipartFile("image", "test.png", "image/png",
-                new FileInputStream("C:\\Users\\GGG\\Desktop"));
+                new FileInputStream("C:\\Users\\GGG\\Desktop\\p4.jpeg"));
+
         String body = om.writeValueAsString(joinDto);
-        System.out.println(body);
-        // //when
-        // ResultActions resultActions = mvc
-        //         .perform(post("/join/company").content(body)
-        //                 .contentType("application/json; charset=utf-8").accept(APPLICATION_JSON));
-        // ResponseDto<?> responseDto = new ResponseDto<>(1, "success",
-        //         resultActions.andReturn().getResponse().getContentAsString());
+
+        //when
+        ResultActions resultActions = mvc
+                .perform(post("/join/company").content(body)
+                        .contentType("application/json; charset=utf-8").accept(APPLICATION_JSON));
+        ResponseDto<?> responseDto = new ResponseDto<>(1, "success",
+                resultActions.andReturn().getResponse().getContentAsString());
                 
         // //then
         // log.debug("디버그 : " );

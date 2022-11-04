@@ -17,6 +17,7 @@ spring:
   h2:
     console:
       enabled: true
+    
   # jpa:
   #   open-in-view: false
   #   hibernate:
@@ -27,6 +28,9 @@ spring:
   output:
     ansi:
       enabled: always
+  sql:
+    init:
+      mode: always
 
 logging:
   level:
