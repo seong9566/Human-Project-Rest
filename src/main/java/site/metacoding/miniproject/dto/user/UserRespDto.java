@@ -16,7 +16,7 @@ public class UserRespDto {
     public static class SignedDto<T> implements Serializable {
         private Integer usersId;
         private String loginId;
-        // 알람정보 넣기
+        // 구독정보 및 좋아요 정보 넣기
         private T userInfo;
 
         public SignedDto(Integer usersId, String loginId, T userInfo) {

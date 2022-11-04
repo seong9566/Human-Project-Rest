@@ -10,7 +10,6 @@ import lombok.Getter;
 import lombok.Setter;
 import site.metacoding.miniproject.domain.company.Company;
 import site.metacoding.miniproject.domain.users.Users;
-import site.metacoding.miniproject.dto.personal.PersonalReqDto.PersonalUpdatReqDto;
 import site.metacoding.miniproject.exception.ApiException;
 import site.metacoding.miniproject.utill.SHA256;
 
