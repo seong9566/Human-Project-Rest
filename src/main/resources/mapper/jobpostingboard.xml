@@ -127,7 +127,7 @@
 		job_posting_board_place,
 		job_posting_board_deadline
 		FROM job_posting_board 
-		WHERE job_posting_board_id = #{jobPostingBoardId};
+		WHERE job_posting_board_id = #{jobPostingBoardId}
 	</select>
 	<delete id="deleteById">
 		DELETE FROM job_posting_board WHERE
