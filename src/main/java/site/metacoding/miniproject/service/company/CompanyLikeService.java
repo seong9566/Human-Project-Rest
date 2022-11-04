@@ -1,8 +1,7 @@
 package site.metacoding.miniproject.service.company;
 
 import java.util.HashMap;
-
-import javax.servlet.http.HttpSession;
+import java.util.List;
 
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -17,47 +16,57 @@ import site.metacoding.miniproject.domain.personal.PersonalDao;
 import site.metacoding.miniproject.domain.users.Users;
 import site.metacoding.miniproject.domain.users.UsersDao;
 import site.metacoding.miniproject.dto.like.LikeReqDto.CompanyLikeReqDto;
-import site.metacoding.miniproject.dto.user.UserRespDto.SignPersonalDto;
-import site.metacoding.miniproject.dto.user.UserRespDto.SignedDto;
+import site.metacoding.miniproject.dto.like.LikeRespDto.CompanyLikeRespDto;
 import site.metacoding.miniproject.utill.AlarmEnum;
 
 @RequiredArgsConstructor
 @Service
 public class CompanyLikeService {
-	private final HttpSession session;
 	private final CompanyLikesDao companyLikesDao;
 	private final UsersDao usersDao;
 	private final AlarmDao alarmDao;
 	private final PersonalDao personalDao;
 
 	@Transactional(rollbackFor = RuntimeException.class)
-	public void 좋아요(SignedDto<?> signedDto, Integer companyId) {
+	public CompanyLikeRespDto 좋아요(Integer companyId, CompanyLikeReqDto companyLikeReqDto) {
 		HashMap<String, Integer> companylikes = new HashMap<>();
-		SignedDto<?> principal = (SignedDto<?>) session.getAttribute("principal");
-		SignPersonalDto signPersonalDto = (SignPersonalDto) principal.getUserInfo();
-		CompanyLike companyLike = new CompanyLike(companyId, signPersonalDto.getPersonalId());
-		companyLikesDao.insert(companyLike);
 
-		companylikes.put(AlarmEnum.ALARMCOMPANYLIKEID.key(),
-				companyLike.getCompanyLikeId());
+		CompanyLike companyLikePS = companyLikeReqDto.companyLikeEntity();
+		companyLikesDao.insert(companyLikePS);
+
+		companylikes.put(AlarmEnum.ALARMCOMPANYLIKEID.key(), companyLikePS.getCompanyLikeId());
 
 		Users users = usersDao.findByCompanyId(companyId);
-		Personal personalPS = personalDao.findById(personalId);
+		Personal personalPS = personalDao.findById(companyLikePS.getPersonalId());
 		Alarm alarm = new Alarm(users.getUsersId(), companylikes, personalPS.getPersonalName());
 
 		alarmDao.insert(alarm);
+		companyLikePS.setAlarmId(alarm.getAlarmId());
+		companyLikesDao.update(companyLikePS);
+		CompanyLikeRespDto companyLikeRespDto = new CompanyLikeRespDto(companyLikePS);
+		return companyLikeRespDto;
 
-		companyLike.setAlarmId(alarm.getAlarmId());
-		companyLikesDao.update(companyLike);
 	}
 
-	public void 좋아요취소(Integer personalId, Integer companyId, CompanyLikeReqDto companyLikeReqDto) {
-		CompanyLike companyLike = companyLikeReqDto.CompanyLikeEntity();
+	// public CompanyLikeRespDto 좋아요취소(Integer companyId, Integer personalId) {
+	// CompanyLike companyLikePS = companyLikeReqDto.companyLikeEntity();
+	// if (companyLikePS == null) {
+	// throw new RuntimeException("해당" + companyId + "좋아요를 삭제할수 없습니다.");
+	// }
+	// companyLikesDao.deleteById(companyLikePS);
+	// CompanyLikeRespDto companyLikeRespDto = new
+	// CompanyLikeRespDto(companyLikePS);
+	// return companyLikeRespDto;
+	// }
+
+	public void 좋아요취소(Integer personalId, Integer companyId) {
+		CompanyLike companyLike = new CompanyLike(personalId, companyId, null);
 		companyLikesDao.deleteById(companyLike);
 	}
 
-	public CompanyLike 좋아요확인(Integer personalId, Integer companyId, CompanyLikeReqDto companyLikeReqDto) {
-		CompanyLike companyLike = companyLikesDao.findById(companyLikeReqDto);
-		return companyLike;
+	@Transactional(readOnly = true)
+	public List<CompanyLikeRespDto> bestcompany(Integer companyId) {
+		List<CompanyLikeRespDto> PersonalLikeDtoList = companyLikesDao.bestcompany(companyId);
+		return PersonalLikeDtoList;
 	}
 }
