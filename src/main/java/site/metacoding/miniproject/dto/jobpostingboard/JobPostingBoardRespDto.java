@@ -179,4 +179,58 @@ public class JobPostingBoardRespDto {
             this.fiveYearOver = career.getFiveYearOver();
         }
     }
+
+    @Getter
+    @Setter
+    @NoArgsConstructor
+    public static class JobPostingAllRespDto { // 전체 채용공고 목록 DTO(페이징+검색+카테고리)
+        private String jobPostingBoardTitle;
+        private Timestamp jobPostingBoardDeadline;
+        // 모집중, 모집 마감
+        private String state;
+        // TimeStamp > String
+        private String formatDeadLine;
+
+        private Integer page;
+        private Integer startNum;
+        private String keyword;
+
+        private Integer id;
+
+        public JobPostingAllRespDto(JobPostingBoard jobPostingBoard) {
+            this.jobPostingBoardTitle = jobPostingBoard.getJobPostingBoardTitle();
+            this.jobPostingBoardDeadline = jobPostingBoard.getJobPostingBoardDeadline();
+            this.state = jobPostingBoard.getState();
+            this.formatDeadLine = jobPostingBoard.getFormatDeadLine();
+        }
+    }
+
+    @Setter
+    @Getter
+    public static class PagingDto {
+        private Integer totalCount;
+        private Integer totalPage;
+        private Integer currentPage;
+        private boolean isFirst;
+        private boolean isLast;
+
+        private Integer blockCount;
+        private Integer currentBlock;
+        private Integer startPageNum;
+        private Integer lastPageNum;
+
+        private String keyword;
+
+        public void makeBlockInfo(String keyword) {
+            this.keyword = keyword;
+            this.blockCount = 5;
+            this.currentBlock = currentPage / blockCount;
+            this.startPageNum = 1 + blockCount * currentBlock;
+            this.lastPageNum = 5 + blockCount * currentBlock;
+
+            if (totalPage < lastPageNum) {
+                this.lastPageNum = totalPage;
+            }
+        }
+    }
 }

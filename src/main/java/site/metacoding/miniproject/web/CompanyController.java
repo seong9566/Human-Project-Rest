@@ -18,6 +18,7 @@ import site.metacoding.miniproject.dto.company.CompanyReqDto.CompanyUpdateReqDto
 import site.metacoding.miniproject.dto.company.CompanyRespDto.CompanyUpdateRespDto;
 import site.metacoding.miniproject.dto.jobpostingboard.JobPostingBoardReqDto.JobPostingBoardInsertReqDto;
 import site.metacoding.miniproject.dto.jobpostingboard.JobPostingBoardReqDto.JobPostingBoardUpdateReqDto;
+import site.metacoding.miniproject.dto.jobpostingboard.JobPostingBoardRespDto.JobPostingAllRespDto;
 import site.metacoding.miniproject.dto.user.UserRespDto.SignCompanyDto;
 import site.metacoding.miniproject.dto.user.UserRespDto.SignedDto;
 import site.metacoding.miniproject.service.company.CompanyService;
@@ -162,6 +163,20 @@ public class CompanyController {
 	public @ResponseBody ResponseDto<?> deleteResumes(@PathVariable Integer jobPostingBoardId) {
 		companyService.deleteJobposting(jobPostingBoardId);
 		return new ResponseDto<>(1, "채용공고 삭제 성공", null);
+	}
+
+	// 전체 채용공고 목록 보기 (페이징+검색+카테고리)
+	@GetMapping("/jobposting/jobpostingList/{id}")
+	public ResponseDto<?> findAllJobPosting(@PathVariable Integer id, Integer page, String keyword,
+			JobPostingAllRespDto jobPostingAllRespDto) {
+		if (page == null)
+			page = 0;
+		int startNum = page * 5;
+		jobPostingAllRespDto.setId(id);
+		jobPostingAllRespDto.setPage(page);
+		jobPostingAllRespDto.setStartNum(startNum);
+		jobPostingAllRespDto.setKeyword(keyword);
+		return new ResponseDto<>(1, "전체 채용공고 목록 보기 성공", companyService.findAllJobPostingBoard(jobPostingAllRespDto));
 	}
 
 }
