@@ -1,9 +1,11 @@
 package site.metacoding.miniproject.web;
 
-import java.io.FileInputStream;
+import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.multipart;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
+import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.jsonPath;
 
-import org.junit.jupiter.api.Assertions;
+import java.nio.charset.StandardCharsets;
+
 import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Order;
@@ -12,15 +14,18 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureMockMvc;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.boot.test.context.SpringBootTest.WebEnvironment;
+import org.springframework.core.io.Resource;
+import org.springframework.core.io.ResourceLoader;
 import org.springframework.http.HttpHeaders;
+import org.springframework.http.HttpMethod;
 import org.springframework.http.MediaType;
 import org.springframework.mock.web.MockHttpSession;
 import org.springframework.mock.web.MockMultipartFile;
+import org.springframework.mock.web.MockPart;
 import org.springframework.test.context.ActiveProfiles;
 import org.springframework.test.context.jdbc.Sql;
-import org.springframework.test.context.jdbc.Sql.ExecutionPhase;
 import org.springframework.test.web.servlet.MockMvc;
-import org.springframework.test.web.servlet.RequestBuilder;
+import org.springframework.test.web.servlet.MvcResult;
 import org.springframework.test.web.servlet.ResultActions;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
@@ -30,7 +35,6 @@ import site.metacoding.miniproject.dto.company.CompanyReqDto.CompanyJoinDto;
 import site.metacoding.miniproject.dto.personal.PersonalReqDto.PersonalJoinDto;
 import site.metacoding.miniproject.dto.user.UserRespDto.SignPersonalDto;
 import site.metacoding.miniproject.dto.user.UserRespDto.SignedDto;
-import site.metacoding.miniproject.web.dto.response.ResponseDto;
 
 @Slf4j
 @ActiveProfiles("test")
@@ -46,6 +50,9 @@ public class UsersApiControllerTest {
 
     @Autowired
     private ObjectMapper om;
+
+    @Autowired
+    ResourceLoader loader;
 
     private MockHttpSession session;
 
@@ -85,20 +92,16 @@ public class UsersApiControllerTest {
         ResultActions resultActions = mvc
                 .perform(post("/join/personal").content(body)
                         .contentType("application/json; charset=utf-8").accept(APPLICATION_JSON));
-        ResponseDto<?> responseDto = new ResponseDto<>(1, "success",
-                resultActions.andReturn().getResponse().getContentAsString());
+
         // then
-        // MvcResult mvcResult = resultActions.andReturn();
-        Assertions.assertEquals(1, responseDto.getCode());
-        Assertions.assertEquals("success", responseDto.getMessage());
-        Assertions.assertNotNull(responseDto.getData());
-        // assertEquals(null, joinDto);
+        resultActions.andExpect(jsonPath("$.code").value("1"));
+        resultActions.andExpect(jsonPath("$.message").value("계정생성완료"));
+        resultActions.andExpect(jsonPath("$.data.usersId").value("1"));
 
     }
 
     @Order(2)
     @Test
-    // @Sql("classpath:truncate.sql")
     public void joinCompany_test() throws Exception {
 
         // given
@@ -108,23 +111,24 @@ public class UsersApiControllerTest {
         joinDto.setLoginId("testId");
         joinDto.setLoginPassword("Qwer1234!");
         joinDto.setCompanyEmail("example@example.com");
-        MockMultipartFile file = new MockMultipartFile("image", "test.png", "image/png",
-                new FileInputStream("C:\\Users\\HEO\\Desktop\\p4.jpg"));
+        String filename = "p4.jpg";
+        Resource resource = loader.getResource("classpath:/static/images/" + filename);
+        MockMultipartFile file = new MockMultipartFile("file", "test.jpg", "image/jpg", resource.getInputStream());
 
         String body = om.writeValueAsString(joinDto);
+        MockMultipartFile multipartBody = new MockMultipartFile("joinDto", "formData", APPLICATION_JSON,
+                body.getBytes());
 
-        // when
-        ResultActions resultActions = mvc
-                .perform(post("/join/company").content(body)
-                        .contentType("application/json; charset=utf-8").accept(APPLICATION_JSON));
-        ResponseDto<?> responseDto = new ResponseDto<>(1, "success",
-                resultActions.andReturn().getResponse().getContentAsString());
+        ResultActions resultActions = mvc.perform(
+                multipart("/join/company")
+                        .file(file)
+                        .file(multipartBody)
+                        .accept(APPLICATION_JSON));
 
-        // //then
-        // log.debug("디버그 : " );
-        // Assertions.assertEquals(1, responseDto.getCode());
-        // Assertions.assertEquals("success", responseDto.getMessage());
-        // Assertions.assertNotNull(responseDto.getData());
+        // then
+        resultActions.andExpect(jsonPath("$.code").value("1"));
+        resultActions.andExpect(jsonPath("$.message").value("계정생성완료"));
+        resultActions.andExpect(jsonPath("$.data.usersId").value("1"));
     }
 
 }
