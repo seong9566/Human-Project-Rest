@@ -2,6 +2,7 @@ package site.metacoding.miniproject.service.company;
 
 import java.sql.Timestamp;
 import java.text.SimpleDateFormat;
+import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
 
@@ -17,7 +18,6 @@ import site.metacoding.miniproject.domain.company.Company;
 import site.metacoding.miniproject.domain.company.CompanyDao;
 import site.metacoding.miniproject.domain.jobpostingboard.JobPostingBoard;
 import site.metacoding.miniproject.domain.jobpostingboard.JobPostingBoardDao;
-import site.metacoding.miniproject.domain.resumes.Resumes;
 import site.metacoding.miniproject.domain.users.Users;
 import site.metacoding.miniproject.domain.users.UsersDao;
 import site.metacoding.miniproject.dto.company.CompanyReqDto.CompanyUpdateReqDto;
@@ -32,10 +32,8 @@ import site.metacoding.miniproject.dto.jobpostingboard.JobPostingBoardRespDto.Jo
 import site.metacoding.miniproject.dto.jobpostingboard.JobPostingBoardRespDto.JobPostingBoardDetailRespDto;
 import site.metacoding.miniproject.dto.jobpostingboard.JobPostingBoardRespDto.JobPostingBoardInsertRespDto;
 import site.metacoding.miniproject.dto.jobpostingboard.JobPostingBoardRespDto.JobPostingBoardUpdateRespDto;
-import site.metacoding.miniproject.dto.resumes.ResumesRespDto.ResumesAllRespDto;
 import site.metacoding.miniproject.exception.ApiException;
 import site.metacoding.miniproject.web.dto.response.etc.PagingDto;
-import site.metacoding.miniproject.web.dto.response.personal.PersonalMainDto;
 
 @Service
 @RequiredArgsConstructor
@@ -55,6 +53,9 @@ public class CompanyService {
 	public CompanyDetailRespDto findByCompany(Integer companyId) {
 		CompanyAddressRespDto companyAddressRespDto = companyDao.findByAddress(companyId);
 		CompanyDetailRespDto companyPS = companyDao.findByCompany(companyId);
+		if (companyPS == null) {
+			throw new ApiException("회사 정보를 찾을 수 없습니다.");
+		}
 		CompanyDetailRespDto companyDetailRespDto = new CompanyDetailRespDto(companyPS, companyAddressRespDto);
 		return companyDetailRespDto;
 	}
@@ -63,10 +64,14 @@ public class CompanyService {
 	@Transactional(readOnly = true)
 	public CompanyUpdateFormRespDto companyUpdateById(Integer companyId) {
 		CompanyUpdateFormRespDto companyUpdateFormRespDto = companyDao.companyUpdateById(companyId);
+		if (companyUpdateFormRespDto == null) {
+			throw new ApiException("회사 정보를 찾을 수 없습니다.");
+		}
 		return companyUpdateFormRespDto;
 	}
 
-	// 내 정보 수정
+	// 회사 정보 수정
+	// 회사 정보 수정에 대한 validation 필요함.
 	@Transactional(rollbackFor = Exception.class)
 	public CompanyUpdateRespDto updateCompany(Integer userId, Integer companyId,
 			CompanyUpdateReqDto companyUpdateReqDto) {
@@ -90,6 +95,7 @@ public class CompanyService {
 	}
 
 	// 채용공고 작성 (category,career,jobPostingboard)
+	// 채용공고 작성에 대한 validation 필요함.
 	@Transactional(rollbackFor = Exception.class)
 	public JobPostingBoardInsertRespDto insertJobPostingBoard(JobPostingBoardInsertReqDto jobPostingBoardInsertReqDto) {
 
@@ -114,12 +120,9 @@ public class CompanyService {
 	public List<JobPostingBoardAllRespDto> jobPostingBoardList(Integer companyId) {
 		List<JobPostingBoardAllRespDto> jobPostingBoardList = jobPostingBoardDao
 				.jobPostingBoardList(companyId);
-
-		// List<JobPostingBoardAllRespDto> jobPostingAllRespDtoList = new ArrayList<>();
-		// for (JobPostingBoard jobPostingBoard : jobPostingBoardList) {
-		// jobPostingAllRespDtoList.add(new JobPostingBoardAllRespDto(jobPostingBoard));
-		// }
-
+		if (jobPostingBoardList == null) {
+			throw new ApiException("채용공고가 없습니다.");
+		}
 		// TimeStamp to String
 		for (JobPostingBoardAllRespDto deadLine : jobPostingBoardList) {
 			Timestamp ts = deadLine.getJobPostingBoardDeadline();
@@ -156,6 +159,7 @@ public class CompanyService {
 	}
 
 	// 채용공고 수정 (jobpostingboard,career,Category)
+	// 채용 공고 수정에 대한 Validation 필요함.
 	@Transactional(rollbackFor = Exception.class)
 	public JobPostingBoardUpdateRespDto updateJobPostingBoard(
 			JobPostingBoardUpdateReqDto jobPostingBoardUpdateReqDto, Integer jobPostingBoardId) {
@@ -172,7 +176,7 @@ public class CompanyService {
 
 		Career careerPS = careerDao.findById(jobPostingBoardPS.getJobPostingBoardCareerId());
 		careerPS.updateCareer(jobPostingBoardUpdateReqDto);
-		careerDao.jobPostingUpdate(careerPS);
+		careerDao.updateJobPostingBoard(careerPS);
 		JobPostingBoardUpdateRespDto jobPostingBoardUpdateRespDto = new JobPostingBoardUpdateRespDto(jobPostingBoardPS,
 				categoryPS, careerPS);
 
@@ -190,71 +194,6 @@ public class CompanyService {
 
 		jobPostingBoardDao.deleteById(jobPostingBoardId);
 	}
-
-	// // 전체 채용공고 리스트
-	// public List<PersonalMainDto> findAll(int startNum) {
-	// List<PersonalMainDto> personalMainPS = jobPostingBoardDao.findAll(startNum);
-	// // TimeStamp to String
-	// for (PersonalMainDto deadLine : personalMainPS) {
-	// Timestamp ts = deadLine.getJobPostingBoardDeadline();
-	// Date date = new Date();
-	// date.setTime(ts.getTime());
-	// String formattedDate = new SimpleDateFormat("yyyy년MM월dd일").format(date);
-	// deadLine.setFormatDeadLine(formattedDate);
-	// }
-	// return personalMainPS;
-	// }
-
-	// // 페이징
-	// public PagingDto jobPostingBoardPaging(Integer page, String keyword) {
-	// return jobPostingBoardDao.jobPostingBoardPaging(page, keyword);
-	// }
-
-	// // 검색 결과 리스트
-	// public List<PersonalMainDto> findSearch(int startNum, String keyword) {
-	// List<PersonalMainDto> personalMainPS =
-	// jobPostingBoardDao.findSearch(startNum, keyword);
-	// // TimeStamp to String
-	// for (PersonalMainDto deadLine : personalMainPS) {
-	// Timestamp ts = deadLine.getJobPostingBoardDeadline();
-	// Date date = new Date();
-	// date.setTime(ts.getTime());
-	// String formattedDate = new SimpleDateFormat("yyyy년MM월dd일").format(date);
-	// deadLine.setFormatDeadLine(formattedDate);
-	// }
-	// return personalMainPS;
-	// }
-
-	// // 카테고리 별 리스트 보기
-	// public List<PersonalMainDto> findCategory(int startNum, Integer id) {
-	// List<PersonalMainDto> personalMainPS =
-	// jobPostingBoardDao.findCategory(startNum, id);
-	// // TimeStamp to String
-	// for (PersonalMainDto deadLine : personalMainPS) {
-	// Timestamp ts = deadLine.getJobPostingBoardDeadline();
-	// Date date = new Date();
-	// date.setTime(ts.getTime());
-	// String formattedDate = new SimpleDateFormat("yyyy년MM월dd일").format(date);
-	// deadLine.setFormatDeadLine(formattedDate);
-	// }
-	// return personalMainPS;
-	// }
-
-	// // 카테고리 별 검색 결과 리스트
-	// public List<PersonalMainDto> findCategorySearch(int startNum, String keyword,
-	// Integer id) {
-	// List<PersonalMainDto> personalMainPS =
-	// jobPostingBoardDao.findCategorySearch(startNum, keyword, id);
-	// // TimeStamp to String
-	// for (PersonalMainDto deadLine : personalMainPS) {
-	// Timestamp ts = deadLine.getJobPostingBoardDeadline();
-	// Date date = new Date();
-	// date.setTime(ts.getTime());
-	// String formattedDate = new SimpleDateFormat("yyyy년MM월dd일").format(date);
-	// deadLine.setFormatDeadLine(formattedDate);
-	// }
-	// return personalMainPS;
-	// }
 
 	// 전체 채용공고 목록 보기 (페이징+검색+카테고리id별)
 	@Transactional(readOnly = true)

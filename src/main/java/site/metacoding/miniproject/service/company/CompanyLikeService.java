@@ -17,6 +17,7 @@ import site.metacoding.miniproject.domain.users.Users;
 import site.metacoding.miniproject.domain.users.UsersDao;
 import site.metacoding.miniproject.dto.like.LikeReqDto.CompanyLikeReqDto;
 import site.metacoding.miniproject.dto.like.LikeRespDto.CompanyLikeRespDto;
+import site.metacoding.miniproject.exception.ApiException;
 import site.metacoding.miniproject.utill.AlarmEnum;
 
 @RequiredArgsConstructor
@@ -47,17 +48,6 @@ public class CompanyLikeService {
 		return companyLikeRespDto;
 
 	}
-
-	// public CompanyLikeRespDto 좋아요취소(Integer companyId, Integer personalId) {
-	// CompanyLike companyLikePS = companyLikeReqDto.companyLikeEntity();
-	// if (companyLikePS == null) {
-	// throw new RuntimeException("해당" + companyId + "좋아요를 삭제할수 없습니다.");
-	// }
-	// companyLikesDao.deleteById(companyLikePS);
-	// CompanyLikeRespDto companyLikeRespDto = new
-	// CompanyLikeRespDto(companyLikePS);
-	// return companyLikeRespDto;
-	// }
 
 	public void 좋아요취소(Integer personalId, Integer companyId) {
 		CompanyLike companyLike = new CompanyLike(personalId, companyId, null);
