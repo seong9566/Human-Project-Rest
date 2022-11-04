@@ -48,7 +48,6 @@ public class Category {
 
 	// 채용 공고 수정
 	public Category(JobPostingBoardUpdateReqDto jobPostingBoardUpdateReqDto) {
-		this.jobPostingBoardCategoryId = jobPostingBoardUpdateReqDto.getJobPostingBoardCategoryId();
 		this.categoryFrontend = jobPostingBoardUpdateReqDto.getCategoryFrontend();
 		this.categoryBackend = jobPostingBoardUpdateReqDto.getCategoryBackend();
 		this.categoryDevops = jobPostingBoardUpdateReqDto.getCategoryDevops();

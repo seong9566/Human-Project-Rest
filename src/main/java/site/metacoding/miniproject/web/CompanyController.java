@@ -1,13 +1,5 @@
 package site.metacoding.miniproject.web;
 
-<<<<<<< HEAD
-=======
-import java.io.File;
-import java.io.IOException;
-import java.nio.file.Files;
-import java.util.UUID;
-
->>>>>>> d3238a0f7c3144f6b730774cfe5aa7787fd16149
 import javax.servlet.http.HttpSession;
 
 import org.springframework.web.bind.annotation.DeleteMapping;
@@ -25,21 +17,11 @@ import lombok.RequiredArgsConstructor;
 import site.metacoding.miniproject.dto.company.CompanyReqDto.CompanyUpdateReqDto;
 import site.metacoding.miniproject.dto.company.CompanyRespDto.CompanyUpdateRespDto;
 import site.metacoding.miniproject.dto.jobpostingboard.JobPostingBoardReqDto.JobPostingBoardInsertReqDto;
-<<<<<<< HEAD
 import site.metacoding.miniproject.dto.jobpostingboard.JobPostingBoardReqDto.JobPostingBoardUpdateReqDto;
-=======
-import site.metacoding.miniproject.dto.jobpostingboard.JobPostingBoardRespDto.JobPostingBoardAllRespDto;
->>>>>>> d3238a0f7c3144f6b730774cfe5aa7787fd16149
 import site.metacoding.miniproject.dto.user.UserRespDto.SignCompanyDto;
 import site.metacoding.miniproject.dto.user.UserRespDto.SignedDto;
 import site.metacoding.miniproject.service.company.CompanyService;
-import site.metacoding.miniproject.service.personal.PersonalService;
 import site.metacoding.miniproject.web.dto.response.ResponseDto;
-<<<<<<< HEAD
-=======
-import site.metacoding.miniproject.web.dto.response.company.CompanyInfoDto;
-import site.metacoding.miniproject.web.dto.response.jobpostingboard.JobPostingBoardDetailDto;
->>>>>>> d3238a0f7c3144f6b730774cfe5aa7787fd16149
 
 @RestController
 @RequiredArgsConstructor
