@@ -206,7 +206,6 @@ public class PersonalService {
 			paging.makeBlockInfo(resumesAllRespDto.getKeyword());
 			return resumesAllRespDtoList;
 		}
-
 	}
 
 	// // 카테고리 별 리스트 보기

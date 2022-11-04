@@ -174,7 +174,7 @@
 	</select>
 
 	<select id="findCategory"
-		resultType="site.metacoding.miniproject.web.dto.response.personal.PersonalMainDto">
+		resultType="site.metacoding.miniproject.domain.jobpostingboard.JobPostingBoard">
 		SELECT b.job_posting_board_id, c.category_id, c.category_frontend, 
 		c.category_backend, c.category_devops, b.job_posting_board_category_id,
 		b.job_posting_board_title, b.job_posting_board_deadline,
@@ -197,13 +197,10 @@
 		<if test="id == 4">
 		OFFSET #{startNum} ROWS FETCH NEXT 5 ROWS ONLY
 		</if>
-		<if test="id == 5">
-		OFFSET #{startNum} ROWS FETCH NEXT 5 ROWS ONLY
-		</if>
 	</select>
 
 	<select id="findCategorySearch"
-		resultType="site.metacoding.miniproject.web.dto.response.personal.PersonalMainDto">
+		resultType="site.metacoding.miniproject.domain.jobpostingboard.JobPostingBoard">
 		SELECT b.job_posting_board_id, c.category_id, c.category_frontend, 
 		c.category_backend, c.category_devops, b.job_posting_board_category_id,
 		b.job_posting_board_title, b.job_posting_board_deadline,
@@ -224,10 +221,6 @@
 		OFFSET #{startNum} ROWS FETCH NEXT 5 ROWS ONLY
 		</if>
 		<if test="id == 4">
-		WHERE job_posting_board_title like CONCAT('%', #{keyword}, '%')
-		OFFSET #{startNum} ROWS FETCH NEXT 5 ROWS ONLY
-		</if>
-		<if test="id == 5">
 		WHERE job_posting_board_title like CONCAT('%', #{keyword}, '%')
 		OFFSET #{startNum} ROWS FETCH NEXT 5 ROWS ONLY
 		</if>
