@@ -39,6 +39,7 @@ dependencies {
    testImplementation 'org.springframework.boot:spring-boot-starter-test'
    implementation group: 'org.codehaus.jackson', name: 'jackson-core-asl', version: '1.9.13'
    implementation group: 'com.auth0', name: 'java-jwt', version: '3.10.3'
+   testImplementation group: 'org.mybatis.spring.boot', name: 'mybatis-spring-boot-starter-test', version: '2.2.2'
 
 }
 tasks.named('test') {

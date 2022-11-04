@@ -76,8 +76,9 @@ public class JWTToken {
 
     }
 
-    public static class TokenVerification {
+    public static class TokenVerificationForCookie {
 
+        //토큰 검증 메서드
         public Boolean Verification(String token) {
 
             if (token == null) {
@@ -87,6 +88,44 @@ public class JWTToken {
             // 토큰 검증 - 검증전 공백제거
             token = token.replace("Authorization=", "");
             token = token.trim();
+
+            try {
+
+                // log.debug("디버그 : 토큰확인 - " + token);
+
+                Date now = new Date(System.currentTimeMillis());
+
+                DecodedJWT decodedJWT = JWT.require(Algorithm.HMAC512(SecretKey.SECRETKEY.key())).build().verify(token);
+
+                // log.debug("디버그 : 만료시간 - " + decodedJWT.getExpiresAt().toString());
+                // log.debug("디버그 : 현재시간 - " + now);
+
+                // 입력받은 토큰값이 현재시간을 넘지 않았을 경우 true를 반환 - 만료된 토큰이 아닌지 판별
+                if (decodedJWT.getExpiresAt() != null && decodedJWT.getExpiresAt().after(now)) {
+                    return true;
+                }
+
+            } catch (Exception e) {
+                throw new ApiException("만료된 토큰 혹은 잘못된 토큰이 입력되었습니다.");
+            }
+
+            return false;
+
+        }
+    }
+    public static class TokenVerificationForHeader {
+
+        //토큰 검증 메서드
+        public Boolean Verification(String token) {
+
+            if (token == null) {
+                return false;
+            }
+
+            // 토큰 검증 - 검증전 공백제거
+            token = token.replace("Bearer ", "");
+            token = token.trim();
+            
             try {
 
                 // log.debug("디버그 : 토큰확인 - " + token);
