@@ -7,7 +7,6 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import lombok.RequiredArgsConstructor;
-import lombok.extern.slf4j.Slf4j;
 import site.metacoding.miniproject.domain.alarm.Alarm;
 import site.metacoding.miniproject.domain.alarm.AlarmDao;
 import site.metacoding.miniproject.domain.company.Company;
@@ -21,7 +20,6 @@ import site.metacoding.miniproject.dto.like.LikeRespDto.PersonalLikeRespDto;
 import site.metacoding.miniproject.utill.AlarmEnum;
 
 @RequiredArgsConstructor
-@Slf4j
 @Service
 public class PersonalLikeService {
 	private final UsersDao usersDao;
@@ -32,6 +30,7 @@ public class PersonalLikeService {
 	@Transactional(rollbackFor = RuntimeException.class)
 	public PersonalLikeRespDto 좋아요(Integer resumesId, PersonalLikeReqDto personalLikeReqDto) {
 		HashMap<String, Integer> personallikes = new HashMap<>();
+		Company companyinfo = (Company) signedDto.getUserinfo();
 
 		PersonalLike personalLikePS = personalLikeReqDto.personalLikeEntity();
 		personalLikesDao.insert(personalLikePS);

@@ -6,7 +6,7 @@ import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
-import site.metacoding.miniproject.web.dto.request.jobpostingboard.JobPostingBoardUpdateDto;
+import site.metacoding.miniproject.dto.jobpostingboard.JobPostingBoardReqDto.JobPostingBoardUpdateReqDto;
 
 @Getter
 @Setter
@@ -40,13 +40,13 @@ public class JobPostingBoard {
 		this.createdAt = createdAt;
 	}
 
-	public JobPostingBoard(Integer jobPostingBoardId, JobPostingBoardUpdateDto updateDto) {
+	public JobPostingBoard(Integer jobPostingBoardId, JobPostingBoardUpdateReqDto jobPostingBoardUpdateReqDto) {
 		this.jobPostingBoardId = jobPostingBoardId;
-		this.jobPostingSalary = updateDto.getJobPostingSalary();
-		this.jobPostingBoardTitle = updateDto.getJobPostingBoardTitle();
-		this.jobPostingBoardContent = updateDto.getJobPostingBoardContent();
-		this.jobPostingBoardPlace = updateDto.getJobPostingBoardPlace();
-		this.jobPostingBoardDeadline = updateDto.getJobPostingBoardDeadline();
+		this.jobPostingSalary = jobPostingBoardUpdateReqDto.getJobPostingSalary();
+		this.jobPostingBoardTitle = jobPostingBoardUpdateReqDto.getJobPostingBoardTitle();
+		this.jobPostingBoardContent = jobPostingBoardUpdateReqDto.getJobPostingBoardContent();
+		this.jobPostingBoardPlace = jobPostingBoardUpdateReqDto.getJobPostingBoardPlace();
+		this.jobPostingBoardDeadline = jobPostingBoardUpdateReqDto.getJobPostingBoardDeadline();
 	}
 
 	public JobPostingBoard(Integer jobPostingBoardId, Integer companyId, Integer jobPostingBoardCareerId,
@@ -61,6 +61,13 @@ public class JobPostingBoard {
 		this.jobPostingBoardDeadline = jobPostingBoardDeadline;
 		this.createdAt = createdAt;
 
+	}
+
+	public void updateJobPostingBoard(JobPostingBoardUpdateReqDto jobPostingBoardUpdateReqDto) {
+		this.jobPostingBoardTitle = jobPostingBoardUpdateReqDto.getJobPostingBoardTitle();
+		this.jobPostingSalary = jobPostingBoardUpdateReqDto.getJobPostingSalary();
+		this.jobPostingBoardContent = jobPostingBoardUpdateReqDto.getJobPostingBoardContent();
+		this.jobPostingBoardDeadline = jobPostingBoardUpdateReqDto.getJobPostingBoardDeadline();
 	}
 
 }
