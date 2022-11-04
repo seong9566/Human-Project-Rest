@@ -52,6 +52,7 @@ CREATE TABLE resumes (
   resumes_picture longtext,
   resumes_introduce longtext,
   resumes_category_id integer,
+  resumes_place varchar(10),
   personal_id integer,
   career_id integer,
   portfolio_id integer,
