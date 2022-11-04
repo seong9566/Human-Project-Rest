@@ -149,12 +149,10 @@ public class CompanyController {
 	// return "company/jobPostingBoardUpdate";
 	// }
 
-	@PutMapping("/api/jobposting/update/{jobPostingBoardId}")
+	@PutMapping("/s/api/jobposting/update/{jobPostingBoardId}")
 	public ResponseDto<?> companyUpdate(@PathVariable Integer jobPostingBoardId,
 			@RequestBody JobPostingBoardUpdateReqDto jobPostingBoardUpdateReqDto) {
 		// @Param("categoryId") Integer categoryId, @Param("careerId")Integer careerId,
-
-		System.out.println("kkkservice" + jobPostingBoardUpdateReqDto.getCareerId());
 
 		return new ResponseDto<>(1, "수정 성공",
 				companyService.updateJobPostingBoard(jobPostingBoardUpdateReqDto, jobPostingBoardId));

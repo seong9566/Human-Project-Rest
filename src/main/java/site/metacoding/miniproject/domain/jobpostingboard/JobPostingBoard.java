@@ -67,6 +67,7 @@ public class JobPostingBoard {
 		this.jobPostingBoardTitle = jobPostingBoardUpdateReqDto.getJobPostingBoardTitle();
 		this.jobPostingSalary = jobPostingBoardUpdateReqDto.getJobPostingSalary();
 		this.jobPostingBoardContent = jobPostingBoardUpdateReqDto.getJobPostingBoardContent();
+		this.jobPostingBoardDeadline = jobPostingBoardUpdateReqDto.getJobPostingBoardDeadline();
 	}
 
 }

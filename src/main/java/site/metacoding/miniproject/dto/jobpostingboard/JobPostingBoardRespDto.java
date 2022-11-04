@@ -162,10 +162,14 @@ public class JobPostingBoardRespDto {
         private String formatDeadLine;
 
         public JobPostingBoardUpdateRespDto(JobPostingBoard jobPostingBoard, Category category, Career career) {
+            this.jobPostingBoardCategoryId = jobPostingBoard.getJobPostingBoardCategoryId();
+            this.jobPostingBoardCareerId = jobPostingBoard.getJobPostingBoardCareerId();
+            this.companyId = jobPostingBoard.getCompanyId();
             this.jobPostingBoardId = jobPostingBoard.getJobPostingBoardId();
             this.jobPostingBoardTitle = jobPostingBoard.getJobPostingBoardTitle();
             this.jobPostingBoardContent = jobPostingBoard.getJobPostingBoardContent();
             this.jobPostingSalary = jobPostingBoard.getJobPostingSalary();
+            this.jobPostingBoardPlace = jobPostingBoard.getJobPostingBoardPlace();
             this.jobPostingBoardContent = jobPostingBoard.getJobPostingBoardContent();
             this.jobPostingBoardDeadline = jobPostingBoard.getJobPostingBoardDeadline();
             this.categoryBackend = category.getCategoryBackend();
