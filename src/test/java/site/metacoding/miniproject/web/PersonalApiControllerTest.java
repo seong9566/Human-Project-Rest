@@ -11,6 +11,7 @@ import org.springframework.context.annotation.Import;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.MediaType;
 import org.springframework.mock.web.MockHttpSession;
+import org.springframework.session.Session;
 import org.springframework.test.context.ActiveProfiles;
 import org.springframework.test.context.jdbc.Sql;
 import org.springframework.test.web.servlet.MockMvc;
@@ -23,18 +24,12 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 
 import lombok.extern.slf4j.Slf4j;
 import site.metacoding.miniproject.config.MyBatisConfig;
-import site.metacoding.miniproject.domain.company.Company;
 import site.metacoding.miniproject.domain.company.CompanyDao;
 import site.metacoding.miniproject.domain.personal.Personal;
 import site.metacoding.miniproject.domain.personal.PersonalDao;
 import site.metacoding.miniproject.domain.users.Users;
 import site.metacoding.miniproject.domain.users.UsersDao;
-import site.metacoding.miniproject.dto.personal.PersonalReqDto.PersonalJoinDto;
 import site.metacoding.miniproject.dto.personal.PersonalReqDto.PersonalUpdatReqDto;
-import site.metacoding.miniproject.dto.user.UserRespDto.SignCompanyDto;
-import site.metacoding.miniproject.dto.user.UserRespDto.SignPersonalDto;
-import site.metacoding.miniproject.dto.user.UserRespDto.SignedDto;
-import site.metacoding.miniproject.exception.ApiException;
 
 @Slf4j
 @ActiveProfiles("test")
@@ -52,15 +47,6 @@ public class PersonalApiControllerTest {
     @Autowired
     private ObjectMapper om;
 
-    @Autowired
-    private PersonalDao personalDao;
-
-    @Autowired
-    private CompanyDao companyDao;
-
-    @Autowired
-    private UsersDao usersDao;
-
     private MockHttpSession session;
 
     private static HttpHeaders headers;
@@ -73,42 +59,10 @@ public class PersonalApiControllerTest {
 
     @BeforeEach
     public void sessionInit() {
-        session = new MockHttpSession();
-        SignPersonalDto signPersonalDto = new SignPersonalDto();
-        signPersonalDto.setPersonalId(17);
-        SignedDto<?> signedDto = new SignedDto<>(1, "personal01", signPersonalDto);
-        session.setAttribute("principal", signedDto);
+        session = new MockHttpSession();// 직접 new를 했음 // MockHttpSession해야 Mock이 된다.
+        Users users = Users.builder().usersId(1).build();
+        session.setAttribute("principal", users);
     }
-
-    // @BeforeEach
-    // public void loginInit() {
-    // String loginId = loginDto.getLoginId();
-    // String loginPassword = sha256.encrypt(loginDto.getLoginPassword());
-    // SignedDto<?> signedDto;
-
-    // Users userInfo = usersDao.findByIdAndPassword(loginId, loginPassword);
-
-    // if (userInfo == null) {
-    // throw new ApiException("아이디 또는 패스워드가 틀렸습니다.");
-    // }
-
-    // if (userInfo.getCompanyId() != null) {
-    // Company companyPS = companyDao.findById(userInfo.getCompanyId());
-
-    // SignCompanyDto signCompanyDto = new SignCompanyDto(companyPS);
-
-    // signedDto = new SignedDto<>(userInfo.getUsersId(), userInfo.getLoginId(),
-    // signCompanyDto);
-    // } else {
-    // Personal personalPS = personalDao.findById(userInfo.getPersonalId());
-
-    // SignPersonalDto signPersonalDto = new SignPersonalDto(personalPS);
-
-    // signedDto = new SignedDto<>(userInfo.getUsersId(), userInfo.getLoginId(),
-    // signPersonalDto);
-
-    // }
-    // }
 
     @BeforeEach
     public void dataInit() {
@@ -121,25 +75,17 @@ public class PersonalApiControllerTest {
                 .build();
     }
 
+    // 내정보보기
     @Test
     public void findByPersonal_test() throws Exception {
 
         // given
-        PersonalJoinDto joinDto = new PersonalJoinDto();
-        joinDto.setLoginId("user3");
-        joinDto.setLoginPassword("Qwer1234!!!");
-        joinDto.setPersonalPhoneNumber("000-1111-4444");
-        joinDto.setPersonalEmail("example@example.com");
-        joinDto.setPersonalName("testUsername");
-        joinDto.setPersonalAddress("testAddress");
-        joinDto.setPersonalEducation("test");
-
-        String body = om.writeValueAsString(joinDto);
 
         // when
         ResultActions resultActions = mvc
                 .perform(
-                        MockMvcRequestBuilders.get("/s/api/personal/detail").accept(APPLICATION_JSON).session(session));
+                        MockMvcRequestBuilders.get("/s/api/personal/detail").session(session).content(APPLICATION_JSON)
+                                .accept(APPLICATION_JSON));
 
         // then
         MvcResult mvcResult = resultActions.andReturn();
@@ -148,11 +94,14 @@ public class PersonalApiControllerTest {
 
     }
 
+    // 내정보수정
     @Test
     public void updatePersonalDetail_test() throws Exception {
 
         // given
+
         PersonalUpdatReqDto personalUpdateReqDto = new PersonalUpdatReqDto();
+        personalUpdateReqDto.setPersonalId(1);
         personalUpdateReqDto.setPersonalName("ssar");
         personalUpdateReqDto.setPersonalPhoneNumber("010-9459-5116");
         personalUpdateReqDto.setPersonalEmail("cndtjq1248@naver.com");
@@ -164,11 +113,12 @@ public class PersonalApiControllerTest {
         // when
         ResultActions resultActions = mvc.perform(MockMvcRequestBuilders.put("/s/api/personal/update").content(body)
                 .contentType(APPLICATION_JSON).accept(APPLICATION_JSON).session(session));
+        System.out.println("debugggg:" + resultActions.andReturn().getResponse().getContentAsString());
 
         // then
         MvcResult mvcResult = resultActions.andReturn();
         System.out.println("debugggg:" + mvcResult.getResponse().getContentAsString());
-        resultActions.andExpect(MockMvcResultMatchers.jsonPath("$.code").value("ssar"));
+        resultActions.andExpect(MockMvcResultMatchers.jsonPath("$.code").value(1));
     }
 
 }
