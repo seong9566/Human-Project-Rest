@@ -60,7 +60,7 @@ public class PersonalApiControllerTest {
     @BeforeEach
     public void sessionInit() {
         session = new MockHttpSession();// 직접 new를 했음 // MockHttpSession해야 Mock이 된다.
-        Users users = Users.builder().usersId(1).build();
+        Users users = Users.builder().usersId(1).personalId(1).build();
         session.setAttribute("principal", users);
     }
 
