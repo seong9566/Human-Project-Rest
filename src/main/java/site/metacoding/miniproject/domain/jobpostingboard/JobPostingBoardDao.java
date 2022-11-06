@@ -6,7 +6,7 @@ import org.apache.ibatis.annotations.Param;
 
 import site.metacoding.miniproject.dto.jobpostingboard.JobPostingBoardRespDto.JobPostingBoardAllRespDto;
 import site.metacoding.miniproject.dto.jobpostingboard.JobPostingBoardRespDto.JobPostingBoardDetailRespDto;
-import site.metacoding.miniproject.web.dto.response.etc.PagingDto;
+import site.metacoding.miniproject.dto.jobpostingboard.JobPostingBoardRespDto.PagingDto;
 import site.metacoding.miniproject.web.dto.response.personal.PersonalMainDto;
 
 public interface JobPostingBoardDao {

@@ -32,8 +32,8 @@ import site.metacoding.miniproject.dto.jobpostingboard.JobPostingBoardRespDto.Jo
 import site.metacoding.miniproject.dto.jobpostingboard.JobPostingBoardRespDto.JobPostingBoardDetailRespDto;
 import site.metacoding.miniproject.dto.jobpostingboard.JobPostingBoardRespDto.JobPostingBoardInsertRespDto;
 import site.metacoding.miniproject.dto.jobpostingboard.JobPostingBoardRespDto.JobPostingBoardUpdateRespDto;
+import site.metacoding.miniproject.dto.jobpostingboard.JobPostingBoardRespDto.PagingDto;
 import site.metacoding.miniproject.exception.ApiException;
-import site.metacoding.miniproject.web.dto.response.etc.PagingDto;
 
 @Service
 @RequiredArgsConstructor
