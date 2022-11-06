@@ -189,7 +189,7 @@ public class CompanyService {
 
 		Career careerPS = careerDao.findById(jobPostingBoardPS.getJobPostingBoardCareerId());
 		careerPS.updateCareer(jobPostingBoardUpdateReqDto);
-		careerDao.updateJobPostingBoard(careerPS);
+		careerDao.update(careerPS);
 		JobPostingBoardUpdateRespDto jobPostingBoardUpdateRespDto = new JobPostingBoardUpdateRespDto(jobPostingBoardPS,
 				categoryPS, careerPS);
 
