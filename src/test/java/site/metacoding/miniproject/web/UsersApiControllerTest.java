@@ -4,8 +4,6 @@ import static org.springframework.test.web.servlet.request.MockMvcRequestBuilder
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.jsonPath;
 
-import java.nio.charset.StandardCharsets;
-
 import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Order;
@@ -21,11 +19,9 @@ import org.springframework.http.HttpMethod;
 import org.springframework.http.MediaType;
 import org.springframework.mock.web.MockHttpSession;
 import org.springframework.mock.web.MockMultipartFile;
-import org.springframework.mock.web.MockPart;
 import org.springframework.test.context.ActiveProfiles;
 import org.springframework.test.context.jdbc.Sql;
 import org.springframework.test.web.servlet.MockMvc;
-import org.springframework.test.web.servlet.MvcResult;
 import org.springframework.test.web.servlet.ResultActions;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
@@ -35,6 +31,8 @@ import site.metacoding.miniproject.dto.company.CompanyReqDto.CompanyJoinDto;
 import site.metacoding.miniproject.dto.personal.PersonalReqDto.PersonalJoinDto;
 import site.metacoding.miniproject.dto.user.UserRespDto.SignPersonalDto;
 import site.metacoding.miniproject.dto.user.UserRespDto.SignedDto;
+import site.metacoding.miniproject.utill.JWTToken.CreateJWTToken;
+import site.metacoding.miniproject.web.dto.request.etc.LoginDto;
 
 @Slf4j
 @ActiveProfiles("test")
@@ -52,16 +50,13 @@ public class UsersApiControllerTest {
     private ObjectMapper om;
 
     @Autowired
-    ResourceLoader loader;
+    private ResourceLoader loader;
 
     private MockHttpSession session;
 
-    private static HttpHeaders headers;
-
     @BeforeAll // 선언시 static으로 선언해야한다. - container에 띄우기 위해 사용한다.
     public static void init() {
-        headers = new HttpHeaders();
-        headers.setContentType(MediaType.APPLICATION_JSON);
+
     }
 
     @BeforeEach // test메서드 진입전에 트랜잭션 발동
@@ -70,12 +65,14 @@ public class UsersApiControllerTest {
         SignPersonalDto signPersonalDto = new SignPersonalDto();
         signPersonalDto.setPersonalId(1);
         SignedDto<?> signedDto = new SignedDto<>(1, "testuser", signPersonalDto);
+        String JwtToken = CreateJWTToken.createToken(signedDto); // Authorization
         session.setAttribute("principal", signedDto);
     }
 
     @Order(1)
     @Test
     public void joinPersonal_test() throws Exception {
+
         // given
         PersonalJoinDto personalJoinDto = new PersonalJoinDto();
         personalJoinDto.setLoginId("user1");
@@ -111,6 +108,7 @@ public class UsersApiControllerTest {
         joinDto.setLoginId("testId");
         joinDto.setLoginPassword("Qwer1234!");
         joinDto.setCompanyEmail("example@example.com");
+
         String filename = "p4.jpg";
         Resource resource = loader.getResource("classpath:/static/images/" + filename);
         MockMultipartFile file = new MockMultipartFile("file", "test.jpg", "image/jpg", resource.getInputStream());
@@ -120,7 +118,7 @@ public class UsersApiControllerTest {
                 body.getBytes());
 
         ResultActions resultActions = mvc.perform(
-                multipart("/join/company")
+                multipart(HttpMethod.POST, "/join/company")
                         .file(file)
                         .file(multipartBody)
                         .accept(APPLICATION_JSON));
@@ -129,6 +127,34 @@ public class UsersApiControllerTest {
         resultActions.andExpect(jsonPath("$.code").value("1"));
         resultActions.andExpect(jsonPath("$.message").value("계정생성완료"));
         resultActions.andExpect(jsonPath("$.data.usersId").value("1"));
+    }
+
+    @Order(3)
+    @Test
+    @Sql("classpath:testsql/userlogintest.sql")
+    public void login_test() throws Exception {
+        // given
+        String loginId = "testuser1";
+        String loginPassword = "Qwer1234!!!";
+        LoginDto loginDto = new LoginDto(loginId, loginPassword);
+
+        String body = om.writeValueAsString(loginDto);
+
+        // when
+
+        ResultActions resultActions = mvc.perform(post("/login")
+                .content(body)
+                .contentType(APPLICATION_JSON)
+                .accept(APPLICATION_JSON));
+
+        // String whatIsThat =
+        // resultActions.andReturn().getResponse().getContentAsString();
+        // log.debug("디버그 : " + whatIsThat);
+        // then
+
+        resultActions.andExpect(jsonPath("$.code").value("1"));
+        resultActions.andExpect(jsonPath("$.message").value("로그인완료"));
+        resultActions.andExpect(jsonPath("$.data.userInfo.personalId").value("1"));
     }
 
 }
