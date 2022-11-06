@@ -1,5 +1,6 @@
 package site.metacoding.miniproject.web;
 
+import static org.mockito.Answers.RETURNS_MOCKS;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.*;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.jsonPath;
 
@@ -60,7 +61,7 @@ public class UsersApiControllerTest {
 
     }
 
-    @BeforeEach // test메서드 진입전에 트랜잭션 발동
+    @BeforeEach
     public void sessionInit() {
 
         session = new MockHttpSession();
@@ -181,6 +182,26 @@ public class UsersApiControllerTest {
         resultActions.andExpect(jsonPath("$.code").value("-1"));
         resultActions.andExpect(jsonPath("$.message").value("이미 로그인 되어 있음"));
 
+    }
+
+    @Test
+    @Sql("classpath:testsql/insertuserforpersonal.sql")
+    public void userIdSameCheck_test() throws Exception {
+
+        // given
+
+        String loginId = "testuser";
+
+        // when
+
+        ResultActions resultActions = mvc.perform(get("/checkId/" + loginId)
+                .accept(APPLICATION_JSON))
+                .andExpect(jsonPath("$.code").value("-1"))
+                .andDo(mvc.perform(get("/checkId/" + "testuser2").accept(APPLICATION_JSON)));
+
+        log.debug("디버그 : " + resultActions.andReturn().getResponse().getContentAsString());
+
+        // then
     }
 
 }
