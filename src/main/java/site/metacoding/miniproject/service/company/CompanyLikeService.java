@@ -17,7 +17,6 @@ import site.metacoding.miniproject.domain.users.Users;
 import site.metacoding.miniproject.domain.users.UsersDao;
 import site.metacoding.miniproject.dto.like.LikeReqDto.CompanyLikeReqDto;
 import site.metacoding.miniproject.dto.like.LikeRespDto.CompanyLikeRespDto;
-import site.metacoding.miniproject.exception.ApiException;
 import site.metacoding.miniproject.utill.AlarmEnum;
 
 @RequiredArgsConstructor

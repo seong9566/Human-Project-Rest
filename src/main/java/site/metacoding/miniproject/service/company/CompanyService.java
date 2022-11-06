@@ -75,6 +75,7 @@ public class CompanyService {
 	@Transactional(rollbackFor = Exception.class)
 	public CompanyUpdateRespDto updateCompany(Integer userId, Integer companyId,
 			CompanyUpdateReqDto companyUpdateReqDto) {
+
 		try {
 			companyUpdateReqDto.companyUpdateDtoPictureSet();
 		} catch (Exception e) {
@@ -82,11 +83,17 @@ public class CompanyService {
 		}
 		// user패스워드 수정
 		Users companyUserPS = usersDao.findById(userId);
+		if (companyUserPS == null) {
+			throw new ApiException("해당 " + userId + " 유저 아이디로 찾을 수 없습니다.");
+		}
 		companyUserPS.update(companyUserPS);
 		usersDao.update(companyUserPS);
 
 		// personal 개인정보 수정
 		Company companyPS = companyDao.findById(companyId);
+		if (companyPS == null) {
+			throw new ApiException("해당 " + companyId + " 유저 아이디로 찾을 수 없습니다.");
+		}
 		companyPS.updateCompany(companyUpdateReqDto);
 		companyDao.update(companyPS);
 		CompanyUpdateRespDto companyUpdateRespDto = new CompanyUpdateRespDto(companyPS, companyUserPS);
@@ -98,7 +105,9 @@ public class CompanyService {
 	// 채용공고 작성에 대한 validation 필요함.
 	@Transactional(rollbackFor = Exception.class)
 	public JobPostingBoardInsertRespDto insertJobPostingBoard(JobPostingBoardInsertReqDto jobPostingBoardInsertReqDto) {
-
+		if (jobPostingBoardInsertReqDto.getCompanyId() == null) {
+			throw new ApiException("companyId가 null입니다.");
+		}
 		Category categoryPS = jobPostingBoardInsertReqDto.JobPostingBoardInsertRespDtoToCategoryEntity();
 		categoryDao.insert(categoryPS);
 
@@ -160,6 +169,7 @@ public class CompanyService {
 
 	// 채용공고 수정 (jobpostingboard,career,Category)
 	// 채용 공고 수정에 대한 Validation 필요함.
+	// 세션에 있는 company와 jobposting의 작성자 가 다를경우 예외처리 해주어야함.
 	@Transactional(rollbackFor = Exception.class)
 	public JobPostingBoardUpdateRespDto updateJobPostingBoard(
 			JobPostingBoardUpdateReqDto jobPostingBoardUpdateReqDto, Integer jobPostingBoardId) {
