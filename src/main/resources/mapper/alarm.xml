@@ -18,7 +18,7 @@
 		SELECT * FROM alarm WHERE alarm_id = #{alarmId}
 	</select>
 
-	<select id="findByusersId" resultType="site.metacoding.miniproject.domain.alarm.Alarm">
+	<select id="findByUsersId" resultType="site.metacoding.miniproject.domain.alarm.Alarm">
 		SELECT * FROM alarm WHERE users_id = #{usersId}
 	</select>
 

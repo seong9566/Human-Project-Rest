@@ -34,6 +34,7 @@ public class AlarmController {
 	// 유저알람 갱신 해주기
 	@GetMapping("/s/users/alarm")
 	public ResponseDto<?> refreshUserAlarm() {
+
 		ResponseDto<?> responseDto = new ResponseDto<>(1, "알람없음", null);
 		SignedDto<?> signedDto = (SignedDto<?>) session.getAttribute("principal");
 

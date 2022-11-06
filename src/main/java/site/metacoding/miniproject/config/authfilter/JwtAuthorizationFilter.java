@@ -35,12 +35,13 @@ public class JwtAuthorizationFilter implements Filter {
 
         String tokenForCookie = CookieForToken.cookieToToken(req.getCookies());
         if (tokenForCookie == null) {
-            
+            throw new ApiException("쿠키값 없음 또는 만료된 쿠키 - 로그인 요망");
         }
 
-        DecodedJWT decodedJWT = JWT.require(Algorithm.HMAC512(SecretKey.SECRETKEY.key())).build().verify(tokenForCookie);
-        
-        //map 형식으로 저장되어있는 토큰값을 map형식으로 가져온다.
+        DecodedJWT decodedJWT = JWT.require(Algorithm.HMAC512(SecretKey.SECRETKEY.key())).build()
+                .verify(tokenForCookie);
+
+        // map 형식으로 저장되어있는 토큰값을 map형식으로 가져온다.
         Map<String, Object> getSigned = decodedJWT.getClaim("sigendDto").asMap();
 
         TokenToSinedDto tokenToSinedDto = new TokenToSinedDto();

@@ -35,7 +35,7 @@ import site.metacoding.miniproject.web.dto.request.etc.LoginDto;
 
 @Service
 @RequiredArgsConstructor
-public class UsersService{
+public class UsersService {
 
     private final UsersDao usersDao;
     private final CompanyDao companyDao;
@@ -45,7 +45,7 @@ public class UsersService{
     private final SHA256 sha256;
 
     // 로그인
-    public SignedDto<?> login(LoginDto loginDto){
+    public SignedDto<?> login(LoginDto loginDto) {
 
         String loginId = loginDto.getLoginId();
         String loginPassword = sha256.encrypt(loginDto.getLoginPassword());
@@ -144,7 +144,7 @@ public class UsersService{
 
     }
 
-    //이력서번호로 유저 아이디찾기
+    // 이력서번호로 유저 아이디찾기
     public Integer findUserIdByResumesId(Integer resumesId) {
         Users users = usersDao.findByResumesId(resumesId);
         return users.getUsersId();
@@ -163,13 +163,15 @@ public class UsersService{
         return false;
     }
 
-    //유저아이디로 해당 유저에게 온 알람 체크 하기
+    // 유저아이디로 해당 유저에게 온 알람 체크 하기
     public List<UserAlarmRespDto> finduserAlarmByUserId(Integer usersId) {
+
         List<Alarm> usersAlarmsPS = alarmDao.findByUsersId(usersId);
-        UserPermissionCheck.permissionCheck(usersId, usersId);
+
         List<UserAlarmRespDto> userAlarmRespDtos = new ArrayList<>();
 
-        userAlarmRespDtos = usersAlarmsPS.stream().map(alarm-> new UserAlarmRespDto(alarm)).collect(Collectors.toList());
+        userAlarmRespDtos = usersAlarmsPS.stream().map(alarm -> new UserAlarmRespDto(alarm))
+                .collect(Collectors.toList());
         return userAlarmRespDtos;
     }
 
@@ -178,9 +180,8 @@ public class UsersService{
         return ischecked;
     }
 
-     //알람확인시 읽음표시 하기
+    // 알람확인시 읽음표시 하기
     public List<UserAlarmRespDtoToChecked> userAlarmToCheck(AlarmReqListDtoToCheck alarmReqListDtoToCheck) {
-
 
         List<Alarm> alarmsPS = alarmDao.findByUsersIdForUnCheckedAlarm(alarmReqListDtoToCheck.getUsersId());
         HashMap<Integer, Integer> alarmPSId = new HashMap<>();
@@ -190,9 +191,9 @@ public class UsersService{
         }
 
         Integer confirmAlarmCount = alarmsPS.stream()
-        .filter(alarm -> alarm.getAlarmId().equals(alarmPSId.get(alarm.getAlarmId())))
+                .filter(alarm -> alarm.getAlarmId().equals(alarmPSId.get(alarm.getAlarmId())))
                 .collect(Collectors.toList()).size();
-        
+
         if (confirmAlarmCount != alarmReqListDtoToCheck.getAlarmsId().size()) {
             throw new ApiException("해당유저의 알람이 아닙니다.");
         }
@@ -201,18 +202,17 @@ public class UsersService{
 
         List<UserAlarmRespDtoToChecked> checkeds = new ArrayList<>();
 
-        //Dto반환을 위해 PS부에서 check를 true 변환 한 뒤 Dto로 넘김
+        // Dto반환을 위해 PS부에서 check를 true 변환 한 뒤 Dto로 넘김
         alarmsPS.iterator().forEachRemaining(alarm -> {
             alarm.setAlarmCheck(true);
             checkeds.add(new UserAlarmRespDtoToChecked(alarm));
         });
-            
+
         return checkeds;
 
-
     }
-        
-    //알람 지우기
+
+    // 알람 지우기
     public void deleteAlarm(AlarmReqDtoToDelete alarmReqDtoToDelete) {
 
         try {
@@ -224,7 +224,7 @@ public class UsersService{
         }
     }
 
-    //구독정보 개인회원아이디로 호출하기
+    // 구독정보 개인회원아이디로 호출하기
     public List<Subscribe> findSubscribeInfoByPersonalId(Integer personalId) {
         return subscribeDao.findByPersonalId(personalId);
     }

@@ -39,8 +39,8 @@ public class JWTToken {
                 map.put("personalId", signPersonalDto.getPersonalId());
             }
 
-            //map type 저장시 primitive type(또는 해당 Wrapping class)만 지원한다.
-            //커스텀 오브젝트는 저장을 지원하지 않는다. - 에러발생
+            // map type 저장시 primitive type(또는 해당 Wrapping class)만 지원한다.
+            // 커스텀 오브젝트는 저장을 지원하지 않는다. - 에러발생
             String jwtToken = JWT.create()
                     .withSubject("userinfo")
                     .withExpiresAt(expire)
@@ -60,6 +60,7 @@ public class JWTToken {
         }
 
         public static String cookieToToken(Cookie[] cookies) {
+
             String token = null;
 
             if (cookies == null) {
@@ -78,7 +79,7 @@ public class JWTToken {
 
     public static class TokenVerificationForCookie {
 
-        //토큰 검증 메서드
+        // 토큰 검증 메서드
         public Boolean Verification(String token) {
 
             if (token == null) {
@@ -113,9 +114,10 @@ public class JWTToken {
 
         }
     }
+
     public static class TokenVerificationForHeader {
 
-        //토큰 검증 메서드
+        // 토큰 검증 메서드
         public Boolean Verification(String token) {
 
             if (token == null) {
@@ -125,7 +127,7 @@ public class JWTToken {
             // 토큰 검증 - 검증전 공백제거
             token = token.replace("Bearer ", "");
             token = token.trim();
-            
+
             try {
 
                 // log.debug("디버그 : 토큰확인 - " + token);
