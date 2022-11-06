@@ -34,11 +34,13 @@ public class UsersController {
 
 	@GetMapping("/loginForm")
 	public ResponseDto<?> loginForm() {
+
 		ResponseDto<?> responseDto;
-		if (session.getAttribute("principal") != null) {
-			responseDto = new ResponseDto<>(-1, "이미 로그인 되어 있음", null);
+		SignedDto<?> signedDto = (SignedDto<?>) session.getAttribute("principal");
+		if (signedDto != null) {
+			responseDto = new ResponseDto<>(-1, "이미 로그인 되어 있음", signedDto);
 		} else {
-			responseDto = new ResponseDto<>(1, "성공", null);
+			responseDto = new ResponseDto<>(1, "성공", signedDto);
 		}
 		return responseDto;
 	}

@@ -1,9 +1,9 @@
 package site.metacoding.miniproject.web;
 
-import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.multipart;
-import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
+import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.*;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.jsonPath;
 
+import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Order;
@@ -14,9 +14,8 @@ import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.boot.test.context.SpringBootTest.WebEnvironment;
 import org.springframework.core.io.Resource;
 import org.springframework.core.io.ResourceLoader;
-import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpMethod;
-import org.springframework.http.MediaType;
+import org.springframework.mock.web.MockCookie;
 import org.springframework.mock.web.MockHttpSession;
 import org.springframework.mock.web.MockMultipartFile;
 import org.springframework.test.context.ActiveProfiles;
@@ -54,6 +53,8 @@ public class UsersApiControllerTest {
 
     private MockHttpSession session;
 
+    private MockCookie mockCookie;
+
     @BeforeAll // 선언시 static으로 선언해야한다. - container에 띄우기 위해 사용한다.
     public static void init() {
 
@@ -61,12 +62,23 @@ public class UsersApiControllerTest {
 
     @BeforeEach // test메서드 진입전에 트랜잭션 발동
     public void sessionInit() {
+
         session = new MockHttpSession();
         SignPersonalDto signPersonalDto = new SignPersonalDto();
+
         signPersonalDto.setPersonalId(1);
-        SignedDto<?> signedDto = new SignedDto<>(1, "testuser", signPersonalDto);
-        String JwtToken = CreateJWTToken.createToken(signedDto); // Authorization
+        SignedDto<?> signedDto = new SignedDto<>(1, "testuser1", signPersonalDto);
+
         session.setAttribute("principal", signedDto);
+
+        String JwtToken = CreateJWTToken.createToken(signedDto); // Authorization
+        mockCookie = new MockCookie("Authorization", JwtToken);
+
+    }
+
+    @AfterEach
+    public void sessionClear() {
+        session.clearAttributes();
     }
 
     @Order(1)
@@ -131,7 +143,7 @@ public class UsersApiControllerTest {
 
     @Order(3)
     @Test
-    @Sql("classpath:testsql/userlogintest.sql")
+    @Sql("classpath:testsql/insertuserforpersonal.sql")
     public void login_test() throws Exception {
         // given
         String loginId = "testuser1";
@@ -141,7 +153,6 @@ public class UsersApiControllerTest {
         String body = om.writeValueAsString(loginDto);
 
         // when
-
         ResultActions resultActions = mvc.perform(post("/login")
                 .content(body)
                 .contentType(APPLICATION_JSON)
@@ -150,11 +161,26 @@ public class UsersApiControllerTest {
         // String whatIsThat =
         // resultActions.andReturn().getResponse().getContentAsString();
         // log.debug("디버그 : " + whatIsThat);
-        // then
 
+        // then
         resultActions.andExpect(jsonPath("$.code").value("1"));
         resultActions.andExpect(jsonPath("$.message").value("로그인완료"));
         resultActions.andExpect(jsonPath("$.data.userInfo.personalId").value("1"));
+    }
+
+    @Order(4)
+    @Test
+    public void loginForm_test() throws Exception {
+        // given
+
+        // when
+        ResultActions resultActions = mvc.perform(get("/loginForm")
+                .session(session)
+                .accept(APPLICATION_JSON));
+        // then
+        resultActions.andExpect(jsonPath("$.code").value("-1"));
+        resultActions.andExpect(jsonPath("$.message").value("이미 로그인 되어 있음"));
+
     }
 
 }
