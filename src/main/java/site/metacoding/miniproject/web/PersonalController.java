@@ -2,7 +2,6 @@ package site.metacoding.miniproject.web;
 
 import javax.servlet.http.HttpSession;
 
-import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
@@ -16,6 +15,7 @@ import org.springframework.web.multipart.MultipartFile;
 
 import lombok.RequiredArgsConstructor;
 import site.metacoding.miniproject.dto.ResponseDto;
+import site.metacoding.miniproject.dto.company.CompanyRespDto.CompanyDetailWithPerRespDto;
 import site.metacoding.miniproject.dto.jobpostingboard.JobPostingBoardRespDto.JobPostingDetailWithPersonalRespDto;
 import site.metacoding.miniproject.dto.personal.PersonalReqDto.PersonalUpdatReqDto;
 import site.metacoding.miniproject.dto.personal.PersonalRespDto.PersonalUpdateRespDto;
@@ -26,11 +26,10 @@ import site.metacoding.miniproject.dto.resumes.ResumesRespDto.ResumesAllRespDto;
 import site.metacoding.miniproject.dto.resumes.ResumesRespDto.ResumesUpdateRespDto;
 import site.metacoding.miniproject.dto.user.UserRespDto.SignPersonalDto;
 import site.metacoding.miniproject.dto.user.UserRespDto.SignedDto;
+import site.metacoding.miniproject.exception.ApiException;
 import site.metacoding.miniproject.service.company.CompanyService;
 import site.metacoding.miniproject.service.personal.PersonalLikeService;
 import site.metacoding.miniproject.service.personal.PersonalService;
-import site.metacoding.miniproject.web.dto.response.company.CompanyAddressDto;
-import site.metacoding.miniproject.web.dto.response.company.CompanyInfoDto;
 
 @RequiredArgsConstructor
 @RestController
@@ -38,8 +37,6 @@ public class PersonalController {
 
 	private final HttpSession session;
 	private final PersonalService personalService;
-	private final CompanyService companyService;
-	private final PersonalLikeService personalLikeService;
 
 	// 이력서 작성 하기
 	@PostMapping(value = "/s/resumes/insert")
@@ -64,7 +61,7 @@ public class PersonalController {
 	// 이력서 상세 보기
 	@GetMapping("/resumes/{resumesId}")
 	public ResponseDto<?> findByResumesId(@PathVariable Integer resumesId) {
-		SignedDto<?> principal = (SignedDto<?>) session.getAttribute("principal");
+		// SignedDto<?> principal = (SignedDto<?>) session.getAttribute("principal");
 		// PersonalLike personalLike = personalLikeService.좋아요확인(resumesId,
 		// signedDto.getCompanyId());
 		// model.addAttribute("personalLike", personalLike);
@@ -144,14 +141,17 @@ public class PersonalController {
 	}
 
 	// 회사 정보보러 가기(개인)
-	@GetMapping("/personal/companyInform/{companyId}")
-	public String companyDetailform(Model model, @PathVariable Integer companyId) {
-		CompanyInfoDto companyPS = companyService.findCompanyInfo(companyId);
-		CompanyAddressDto addressPS = companyService.findByAddress(companyId);
-		model.addAttribute("address", addressPS);
-		model.addAttribute("companyInfo", companyPS);
-		System.out.println("companyPS : " + companyPS.getCount());
-		return "personal/companyInform";
+	@GetMapping("/personal/company/{companyId}")
+	public ResponseDto<?> companyDetailform(@PathVariable Integer companyId) {
+		CompanyDetailWithPerRespDto companyPS = personalService.findByCompany(companyId);
+		if (companyPS == null) {
+			throw new ApiException("해당 회사를 찾을 수 없습니다.");
+		}
+		// CompanyAddressDto addressPS = companyService.findByAddress(companyId);
+		// model.addAttribute("address", addressPS);
+		// model.addAttribute("companyInfo", companyPS);
+		// System.out.println("companyPS : " + companyPS.getCount());
+		return new ResponseDto<>(1, "회사정보보기", companyPS);
 	}
 
 }

@@ -15,6 +15,7 @@ import site.metacoding.miniproject.domain.career.Career;
 import site.metacoding.miniproject.domain.career.CareerDao;
 import site.metacoding.miniproject.domain.category.Category;
 import site.metacoding.miniproject.domain.category.CategoryDao;
+import site.metacoding.miniproject.domain.company.CompanyDao;
 import site.metacoding.miniproject.domain.jobpostingboard.JobPostingBoardDao;
 import site.metacoding.miniproject.domain.personal.Personal;
 import site.metacoding.miniproject.domain.personal.PersonalDao;
@@ -24,6 +25,9 @@ import site.metacoding.miniproject.domain.resumes.Resumes;
 import site.metacoding.miniproject.domain.resumes.ResumesDao;
 import site.metacoding.miniproject.domain.users.Users;
 import site.metacoding.miniproject.domain.users.UsersDao;
+import site.metacoding.miniproject.dto.company.CompanyRespDto.CompanyAddressRespDto;
+import site.metacoding.miniproject.dto.company.CompanyRespDto.CompanyDetailRespDto;
+import site.metacoding.miniproject.dto.company.CompanyRespDto.CompanyDetailWithPerRespDto;
 import site.metacoding.miniproject.dto.jobpostingboard.JobPostingBoardRespDto.JobPostingDetailWithPersonalRespDto;
 import site.metacoding.miniproject.dto.personal.PersonalReqDto.PersonalUpdatReqDto;
 import site.metacoding.miniproject.dto.personal.PersonalRespDto.PersonalAddressRespDto;
@@ -50,6 +54,7 @@ public class PersonalService {
 	private final PortfolioDao portfolioDao;
 	private final CareerDao careerDao;
 	private final UsersDao usersDao;
+	private final CompanyDao companyDao;
 	private final JobPostingBoardDao jobPostingBoardDao;
 
 	// 이력서 작성 하기
@@ -259,5 +264,17 @@ public class PersonalService {
 		String formattedDate = new SimpleDateFormat("yyyy년MM월dd일").format(date);
 		jobPostingBoardDetailRespDto.setFormatDeadLine(formattedDate);
 		return jobPostingBoardDetailRespDto;
+	}
+
+	@Transactional(readOnly = true)
+	public CompanyDetailWithPerRespDto findByCompany(Integer companyId) {
+		CompanyAddressRespDto companyAddressRespDto = companyDao.findByAddress(companyId);
+		CompanyDetailWithPerRespDto companyPS = companyDao.findByCompanyToPer(companyId);
+		if (companyPS == null) {
+			throw new ApiException("회사 정보를 찾을 수 없습니다.");
+		}
+		CompanyDetailWithPerRespDto companyDetailRespDto = new CompanyDetailWithPerRespDto(companyPS,
+				companyAddressRespDto);
+		return companyDetailRespDto;
 	}
 }
