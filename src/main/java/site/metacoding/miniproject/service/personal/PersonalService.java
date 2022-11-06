@@ -1,6 +1,9 @@
 package site.metacoding.miniproject.service.personal;
 
+import java.sql.Timestamp;
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.List;
 
 import org.springframework.stereotype.Service;
@@ -12,6 +15,7 @@ import site.metacoding.miniproject.domain.career.Career;
 import site.metacoding.miniproject.domain.career.CareerDao;
 import site.metacoding.miniproject.domain.category.Category;
 import site.metacoding.miniproject.domain.category.CategoryDao;
+import site.metacoding.miniproject.domain.jobpostingboard.JobPostingBoardDao;
 import site.metacoding.miniproject.domain.personal.Personal;
 import site.metacoding.miniproject.domain.personal.PersonalDao;
 import site.metacoding.miniproject.domain.portfolio.Portfolio;
@@ -20,6 +24,7 @@ import site.metacoding.miniproject.domain.resumes.Resumes;
 import site.metacoding.miniproject.domain.resumes.ResumesDao;
 import site.metacoding.miniproject.domain.users.Users;
 import site.metacoding.miniproject.domain.users.UsersDao;
+import site.metacoding.miniproject.dto.jobpostingboard.JobPostingBoardRespDto.JobPostingDetailWithPersonalRespDto;
 import site.metacoding.miniproject.dto.personal.PersonalReqDto.PersonalUpdatReqDto;
 import site.metacoding.miniproject.dto.personal.PersonalRespDto.PersonalAddressRespDto;
 import site.metacoding.miniproject.dto.personal.PersonalRespDto.PersonalDetailRespDto;
@@ -45,6 +50,7 @@ public class PersonalService {
 	private final PortfolioDao portfolioDao;
 	private final CareerDao careerDao;
 	private final UsersDao usersDao;
+	private final JobPostingBoardDao jobPostingBoardDao;
 
 	// 이력서 작성 하기
 	@Transactional(rollbackFor = RuntimeException.class)
@@ -239,5 +245,19 @@ public class PersonalService {
 		PersonalUpdateRespDto personalUpdateRespDto = new PersonalUpdateRespDto(personalPS, personalUserPS);
 
 		return personalUpdateRespDto;
+	}
+
+	// 채용공고 상세 보기(개인)
+	@Transactional(readOnly = true)
+	public JobPostingDetailWithPersonalRespDto jobPostingBoardDetail(Integer jobPostingBoardId) {
+		// .. 로직이 너무 더러운데..
+		JobPostingDetailWithPersonalRespDto jobPostingBoardDetailRespDto = jobPostingBoardDao
+				.findByJobPostingBoardToPer(jobPostingBoardId);
+		Timestamp ts = jobPostingBoardDetailRespDto.getJobPostingBoardDeadline();
+		Date date = new Date();
+		date.setTime(ts.getTime());
+		String formattedDate = new SimpleDateFormat("yyyy년MM월dd일").format(date);
+		jobPostingBoardDetailRespDto.setFormatDeadLine(formattedDate);
+		return jobPostingBoardDetailRespDto;
 	}
 }

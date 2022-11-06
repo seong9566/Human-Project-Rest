@@ -6,6 +6,7 @@ import org.apache.ibatis.annotations.Param;
 
 import site.metacoding.miniproject.dto.jobpostingboard.JobPostingBoardRespDto.JobPostingBoardAllRespDto;
 import site.metacoding.miniproject.dto.jobpostingboard.JobPostingBoardRespDto.JobPostingBoardDetailRespDto;
+import site.metacoding.miniproject.dto.jobpostingboard.JobPostingBoardRespDto.JobPostingDetailWithPersonalRespDto;
 import site.metacoding.miniproject.dto.jobpostingboard.JobPostingBoardRespDto.PagingDto;
 import site.metacoding.miniproject.web.dto.response.personal.PersonalMainDto;
 
@@ -23,6 +24,8 @@ public interface JobPostingBoardDao {
 
 	// 채용공고 상세보기
 	public JobPostingBoardDetailRespDto findByJobPostingBoard(Integer jobPostingBoardId);
+
+	public JobPostingDetailWithPersonalRespDto findByJobPostingBoardToPer(Integer jobPostingBoardId);
 
 	// 채용공고 리스트
 	public List<PersonalMainDto> findAll(int startNum);

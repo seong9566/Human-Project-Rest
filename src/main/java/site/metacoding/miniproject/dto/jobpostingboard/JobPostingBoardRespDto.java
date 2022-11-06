@@ -233,4 +233,54 @@ public class JobPostingBoardRespDto {
             }
         }
     }
+
+    @Getter
+    @Setter
+    @NoArgsConstructor
+    public static class JobPostingDetailWithPersonalRespDto {
+
+        // postingBoard 테이블
+        private Integer jobPostingBoardId;
+        private Integer companyId;
+        private Integer jobPostingBoardCategoryId;
+        private Integer jobPostingBoardCareerId;
+        private String jobPostingBoardTitle;
+        private String jobPostingBoardContent;
+        private Integer jobPostingSalary;
+        private String jobPostingBoardPlace;
+        private Timestamp jobPostingBoardDeadline;
+
+        // Category테이블
+        private Boolean categoryFrontend;
+        private Boolean categoryBackend;
+        private Boolean categoryDevops;
+
+        // Career테이블
+        private Boolean oneYearLess;
+        private Boolean twoYearOver;
+        private Boolean threeYearOver;
+        private Boolean fiveYearOver;
+        // company테이블
+        private String companyPicture;
+        private String companyName;
+        private String companyEmail;
+        private String companyPhoneNumber;
+        // company_like 테이블
+        private Integer companyLikeId;
+        // TimeStamp > String
+        private String formatDeadLine;
+
+        public JobPostingDetailWithPersonalRespDto(JobPostingBoard jobPostingBoard) {
+            this.companyId = jobPostingBoard.getCompanyId();
+            this.jobPostingBoardId = jobPostingBoard.getJobPostingBoardId();
+            this.jobPostingBoardCategoryId = jobPostingBoard.getJobPostingBoardCategoryId();
+            this.jobPostingBoardCareerId = jobPostingBoard.getJobPostingBoardCareerId();
+            this.jobPostingBoardTitle = jobPostingBoard.getJobPostingBoardTitle();
+            this.jobPostingBoardContent = jobPostingBoard.getJobPostingBoardContent();
+            this.jobPostingSalary = jobPostingBoard.getJobPostingSalary();
+            this.jobPostingBoardPlace = jobPostingBoard.getJobPostingBoardPlace();
+            this.jobPostingBoardDeadline = jobPostingBoard.getJobPostingBoardDeadline();
+        }
+
+    }
 }

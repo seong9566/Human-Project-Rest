@@ -1,7 +1,5 @@
 package site.metacoding.miniproject.web;
 
-import java.util.List;
-
 import javax.servlet.http.HttpSession;
 
 import org.springframework.ui.Model;
@@ -17,6 +15,8 @@ import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.multipart.MultipartFile;
 
 import lombok.RequiredArgsConstructor;
+import site.metacoding.miniproject.dto.ResponseDto;
+import site.metacoding.miniproject.dto.jobpostingboard.JobPostingBoardRespDto.JobPostingDetailWithPersonalRespDto;
 import site.metacoding.miniproject.dto.personal.PersonalReqDto.PersonalUpdatReqDto;
 import site.metacoding.miniproject.dto.personal.PersonalRespDto.PersonalUpdateRespDto;
 import site.metacoding.miniproject.dto.resumes.ResumesReqDto.ResumesInsertReqDto;
@@ -29,13 +29,8 @@ import site.metacoding.miniproject.dto.user.UserRespDto.SignedDto;
 import site.metacoding.miniproject.service.company.CompanyService;
 import site.metacoding.miniproject.service.personal.PersonalLikeService;
 import site.metacoding.miniproject.service.personal.PersonalService;
-import site.metacoding.miniproject.web.dto.response.ResponseDto;
 import site.metacoding.miniproject.web.dto.response.company.CompanyAddressDto;
 import site.metacoding.miniproject.web.dto.response.company.CompanyInfoDto;
-import site.metacoding.miniproject.web.dto.response.company.CompanyMainDto;
-import site.metacoding.miniproject.web.dto.response.etc.PagingDto;
-import site.metacoding.miniproject.web.dto.response.jobpostingboard.JobPostingBoardDetailDto;
-import site.metacoding.miniproject.web.dto.response.personal.PersonalMainDto;
 
 @RequiredArgsConstructor
 @RestController
@@ -120,42 +115,32 @@ public class PersonalController {
 
 	}
 
-	// // 내정보 수정 보기
-	// @GetMapping("/s/api/personal/update")
-	// public ResponseDto<?> personalInformUpdate() {
-	// SignedDto<?> principal = (SignedDto<?>) session.getAttribute("principal");
-	// SignPersonalDto signPersonalDto = (SignPersonalDto) principal.getUserInfo();
-
-	// return new ResponseDto<>(1, "성공",
-	// personalService.personalUpdateById(signPersonalDto.getPersonalId()));
-	// // return new ResponseDto<>(1, "성공",
-	// //
-	// personalService.personalUpdateById(principal.getUserInfo().getPersonalId()));
-
-	// }
-
 	// 내정보 수정
 	@PutMapping("/s/api/personal/update")
 	public @ResponseBody ResponseDto<?> personalUpdate(@RequestBody PersonalUpdatReqDto personalUpdatReqDto) {
 		// ValidationCheckUtil.valCheckToUpdatePersonal(personalUpdatReqDto);
-		SignedDto<SignPersonalDto> principal = (SignedDto<SignPersonalDto>) session.getAttribute("principal");
-
+		SignedDto<?> principal = (SignedDto<?>) session.getAttribute("principal");
+		SignPersonalDto signPersonalDto = (SignPersonalDto) principal.getUserInfo();
 		PersonalUpdateRespDto personalUpdateRespDto = personalService.updatePersonal(principal.getUsersId(),
-				principal.getUserInfo().getPersonalId(),
+				signPersonalDto.getPersonalId(),
 				personalUpdatReqDto);
 		return new ResponseDto<>(1, "수정 성공", personalUpdateRespDto);
 	}
 
 	// 채용공고 상세 보기 (개인)
 	@GetMapping("/personal/jobPostingBoard/{jobPostingBoardId}")
-	public String jobPostingDetailForm(Model model, @PathVariable Integer jobPostingBoardId) {
-		JobPostingBoardDetailDto jobPostingPS = companyService.jobPostingOne(jobPostingBoardId);
+	public ResponseDto<?> jobPostingDetailForm(@PathVariable Integer jobPostingBoardId) {
+		JobPostingDetailWithPersonalRespDto jobPostingPS = personalService.jobPostingBoardDetail(jobPostingBoardId);
+
 		// SignedDto<?> principal = (SignedDto<?>) session.getAttribute("principal");
-		CompanyAddressDto addressPS = companyService.findByAddress(jobPostingPS.getCompanyId());
-		model.addAttribute("address", addressPS);
-		model.addAttribute("jobPostingPS", jobPostingPS);
-		System.out.println("jobpostingLike : " + jobPostingPS.getCompanyPhoneNumber());
-		return "personal/jobPostingViewApply";
+		// CompanyAddressDto addressPS =
+		// companyService.findByAddress(jobPostingPS.getCompanyId());
+		// model.addAttribute("address", addressPS);
+		// model.addAttribute("jobPostingPS", jobPostingPS);
+
+		// companyService.jobPostingBoardDetail(jobPostingBoardId, jobPostingBoardId);
+		// personalService.jobPostingBoardDetail(jobPostingBoardId);
+		return new ResponseDto<>(1, "채용공고 상세보기", jobPostingPS);
 	}
 
 	// 회사 정보보러 가기(개인)
