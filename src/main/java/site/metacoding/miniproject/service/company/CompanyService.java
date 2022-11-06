@@ -113,7 +113,10 @@ public class CompanyService {
 
 		Career careerPS = jobPostingBoardInsertReqDto.JobPostingBoardInsertRespDtoToCareerEntity();
 		careerDao.insert(careerPS);
-
+		// if 체크
+		if (!(categoryPS.getCategoryId() != null && careerPS.getCareerId() != null)) {
+			throw new ApiException("채용공고 작성 에러");
+		}
 		JobPostingBoard jobPostingBoardPS = jobPostingBoardInsertReqDto
 				.JobPostingBoardInsertReqDtoJobPostingBoardToEntity();
 		jobPostingBoardPS.setJobPostingBoardCategoryId(categoryPS.getCategoryId());

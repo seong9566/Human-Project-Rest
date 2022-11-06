@@ -34,7 +34,6 @@ import site.metacoding.miniproject.dto.resumes.ResumesRespDto.ResumesDetailRespD
 import site.metacoding.miniproject.dto.resumes.ResumesRespDto.ResumesInsertRespDto;
 import site.metacoding.miniproject.dto.resumes.ResumesRespDto.ResumesUpdateRespDto;
 import site.metacoding.miniproject.exception.ApiException;
-import site.metacoding.miniproject.web.dto.response.company.CompanyMainDto;
 
 @Service
 @RequiredArgsConstructor
@@ -89,6 +88,9 @@ public class PersonalService {
 	// 내가 작성한 이력서 목록 보기
 	@Transactional(readOnly = true)
 	public List<ResumesAllByIdRespDto> findAllMyResumes(ResumesAllByIdRespDto resumesAllByIdRespDto) {
+		if (resumesAllByIdRespDto.getPersonalId() == null) {
+			throw new ApiException("해당 " + resumesAllByIdRespDto.getPersonalId() + " 유저가 없습니다.");
+		}
 		List<Resumes> resumesList = resumesDao.findAllMyResumes(resumesAllByIdRespDto.getPersonalId());
 		List<ResumesAllByIdRespDto> resumesAllByIdRespDtoList = new ArrayList<>();
 		for (Resumes resumes : resumesList) {
@@ -101,6 +103,9 @@ public class PersonalService {
 	@Transactional(readOnly = true)
 	public ResumesDetailRespDto findByResumesId(Integer resumesId) {
 		ResumesDetailRespDto resumesDetailRespDto = resumesDao.findByResumesId(resumesId);
+		if (resumesDetailRespDto == null) {
+			throw new ApiException("해당 이력서가 존재하지 않습니다.");
+		}
 		return resumesDetailRespDto;
 	}
 
@@ -115,6 +120,9 @@ public class PersonalService {
 		}
 
 		Resumes resumesPS = resumesDao.findById(resumesUpdateReqDto.getResumesId());
+		if (resumesPS == null) {
+			throw new ApiException("해당 이력서가 없습니다.");
+		}
 		resumesUpdateReqDto.setCategoryId(resumesPS.getResumesCategoryId());
 		resumesUpdateReqDto.setPortfolioId(resumesPS.getPortfolioId());
 		resumesUpdateReqDto.setCareerId(resumesPS.getCareerId());
@@ -151,37 +159,6 @@ public class PersonalService {
 		resumesDao.deleteById(resumesId);
 	}
 
-	// // 전체 이력서 목록 보기 (페이징+검색)
-	// @Transactional(readOnly = true)
-	// public List<ResumesAllRespDto> findAllResumes(ResumesAllRespDto
-	// resumesAllRespDto) {
-	// if (resumesAllRespDto.getKeyword() == null ||
-	// resumesAllRespDto.getKeyword().isEmpty()) {
-	// List<Resumes> resumesList =
-	// resumesDao.findAllResumes(resumesAllRespDto.getStartNum());
-	// List<ResumesAllRespDto> resumesAllRespDtoList = new ArrayList<>();
-	// for (Resumes resumes : resumesList) {
-	// resumesAllRespDtoList.add(new ResumesAllRespDto(resumes));
-	// }
-	// PagingDto paging = resumesDao.resumesPaging(resumesAllRespDto.getPage(),
-	// resumesAllRespDto.getKeyword());
-	// paging.makeBlockInfo(resumesAllRespDto.getKeyword());
-	// return resumesAllRespDtoList;
-	// } else {
-	// List<Resumes> resumesList =
-	// resumesDao.findSearch(resumesAllRespDto.getStartNum(),
-	// resumesAllRespDto.getKeyword());
-	// List<ResumesAllRespDto> resumesAllRespDtoList = new ArrayList<>();
-	// for (Resumes resumes : resumesList) {
-	// resumesAllRespDtoList.add(new ResumesAllRespDto(resumes));
-	// }
-	// PagingDto paging = resumesDao.resumesPaging(resumesAllRespDto.getPage(),
-	// resumesAllRespDto.getKeyword());
-	// paging.makeBlockInfo(resumesAllRespDto.getKeyword());
-	// return resumesAllRespDtoList;
-	// }
-	// }
-
 	// 전체 이력서 목록 보기 (페이징+검색+카테고리id별)
 	@Transactional(readOnly = true)
 	public List<ResumesAllRespDto> findAllResumes(ResumesAllRespDto resumesAllRespDto) {
@@ -208,22 +185,14 @@ public class PersonalService {
 		}
 	}
 
-	// // 카테고리 별 리스트 보기
-	// public List<CompanyMainDto> findCategory(int startNum, Integer id) {
-	// return resumesDao.findCategory(startNum, id);
-	// }
-
-	// // 카테고리 별 검색 결과 리스트
-	// public List<CompanyMainDto> findCategorySearch(int startNum, String keyword,
-	// Integer id) {
-	// return resumesDao.findCategorySearch(startNum, keyword, id);
-	// }
-
 	// 개인 정보에 보기
 	@Transactional(readOnly = true)
 	public PersonalDetailRespDto findByPersonal(Integer personalId) {
 		PersonalAddressRespDto personalAddressRespDto = personalDao.personalAddressById(personalId);
 		Personal personalPS = personalDao.personaldetailById(personalId);
+		if (personalPS == null) {
+			throw new ApiException("해당 정보를 찾을 수 없습니다.");
+		}
 		PersonalDetailRespDto personalDetailRespDto = new PersonalDetailRespDto(personalPS, personalAddressRespDto);
 
 		return personalDetailRespDto;
@@ -235,7 +204,9 @@ public class PersonalService {
 		PersonalAddressRespDto personalAddressRespDto = personalDao.personalAddressById(personalId);
 
 		PersonalUpdateFormRespDto personalUpdatePS = personalDao.personalUpdateById(personalId);
-
+		if (personalUpdatePS == null) {
+			throw new ApiException("해당 유저가 없습니다.");
+		}
 		PersonalUpdateFormRespDto personalUpdateFormRespDto = new PersonalUpdateFormRespDto(personalUpdatePS,
 				personalAddressRespDto);
 
@@ -254,11 +225,15 @@ public class PersonalService {
 
 		// user패스워드 수정
 		Users personalUserPS = usersDao.findById(userId);
-		personalUserPS.update(personalUpdatReqDto.personalPassWordUpdateReqDto());
-		usersDao.update(personalUserPS);
 
 		// personal 개인정보 수정
 		Personal personalPS = personalDao.findById(perosnalId);
+
+		if (personalUserPS == null || personalPS == null) {
+			throw new ApiException("유저 정보가 없습니다.");
+		}
+		personalUserPS.update(personalUpdatReqDto.personalPassWordUpdateReqDto());
+		usersDao.update(personalUserPS);
 		personalPS.updatePersonal(personalUpdatReqDto);
 		personalDao.update(personalPS);
 		PersonalUpdateRespDto personalUpdateRespDto = new PersonalUpdateRespDto(personalPS, personalUserPS);
