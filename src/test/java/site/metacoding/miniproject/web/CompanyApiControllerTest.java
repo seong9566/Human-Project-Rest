@@ -3,7 +3,6 @@ package site.metacoding.miniproject.web;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.put;
 
 import java.sql.Timestamp;
-import java.util.Date;
 
 import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.BeforeAll;
