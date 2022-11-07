@@ -292,4 +292,24 @@ public class PersonalApiControllerTest {
         resultActions.andExpect(jsonPath("$.data.companyName").value("testCompanyname"));
     }
 
+    @Test
+    @Sql({ "classpath:truncate.sql", "classpath:testsql/insertjobpostingBoard.sql" })
+    public void jobPostingDetailForm_test() throws Exception { // 개인 - 채용공고 상세 보기
+        // given
+        Integer jobPostingBoardId = 1;
+
+        // when
+        ResultActions resultActions = mvc
+                .perform(MockMvcRequestBuilders.get("/personal/jobPostingBoard/" + jobPostingBoardId)
+                        .accept(APPLICATION_JSON)
+                        .cookie(mockCookie)
+                        .session(session));
+
+        // then
+        MvcResult mvcResult = resultActions.andReturn();
+        System.out.println("디버그 : " + mvcResult.getResponse().getContentAsString());
+        resultActions.andExpect(jsonPath("$.code").value(1));
+        resultActions.andExpect(jsonPath("$.message").value("채용공고 상세보기"));
+        resultActions.andExpect(jsonPath("$.data.jobPostingBoardTitle").value("title"));
+    }
 }
