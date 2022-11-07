@@ -1,9 +1,11 @@
 package site.metacoding.miniproject.web;
 
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.put;
+import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.jsonPath;
 
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.*;
 import java.sql.Timestamp;
+import java.util.Date;
 
 import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.BeforeAll;
@@ -24,6 +26,7 @@ import org.springframework.test.web.servlet.request.MockMvcRequestBuilders;
 import org.springframework.test.web.servlet.result.MockMvcResultMatchers;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
+import com.jayway.jsonpath.JsonPath;
 
 import lombok.extern.slf4j.Slf4j;
 import site.metacoding.miniproject.dto.company.CompanyReqDto.CompanyUpdateReqDto;
@@ -195,6 +198,27 @@ public class CompanyApiControllerTest {
         System.out.println("debugggg:" + mvcResult.getResponse().getContentAsString());
         resultActions.andExpect(MockMvcResultMatchers.jsonPath("$.code").value(1));
 
+    }
+
+    @Test
+    @Sql({ "classpath:truncate.sql", "classpath:testsql/insertjobpostingBoard.sql" })
+    public void findByjobPostingBoard_test() throws Exception { // 채용공고 상세 보기 완료
+        // given
+        Integer jobPostingBoardId = 1;
+
+        // when
+        ResultActions resultActions = mvc
+                .perform(MockMvcRequestBuilders.get("/s/api/jobPostingBoard/detail/" + jobPostingBoardId)
+                        .accept(APPLICATION_JSON)
+                        .cookie(mockCookie)
+                        .session(session));
+
+        // then
+        MvcResult mvcResult = resultActions.andReturn();
+        System.out.println("디버그 : " + mvcResult.getResponse().getContentAsString());
+        resultActions.andExpect(jsonPath("$.code").value(1));
+        resultActions.andExpect(jsonPath("$.message").value("채용공고 상세보기"));
+        resultActions.andExpect(jsonPath("$.data.jobPostingBoardTitle").value("title"));
     }
 
     @Test

@@ -47,12 +47,19 @@ public class CompanyService {
 
 	@Transactional(readOnly = true)
 	public CompanyDetailRespDto findByCompany(Integer companyId) {
-		CompanyAddressRespDto companyAddressRespDto = companyDao.findByAddress(companyId);
 		CompanyDetailRespDto companyPS = companyDao.findByCompany(companyId);
 		if (companyPS == null) {
 			throw new ApiException("회사 정보를 찾을 수 없습니다.");
 		}
-		CompanyDetailRespDto companyDetailRespDto = new CompanyDetailRespDto(companyPS, companyAddressRespDto);
+
+		String address = companyPS.getCompanyAddress();
+		String[] arry = address.split(",");
+		for (int i = 0; i < arry.length; i++) {
+			companyPS.setZoneCode(arry[0]);
+			companyPS.setRoadJibunAddr(arry[1]);
+			companyPS.setDetailAddress(arry[2]);
+		}
+		CompanyDetailRespDto companyDetailRespDto = new CompanyDetailRespDto(companyPS);
 		return companyDetailRespDto;
 	}
 

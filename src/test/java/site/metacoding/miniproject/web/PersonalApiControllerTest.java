@@ -2,12 +2,8 @@ package site.metacoding.miniproject.web;
 
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.delete;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
-import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.multipart;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.put;
-
-import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.put;
-
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.jsonPath;
 
 import org.junit.jupiter.api.AfterEach;
@@ -17,7 +13,6 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureMockMvc;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.boot.test.context.SpringBootTest.WebEnvironment;
-import org.springframework.core.annotation.Order;
 import org.springframework.core.io.Resource;
 import org.springframework.core.io.ResourceLoader;
 import org.springframework.http.HttpMethod;
@@ -33,7 +28,6 @@ import org.springframework.test.web.servlet.request.MockMvcRequestBuilders;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
 
-import lombok.extern.slf4j.Slf4j;
 import site.metacoding.miniproject.dto.personal.PersonalReqDto.PersonalUpdatReqDto;
 import site.metacoding.miniproject.dto.resumes.ResumesReqDto.ResumesInsertReqDto;
 import site.metacoding.miniproject.dto.resumes.ResumesReqDto.ResumesUpdateReqDto;
@@ -43,11 +37,9 @@ import site.metacoding.miniproject.service.personal.PersonalService;
 import site.metacoding.miniproject.utill.JWTToken.CreateJWTToken;
 import site.metacoding.miniproject.utill.SHA256;
 
-@Slf4j
 @ActiveProfiles("test")
 @AutoConfigureMockMvc
 @SpringBootTest(webEnvironment = WebEnvironment.MOCK)
-@Sql("classpath:truncate.sql")
 public class PersonalApiControllerTest {
 
     private static final String APPLICATION_JSON = "application/json; charset=utf-8";
@@ -90,7 +82,7 @@ public class PersonalApiControllerTest {
     }
 
     @Test
-    @Sql("classpath:testsql/insertresumes.sql")
+    @Sql({ "classpath:truncate.sql", "classpath:testsql/insertresumes.sql" })
     public void insertResumes_test() throws Exception { // 이력서 작성
         // given
         ResumesInsertReqDto resumesInsertReqDto = new ResumesInsertReqDto();
@@ -136,7 +128,7 @@ public class PersonalApiControllerTest {
     }
 
     @Test
-    @Sql("classpath:testsql/findallmyresumes.sql")
+    @Sql({ "classpath:truncate.sql", "classpath:testsql/findallmyresumes.sql" })
     public void findAllMyResumes_test() throws Exception { // 내 이력서 목록 보기
         // given
         Integer id = 1;
@@ -155,7 +147,7 @@ public class PersonalApiControllerTest {
     }
 
     @Test
-    @Sql("classpath:testsql/oneresumes.sql")
+    @Sql({ "classpath:truncate.sql", "classpath:testsql/oneresumes.sql" })
     public void findByResumesId_test() throws Exception { // 이력서 상세보기
         // given
         Integer resumesId = 1;
@@ -175,7 +167,7 @@ public class PersonalApiControllerTest {
     }
 
     @Test
-    @Sql("classpath:testsql/oneresumes.sql")
+    @Sql({ "classpath:truncate.sql", "classpath:testsql/oneresumes.sql" })
     public void updateResumes_test() throws Exception { // 이력서 수정
         // given
         Integer resumesId = 1;
@@ -237,12 +229,10 @@ public class PersonalApiControllerTest {
         resultActions.andExpect(jsonPath("$.message").value("이력서 삭제 성공"));
     }
 
-    // 내정보보기 // 오류발생하는게 맞음 아직 해결못함
-
-    @Sql(scripts = "classpath:testsql/selectdetailforpersonal.sql")
+    // 내정보보기
+    @Sql({ "classpath:truncate.sql", "classpath:testsql/selectdetailforpersonal.sql" })
     @Test
     public void findByPersonal_test() throws Exception {
-
         // given
 
         // when
@@ -257,7 +247,7 @@ public class PersonalApiControllerTest {
     }
 
     // 내정보수정
-    @Sql(scripts = "classpath:testsql/selectdetailforpersonal.sql")
+    @Sql({ "classpath:truncate.sql", "classpath:testsql/selectdetailforpersonal.sql" })
     @Test
     public void updatePersonalDetail_test() throws Exception {
 
