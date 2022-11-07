@@ -64,7 +64,7 @@ public class CompanyController {
 	}
 
 	// 회사가 작성한 구인 공고 리스트 보기
-	@GetMapping("/company/jobPostingBoardList")
+	@GetMapping("/s/company/jobPostingBoardList")
 	public ResponseDto<?> jobPostingBoardList() {
 		SignedDto<?> principal = (SignedDto<?>) session.getAttribute("principal");
 

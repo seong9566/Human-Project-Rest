@@ -124,7 +124,7 @@ public class CompanyApiControllerTest {
         // given
 
         // when
-        ResultActions resultActions = mvc.perform(MockMvcRequestBuilders.get("/company/jobPostingBoardList")
+        ResultActions resultActions = mvc.perform(MockMvcRequestBuilders.get("/s/company/jobPostingBoardList")
                 .session(session).content(APPLICATION_JSON).accept(APPLICATION_JSON));
 
         // then
