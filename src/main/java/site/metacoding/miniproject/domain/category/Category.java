@@ -8,6 +8,7 @@ import lombok.NoArgsConstructor;
 import lombok.Setter;
 import site.metacoding.miniproject.dto.jobpostingboard.JobPostingBoardReqDto.JobPostingBoardInsertReqDto;
 import site.metacoding.miniproject.dto.jobpostingboard.JobPostingBoardReqDto.JobPostingBoardUpdateReqDto;
+import site.metacoding.miniproject.dto.resumes.ResumesReqDto.ResumesUpdateReqDto;
 
 @Getter
 @Setter
@@ -28,12 +29,10 @@ public class Category {
 	}
 
 	// 이력서 수정
-	@Builder
-	public Category(Integer categoryId, Boolean categoryFrontend, Boolean categoryBackend, Boolean categoryDevops) {
-		this.categoryId = categoryId;
-		this.categoryFrontend = categoryFrontend;
-		this.categoryBackend = categoryBackend;
-		this.categoryDevops = categoryDevops;
+	public void updateCategory(ResumesUpdateReqDto resumesUpdateReqDto) {
+		this.categoryFrontend = resumesUpdateReqDto.getCategoryFrontend();
+		this.categoryBackend = resumesUpdateReqDto.getCategoryBackend();
+		this.categoryDevops = resumesUpdateReqDto.getCategoryDevops();
 	}
 
 	// 채용 공고 작성

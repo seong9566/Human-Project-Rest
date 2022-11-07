@@ -37,7 +37,6 @@ import site.metacoding.miniproject.dto.user.UserRespDto.SignedDto;
 @ActiveProfiles("test")
 @AutoConfigureMockMvc
 @SpringBootTest(webEnvironment = WebEnvironment.MOCK)
-@Sql("classpath:truncate.sql")
 public class UsersApiControllerTest {
 
     private static final String APPLICATION_JSON = "application/json; charset=utf-8";
@@ -78,6 +77,7 @@ public class UsersApiControllerTest {
 
     @Order(1)
     @Test
+    @Sql("classpath:truncate.sql")
     public void joinPersonal_test() throws Exception {
 
         // given
@@ -106,6 +106,7 @@ public class UsersApiControllerTest {
 
     @Order(2)
     @Test
+    @Sql("classpath:truncate.sql")
     public void joinCompany_test() throws Exception {
 
         // given
@@ -138,7 +139,7 @@ public class UsersApiControllerTest {
 
     @Order(3)
     @Test
-    @Sql("classpath:testsql/insertuserforpersonal.sql")
+    @Sql({"classpath:truncate.sql", "classpath:testsql/insertuserforpersonal.sql"})
     public void login_test() throws Exception {
         // given
         String loginId = "testuser1";
@@ -148,7 +149,7 @@ public class UsersApiControllerTest {
         String body = om.writeValueAsString(loginDto);
 
         // when
-        ResultActions resultActions = mvc.perform(post("/login")
+        ResultActions resultActions = mvc.perform(post("/api/login")
                 .content(body)
                 .contentType(APPLICATION_JSON)
                 .accept(APPLICATION_JSON));
@@ -165,6 +166,7 @@ public class UsersApiControllerTest {
 
     @Order(4)
     @Test
+    @Sql("classpath:truncate.sql")
     public void loginForm_test() throws Exception {
         // given
 
@@ -173,14 +175,14 @@ public class UsersApiControllerTest {
                 .session(session)
                 .accept(APPLICATION_JSON));
         // then
-        resultActions.andExpect(jsonPath("$.code").value("-1"));
-        resultActions.andExpect(jsonPath("$.message").value("이미 로그인 되어 있음"));
+        resultActions.andExpect(jsonPath("$.code").value("-1"))
+        .andExpect(jsonPath("$.message").value("이미 로그인 되어 있음"));
 
     }
 
     @Order(2)
     @Test
-    @Sql("classpath:testsql/insertuserforpersonal.sql")
+    @Sql({"classpath:truncate.sql", "classpath:testsql/insertuserforpersonal.sql" })
     public void userIdSameCheck_test() throws Exception {
 
         // given
@@ -191,15 +193,14 @@ public class UsersApiControllerTest {
 
         ResultActions resultActions = mvc.perform(get("/api/checkId/" + loginId)
                 .accept(APPLICATION_JSON))
-                
 
-        // then
+                // then
                 .andExpect(jsonPath("$.code").value("-1"))
                 .andDo(result -> {
-                    mvc.perform(get("/checkId/" + "testuser2").accept(APPLICATION_JSON))
+                    mvc.perform(get("/api/checkId/" + "testuser2").accept(APPLICATION_JSON))
                             .andExpect(jsonPath("$.code").value("1"))
                             .andExpect(jsonPath("$.data").value("true"));
-                            
+
                 });
     }
 

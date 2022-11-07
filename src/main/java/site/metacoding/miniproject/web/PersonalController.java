@@ -111,7 +111,7 @@ public class PersonalController {
 	}
 
 	// 내정보 수정
-	@PutMapping("/api/personal/update")
+	@PutMapping("/s/api/personal/update")
 	public @ResponseBody ResponseDto<?> personalUpdate(@RequestBody PersonalUpdatReqDto personalUpdatReqDto) {
 		// ValidationCheckUtil.valCheckToUpdatePersonal(personalUpdatReqDto);
 		SignedDto<?> principal = (SignedDto<?>) session.getAttribute("principal");
