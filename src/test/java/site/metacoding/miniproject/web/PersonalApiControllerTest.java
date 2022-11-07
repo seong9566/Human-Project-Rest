@@ -19,6 +19,7 @@ import org.springframework.core.annotation.Order;
 import org.springframework.core.io.Resource;
 import org.springframework.core.io.ResourceLoader;
 import org.springframework.http.HttpMethod;
+import org.springframework.http.StreamingHttpOutputMessage.Body;
 import org.springframework.mock.web.MockCookie;
 import org.springframework.mock.web.MockHttpSession;
 import org.springframework.mock.web.MockMultipartFile;
@@ -32,6 +33,7 @@ import org.springframework.test.web.servlet.request.MockMvcRequestBuilders;
 import com.fasterxml.jackson.databind.ObjectMapper;
 
 import lombok.extern.slf4j.Slf4j;
+import site.metacoding.miniproject.domain.personal.Personal;
 import site.metacoding.miniproject.dto.personal.PersonalReqDto.PersonalUpdatReqDto;
 import site.metacoding.miniproject.dto.resumes.ResumesReqDto.ResumesInsertReqDto;
 import site.metacoding.miniproject.dto.resumes.ResumesReqDto.ResumesUpdateReqDto;
@@ -236,13 +238,10 @@ public class PersonalApiControllerTest {
     }
 
     // 내정보보기 // 오류발생하는게 맞음 아직 해결못함
-
     @Sql(scripts = "classpath:testsql/selectdetailforpersonal.sql")
     @Test
     public void findByPersonal_test() throws Exception {
-
         // given
-
         // when
         ResultActions resultActions = mvc.perform(get("/s/api/personal/detail")
                 .session(session)
