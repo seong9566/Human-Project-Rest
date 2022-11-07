@@ -131,6 +131,8 @@ CREATE TABLE alarm (
   created_at timestamp
 );
 
+
+
 ALTER TABLE users ADD FOREIGN KEY (personal_id) REFERENCES personal (personal_id);
 
 

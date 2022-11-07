@@ -53,14 +53,12 @@ public class UsersApiControllerTest {
 
     private MockHttpSession session;
 
-    private MockCookie mockCookie;
-
     @BeforeAll // 선언시 static으로 선언해야한다. - container에 띄우기 위해 사용한다.
     public static void init() {
 
     }
 
-    @BeforeEach // test메서드 진입전에 트랜잭션 발동
+    @BeforeEach
     public void sessionInit() {
 
         session = new MockHttpSession();
@@ -70,9 +68,6 @@ public class UsersApiControllerTest {
         SignedDto<?> signedDto = new SignedDto<>(1, "testuser1", signPersonalDto);
 
         session.setAttribute("principal", signedDto);
-
-        String JwtToken = CreateJWTToken.createToken(signedDto); // Authorization
-        mockCookie = new MockCookie("Authorization", JwtToken);
 
     }
 
@@ -99,7 +94,7 @@ public class UsersApiControllerTest {
 
         // when
         ResultActions resultActions = mvc
-                .perform(post("/join/personal").content(body)
+                .perform(post("/api/join/personal").content(body)
                         .contentType("application/json; charset=utf-8").accept(APPLICATION_JSON));
 
         // then
@@ -130,7 +125,7 @@ public class UsersApiControllerTest {
                 body.getBytes());
 
         ResultActions resultActions = mvc.perform(
-                multipart(HttpMethod.POST, "/join/company")
+                multipart(HttpMethod.POST, "/api/join/company")
                         .file(file)
                         .file(multipartBody)
                         .accept(APPLICATION_JSON));
@@ -174,13 +169,37 @@ public class UsersApiControllerTest {
         // given
 
         // when
-        ResultActions resultActions = mvc.perform(get("/loginForm")
+        ResultActions resultActions = mvc.perform(get("/api/loginForm")
                 .session(session)
                 .accept(APPLICATION_JSON));
         // then
         resultActions.andExpect(jsonPath("$.code").value("-1"));
         resultActions.andExpect(jsonPath("$.message").value("이미 로그인 되어 있음"));
 
+    }
+
+    @Order(2)
+    @Test
+    @Sql("classpath:testsql/insertuserforpersonal.sql")
+    public void userIdSameCheck_test() throws Exception {
+
+        // given
+
+        String loginId = "testuser1";
+
+        // when
+
+        ResultActions resultActions = mvc.perform(get("/api/checkId/" + loginId)
+                .accept(APPLICATION_JSON))
+
+                // then
+                .andExpect(jsonPath("$.code").value("-1"))
+                .andDo(result -> {
+                    mvc.perform(get("/checkId/" + "testuser2").accept(APPLICATION_JSON))
+                            .andExpect(jsonPath("$.code").value("1"))
+                            .andExpect(jsonPath("$.data").value("true"));
+
+                });
     }
 
 }
