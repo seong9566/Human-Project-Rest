@@ -17,11 +17,11 @@ import lombok.extern.slf4j.Slf4j;
 import site.metacoding.miniproject.dto.ResponseDto;
 import site.metacoding.miniproject.dto.company.CompanyReqDto.CompanyJoinDto;
 import site.metacoding.miniproject.dto.personal.PersonalReqDto.PersonalJoinDto;
+import site.metacoding.miniproject.dto.user.UserReqDto.LoginDto;
 import site.metacoding.miniproject.dto.user.UserRespDto.SignedDto;
 import site.metacoding.miniproject.service.users.UsersService;
 import site.metacoding.miniproject.utill.JWTToken.CookieForToken;
 import site.metacoding.miniproject.utill.JWTToken.CreateJWTToken;
-import site.metacoding.miniproject.web.dto.request.etc.LoginDto;
 
 @RestController
 @RequiredArgsConstructor
@@ -30,7 +30,7 @@ public class UsersController {
 	private final UsersService userService;
 	private final HttpSession session;
 
-	@GetMapping("/loginForm")
+	@GetMapping("/api/loginForm")
 	public ResponseDto<?> loginForm() {
 
 		ResponseDto<?> responseDto;
@@ -43,7 +43,7 @@ public class UsersController {
 		return responseDto;
 	}
 
-	@GetMapping("/logout")
+	@GetMapping("/api/logout")
 	public ResponseDto<?> logout(HttpServletResponse resp) {
 
 		Cookie cookie = new Cookie("Authorization", null);
@@ -56,22 +56,22 @@ public class UsersController {
 		return new ResponseDto<>(1, "성공", null);
 	}
 
-	@GetMapping("/company/joinForm")
+	@GetMapping("/api/company/joinForm")
 	public ResponseDto<?> CompanyJoinForm() {
 		return new ResponseDto<>(-1, "성공", null);
 	}
 
-	@GetMapping("/personal/joinForm")
+	@GetMapping("/api/personal/joinForm")
 	public ResponseDto<?> PersonalJoinForm() {
 		return new ResponseDto<>(-1, "성공", null);
 	}
 
-	@GetMapping("/company/companyinform")
+	@GetMapping("/api/company/companyinform")
 	public ResponseDto<?> companyInform() {
 		return new ResponseDto<>(-1, "성공", null);
 	}
 
-	@GetMapping("/checkId/{loginId}")
+	@GetMapping("/api/checkId/{loginId}")
 	public ResponseDto<?> userIdSameCheck(@PathVariable String loginId) {
 
 		ResponseDto<?> responseDto;
@@ -92,7 +92,7 @@ public class UsersController {
 		return responseDto;
 	}
 
-	@PostMapping("/login")
+	@PostMapping("/api/login")
 	public ResponseDto<?> login(@RequestBody LoginDto loginDto, HttpServletResponse resp) {
 
 		SignedDto<?> signUserDto = userService.login(loginDto);
@@ -106,7 +106,7 @@ public class UsersController {
 	}
 
 	// 개인 회원가입
-	@PostMapping("/join/personal")
+	@PostMapping("/api/join/personal")
 	public ResponseDto<?> joinPersonal(@RequestBody PersonalJoinDto joinDto, HttpServletResponse resp) {
 
 		SignedDto<?> signedDto = userService.joinPersonal(joinDto);
@@ -122,7 +122,7 @@ public class UsersController {
 	}
 
 	// 기업 회원가입
-	@PostMapping(value = "/join/company")
+	@PostMapping(value = "/api/join/company")
 	public ResponseDto<?> joinCompany(@RequestPart(value = "file", required = false) MultipartFile file,
 			@RequestPart("joinDto") CompanyJoinDto joinDto, HttpServletResponse resp) {
 		joinDto.setFile(file);

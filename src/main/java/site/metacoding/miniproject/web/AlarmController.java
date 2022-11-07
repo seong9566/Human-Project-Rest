@@ -32,7 +32,7 @@ public class AlarmController {
 	private final HttpSession session;
 
 	// 유저알람 갱신 해주기
-	@GetMapping("/s/users/alarm")
+	@GetMapping("/s/api/users/alarm")
 	public ResponseDto<?> refreshUserAlarm() {
 
 		ResponseDto<?> responseDto = new ResponseDto<>(1, "알람없음", null);
@@ -48,7 +48,7 @@ public class AlarmController {
 	}
 
 	// 알람 확인시 ischeck -> true 변경
-	@PutMapping("/s/users/alarm/readed")
+	@PutMapping("/s/api/users/alarm/readed")
 	public ResponseDto<?> readedAlarm(@RequestBody AlarmReqListDtoToCheck alarmReqListDtoToCheck) {
 		SignedDto<?> signedDto = (SignedDto<?>) session.getAttribute("principal");
 		alarmReqListDtoToCheck.setUsersId(signedDto.getUsersId());
@@ -57,7 +57,7 @@ public class AlarmController {
 	}
 
 	// 알람지우기
-	@DeleteMapping("/s/users/alarm/delete/{alarmId}")
+	@DeleteMapping("/s/api/users/alarm/delete/{alarmId}")
 	public ResponseDto<?> deleteUserAlarm(@PathVariable Integer alarmId) {
 
 		SignedDto<?> signedDto = (SignedDto<?>) session.getAttribute("principal");
@@ -66,7 +66,7 @@ public class AlarmController {
 		usersService.deleteAlarm(alarmReqDtoToDelete);
 		return new ResponseDto<>(1, "삭제 성공", null);
 	}
-
+	// 웹소켓 의존 제외로 인해서 사용 안됨
 	// @MessageMapping("/Personal/{userId}")
 	// public void messageToTopicPersonal(@DestinationVariable Integer userId,
 	// Integer resumesId) {
