@@ -1,5 +1,6 @@
 package site.metacoding.miniproject.web;
 
+import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.delete;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.multipart;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.jsonPath;
@@ -141,9 +142,9 @@ public class PersonalApiControllerTest {
 
         // then
         MvcResult mvcResult = resultActions.andReturn();
-        System.out.println("디버그 : " + mvcResult.getResponse().getContentAsString());
         resultActions.andExpect(jsonPath("$.code").value(1));
         resultActions.andExpect(jsonPath("$.message").value("내 이력서 상세 보기 성공"));
+        resultActions.andExpect(jsonPath("$.data.resumesTitle").value("resumes_title_example1"));
     }
 
     @Test
@@ -160,8 +161,27 @@ public class PersonalApiControllerTest {
 
         // then
         MvcResult mvcResult = resultActions.andReturn();
-        System.out.println("디버그 : " + mvcResult.getResponse().getContentAsString());
         resultActions.andExpect(jsonPath("$.code").value(1));
         resultActions.andExpect(jsonPath("$.message").value("내 이력서 목록 보기 성공"));
+        resultActions.andExpect(jsonPath("$.data.[0].resumesTitle").value("resumes_title_example1"));
+    }
+
+    @Test
+    @Sql("classpath:testsql/deleteresumes.sql")
+    public void deleteResumes_test() throws Exception {
+        // given
+        Integer id = 1;
+
+        // when
+        ResultActions resultActions = mvc
+                .perform(delete("/s/resumes/delete/" + id)
+                        .accept(APPLICATION_JSON)
+                        .cookie(mockCookie)
+                        .session(session));
+
+        // then
+        MvcResult mvcResult = resultActions.andReturn();
+        resultActions.andExpect(jsonPath("$.code").value(1));
+        resultActions.andExpect(jsonPath("$.message").value("이력서 삭제 성공"));
     }
 }
