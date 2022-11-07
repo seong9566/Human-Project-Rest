@@ -7,6 +7,7 @@ import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
+import site.metacoding.miniproject.dto.resumes.ResumesReqDto.ResumesUpdateReqDto;
 
 @AllArgsConstructor
 @NoArgsConstructor
@@ -34,26 +35,12 @@ public class Resumes {
 	}
 
 	// 이력서 수정
-	@Builder
-	public Resumes(int resumesId, String resumesTitle, String resumesPicture,
-			String resumesIntroduce,
-			String resumesPlace) {
-		this.resumesId = resumesId;
-		this.resumesTitle = resumesTitle;
-		this.resumesPicture = resumesPicture;
-		this.resumesIntroduce = resumesIntroduce;
-		this.resumesPlace = resumesPlace;
-	}
-
-	@Builder
-	public Resumes(Integer resumesId, Integer personalId, String resumesTitle, String resumesPicture,
-			String resumesIntroduce, Timestamp createdAt) {
-		this.resumesId = resumesId;
-		this.personalId = personalId;
-		this.resumesTitle = resumesTitle;
-		this.resumesPicture = resumesPicture;
-		this.resumesIntroduce = resumesIntroduce;
-		this.createdAt = createdAt;
+	public void updateResumes(ResumesUpdateReqDto resumesUpdateReqDto) {
+		this.resumesId = resumesUpdateReqDto.getResumesId();
+		this.resumesTitle = resumesUpdateReqDto.getResumesTitle();
+		this.resumesPicture = resumesUpdateReqDto.getResumesPicture();
+		this.resumesIntroduce = resumesUpdateReqDto.getResumesIntroduce();
+		this.resumesPlace = resumesUpdateReqDto.getResumesPlace();
 	}
 
 }
