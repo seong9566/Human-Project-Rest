@@ -272,4 +272,24 @@ public class PersonalApiControllerTest {
 
     }
 
+    @Test
+    @Sql({ "classpath:truncate.sql", "classpath:testsql/insertcompanyfortest.sql" })
+    public void companyDetailform_test() throws Exception { // 개인 - 회사 정보보기
+        // given
+        Integer companyId = 1;
+
+        // when
+        ResultActions resultActions = mvc
+                .perform(MockMvcRequestBuilders.get("/personal/company/" + companyId).accept(APPLICATION_JSON)
+                        .cookie(mockCookie)
+                        .session(session));
+
+        // then
+        MvcResult mvcResult = resultActions.andReturn();
+        System.out.println("디버그 : " + mvcResult.getResponse().getContentAsString());
+        resultActions.andExpect(jsonPath("$.code").value(1));
+        resultActions.andExpect(jsonPath("$.message").value("회사정보보기"));
+        resultActions.andExpect(jsonPath("$.data.companyName").value("testCompanyname"));
+    }
+
 }

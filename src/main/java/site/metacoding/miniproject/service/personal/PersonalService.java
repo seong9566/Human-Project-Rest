@@ -274,13 +274,19 @@ public class PersonalService {
 
 	@Transactional(readOnly = true)
 	public CompanyDetailWithPerRespDto findByCompany(Integer companyId) {
-		CompanyAddressRespDto companyAddressRespDto = companyDao.findByAddress(companyId);
 		CompanyDetailWithPerRespDto companyPS = companyDao.findByCompanyToPer(companyId);
 		if (companyPS == null) {
 			throw new ApiException("회사 정보를 찾을 수 없습니다.");
 		}
-		CompanyDetailWithPerRespDto companyDetailRespDto = new CompanyDetailWithPerRespDto(companyPS,
-				companyAddressRespDto);
+		CompanyDetailWithPerRespDto companyDetailRespDto = new CompanyDetailWithPerRespDto(companyPS);
+		String address = companyDetailRespDto.getCompanyAddress();
+		String[] arry = address.split(",");
+		for (int i = 0; i < arry.length; i++) {
+			companyDetailRespDto.setZoneCode(arry[0]);
+			companyDetailRespDto.setRoadJibunAddr(arry[1]);
+			companyDetailRespDto.setDetailAddress(arry[2]);
+		}
+
 		return companyDetailRespDto;
 	}
 }
