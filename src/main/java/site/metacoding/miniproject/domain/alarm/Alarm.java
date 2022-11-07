@@ -24,8 +24,6 @@ public class Alarm {
 	private Boolean alarmCheck;
 	private Timestamp createdAt;
 
-	
-
 	@Builder
 	public Alarm(Integer alarmId, Integer usersId, Integer alarmApplyId, Integer alarmIncruitId,
 			Integer alarmSubscribeId, Integer alarmCompanyLikeId, Integer alarmPersonalLikeId, String alarmMessage,
@@ -41,7 +39,7 @@ public class Alarm {
 		this.alarmCheck = alarmCheck;
 		this.createdAt = createdAt;
 	}
-	
+
 	// null값 방지용 알람삽입 생성자
 	public Alarm(Integer usersId, HashMap<String, Integer> map, String username) {
 		this.usersId = usersId;
