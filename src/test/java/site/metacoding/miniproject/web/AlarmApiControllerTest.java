@@ -34,7 +34,6 @@ import site.metacoding.miniproject.utill.JWTToken.CreateJWTToken;
 @ActiveProfiles("test")
 @AutoConfigureMockMvc
 @SpringBootTest(webEnvironment = WebEnvironment.MOCK)
-@Sql("classpath:truncate.sql")
 public class AlarmApiControllerTest {
 
     private static final String APPLICATION_JSON = "application/json; charset=utf-8";
@@ -77,7 +76,7 @@ public class AlarmApiControllerTest {
 
     @Order(1)
     @Test
-    @Sql("classpath:testsql/insertalarmfortest.sql")
+    @Sql(value = { "classpath:truncate.sql", "classpath:testsql/insertalarmfortest.sql"})
     public void refreshUserAlarm_test() throws Exception {
 
         // given
@@ -93,9 +92,10 @@ public class AlarmApiControllerTest {
     }
     
 
+    
     @Order(2)
     @Test
-    @Sql("classpath:testsql/insertalarmfortest.sql")
+    @Sql(value = { "classpath:truncate.sql", "classpath:testsql/insertalarmfortest.sql"})
     public void readedAlarm_test() throws Exception {
 
         //given
@@ -150,13 +150,31 @@ public class AlarmApiControllerTest {
     }
 
     @Test
-    public void deleteUserAlarm_test() {
+    @Sql(value = { "classpath:truncate.sql", "classpath:testsql/insertalarmfortest.sql"})
+    public void deleteUserAlarm_test() throws Exception{
+
         //given
+
+        Integer alarmId = 5;
 
         //when
 
+        ResultActions resultActions = mvc
+                .perform(delete("/s/api/users/alarm/delete/" + alarmId)
+                .session(session)
+                .cookie(mockCookie)
+                .accept(APPLICATION_JSON))
+        
         //then
 
+                .andExpect(jsonPath("$.code").value("-1"))
+                .andDo(result -> {
+                    mvc.perform(delete("/s/api/users/alarm/delete/" + 1)
+                    .session(session)
+                    .cookie(mockCookie)
+                    .accept(APPLICATION_JSON))
+                    .andExpect(jsonPath("$.code").value("1"));
+                });
     }
 
 }
