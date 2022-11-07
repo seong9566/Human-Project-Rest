@@ -13,6 +13,7 @@ import org.springframework.boot.test.context.SpringBootTest.WebEnvironment;
 import org.springframework.core.io.Resource;
 import org.springframework.core.io.ResourceLoader;
 import org.springframework.http.HttpMethod;
+import org.springframework.http.MediaType;
 import org.springframework.mock.web.MockCookie;
 import org.springframework.mock.web.MockHttpSession;
 import org.springframework.mock.web.MockMultipartFile;
@@ -83,29 +84,32 @@ public class PersonalApiControllerTest {
     public void insertResumes_test() throws Exception {
         // given
         ResumesInsertReqDto resumesInsertReqDto = new ResumesInsertReqDto();
-        resumesInsertReqDto.setResumesTitle("이력서제목1");
-        resumesInsertReqDto.setResumesIntroduce("자기소개1");
-        resumesInsertReqDto.setResumesPlace("부산경남");
+
         resumesInsertReqDto.setCategoryFrontend(true);
         resumesInsertReqDto.setCategoryBackend(true);
         resumesInsertReqDto.setCategoryDevops(true);
+        resumesInsertReqDto.setPortfolioFile("포트폴리오파일");
+        resumesInsertReqDto.setPortfolioSource("http://github.com/asdfqwer");
         resumesInsertReqDto.setOneYearLess(true);
         resumesInsertReqDto.setTwoYearOver(false);
         resumesInsertReqDto.setThreeYearOver(false);
         resumesInsertReqDto.setFiveYearOver(false);
-        resumesInsertReqDto.setPortfolioFile("포트폴리오파일");
-        resumesInsertReqDto.setPortfolioSource("http://github.com/asdfqwer");
+        resumesInsertReqDto.setPersonalId(1);
+        resumesInsertReqDto.setCareerId(1);
+        resumesInsertReqDto.setPortfolioId(1);
+        resumesInsertReqDto.setResumesTitle("이력서제목1");
+        resumesInsertReqDto.setResumesPicture("사진자리");
+        resumesInsertReqDto.setResumesIntroduce("자기소개1");
+        resumesInsertReqDto.setResumesCategoryId(1);
+        resumesInsertReqDto.setResumesPlace("부산경남");
 
         String filename = "p4.jpg";
         Resource resource = loader.getResource("classpath:/static/images/" + filename);
         MockMultipartFile file = new MockMultipartFile("file", "test.jpg", "image/jpg", resource.getInputStream());
 
         String body = om.writeValueAsString(resumesInsertReqDto);
-        MockMultipartFile multipartBody = new MockMultipartFile("resumesInsertReqDto", "formData", APPLICATION_JSON,
+        MockMultipartFile multipartBody = new MockMultipartFile("reqDto", "formData", APPLICATION_JSON,
                 body.getBytes());
-
-        System.out.println("디버그1 : " + body);
-        System.out.println("디버그2 : " + multipartBody);
 
         // when
         ResultActions resultActions = mvc
@@ -118,9 +122,11 @@ public class PersonalApiControllerTest {
 
         // then
         MvcResult mvcResult = resultActions.andReturn();
-        System.out.println("디버그 : " + mvcResult.getResponse().getContentAsString());
+        // System.out.println("디버그 : " + mvcResult.getResponse().getStatus());
+        // System.out.println("디버그 : " + mvcResult.getResponse().getContentAsString());
         resultActions.andExpect(jsonPath("$.code").value(1));
         resultActions.andExpect(jsonPath("$.message").value("이력서 등록 성공"));
+        resultActions.andExpect(jsonPath("$.data.resumesTitle").value("이력서제목1"));
     }
 
     @Test
