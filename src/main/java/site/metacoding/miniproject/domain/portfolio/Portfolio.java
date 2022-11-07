@@ -6,6 +6,7 @@ import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
+import site.metacoding.miniproject.dto.resumes.ResumesReqDto.ResumesUpdateReqDto;
 
 @Getter
 @Setter
@@ -24,11 +25,10 @@ public class Portfolio {
 	}
 
 	// 이력서 수정
-	@Builder
-	public Portfolio(Integer portfolioId, String portfolioSource, String portfolioFile) {
-		this.portfolioId = portfolioId;
-		this.portfolioSource = portfolioSource;
-		this.portfolioFile = portfolioFile;
+	public void updatePortfolio(ResumesUpdateReqDto resumesUpdateReqDto) {
+		this.portfolioId = resumesUpdateReqDto.getPortfolioId();
+		this.portfolioSource = resumesUpdateReqDto.getPortfolioSource();
+		this.portfolioFile = resumesUpdateReqDto.getPortfolioFile();
 	}
 
 }
