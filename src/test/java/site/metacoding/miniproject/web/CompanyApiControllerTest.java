@@ -1,9 +1,8 @@
 package site.metacoding.miniproject.web;
 
-import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
-import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.put;
 
+import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.*;
 import java.sql.Timestamp;
 
 import org.junit.jupiter.api.AfterEach;
@@ -38,7 +37,6 @@ import site.metacoding.miniproject.utill.JWTToken.CreateJWTToken;
 @ActiveProfiles("test")
 @AutoConfigureMockMvc
 @SpringBootTest(webEnvironment = WebEnvironment.MOCK)
-@Sql("classpath:truncate.sql")
 public class CompanyApiControllerTest {
 
     private static final String APPLICATION_JSON = "application/json; charset=utf-8";
@@ -81,7 +79,8 @@ public class CompanyApiControllerTest {
 
     // 채용공고업데이트
     @Test
-    @Sql(scripts = "classpath:testsql/insertjobpostingboard.sql")
+
+    @Sql({ "classpath:truncate.sql", "classpath:testsql/insertjobpostingboard.sql" })
     public void updatejobPostingBoard_test() throws Exception {
 
         // given
@@ -122,7 +121,8 @@ public class CompanyApiControllerTest {
 
     // 채용공고 목록보기
     @Test
-    @Sql(scripts = "classpath:testsql/insertjobpostingBoard.sql")
+
+    @Sql({ "classpath:truncate.sql", "classpath:testsql/insertjobpostingboard.sql" })
     public void jobPostingBoardList_test() throws Exception {
         // given
 
@@ -138,7 +138,7 @@ public class CompanyApiControllerTest {
 
     // 채용공고 추가하기
     @Test
-    @Sql("classpath:truncate.sql")
+    @Sql({ "classpath:truncate.sql", "classpath:testsql/companytest.sql" })
     public void insertJobPostingBoard_test() throws Exception {
 
         // given
@@ -157,7 +157,7 @@ public class CompanyApiControllerTest {
         jobPostingBoardInsertReqDto.setFiveYearOver(false);
 
         String body = om.writeValueAsString(jobPostingBoardInsertReqDto);
-
+        log.debug("mytest : " + body);
         // when
         ResultActions resultActions = mvc.perform(post("/s/api/jobpostingboard/insert")
                 .content(body)
@@ -170,14 +170,15 @@ public class CompanyApiControllerTest {
         MvcResult mvcResult = resultActions.andReturn();
         System.out.println("debugggg:" +
                 mvcResult.getResponse().getContentAsString());
-        // resultActions.andExpect(MockMvcResultMatchers.jsonPath("$.code").value(1));
+        //
+        resultActions.andExpect(MockMvcResultMatchers.jsonPath("$.code").value(1));
         resultActions.andExpect(MockMvcResultMatchers.status().isOk());
 
     }
 
     // 채용공고 삭제하기
     @Test
-    @Sql(scripts = "classpath:testsql/insertjobpostingBoard.sql")
+    @Sql({ "classpath:truncate.sql", "classpath:testsql/insertjobpostingBoard.sql" })
     public void deleteJobPostingBoard_test() throws Exception {
         // given
 

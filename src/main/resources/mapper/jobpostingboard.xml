@@ -43,8 +43,7 @@
 	<insert id="insert">
 		INSERT INTO
 		job_posting_board
-		(
-		company_id,
+		(company_id,
 		job_posting_board_category_id,
 		job_posting_board_career_id,
 		job_posting_board_title,
@@ -52,10 +51,8 @@
 		job_posting_board_place,
 		job_posting_board_content,
 		job_posting_board_deadline,
-		created_at
-		)
-		VALUE(
-		#{companyId},
+		created_at)
+		VALUES(#{companyId},
 		#{jobPostingBoardCategoryId},
 		#{jobPostingBoardCareerId},
 		#{jobPostingBoardTitle},
@@ -63,8 +60,7 @@
 		#{jobPostingBoardPlace},
 		#{jobPostingBoardContent},
 		#{jobPostingBoardDeadline},
-		now()
-		)
+		now())
 	</insert>
 
 	<update id="update">
