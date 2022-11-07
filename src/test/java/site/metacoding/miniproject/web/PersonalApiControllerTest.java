@@ -2,7 +2,9 @@ package site.metacoding.miniproject.web;
 
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.delete;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
+import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.multipart;
+import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.put;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.put;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.jsonPath;
 
@@ -13,10 +15,10 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureMockMvc;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.boot.test.context.SpringBootTest.WebEnvironment;
+import org.springframework.core.annotation.Order;
 import org.springframework.core.io.Resource;
 import org.springframework.core.io.ResourceLoader;
 import org.springframework.http.HttpMethod;
-import org.springframework.http.MediaType;
 import org.springframework.mock.web.MockCookie;
 import org.springframework.mock.web.MockHttpSession;
 import org.springframework.mock.web.MockMultipartFile;
@@ -26,10 +28,11 @@ import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.test.web.servlet.MvcResult;
 import org.springframework.test.web.servlet.ResultActions;
 import org.springframework.test.web.servlet.request.MockMvcRequestBuilders;
-import org.springframework.transaction.annotation.Transactional;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
 
+import lombok.extern.slf4j.Slf4j;
+import site.metacoding.miniproject.dto.personal.PersonalReqDto.PersonalUpdatReqDto;
 import site.metacoding.miniproject.dto.resumes.ResumesReqDto.ResumesInsertReqDto;
 import site.metacoding.miniproject.dto.resumes.ResumesReqDto.ResumesUpdateReqDto;
 import site.metacoding.miniproject.dto.user.UserRespDto.SignPersonalDto;
@@ -38,11 +41,11 @@ import site.metacoding.miniproject.service.personal.PersonalService;
 import site.metacoding.miniproject.utill.JWTToken.CreateJWTToken;
 import site.metacoding.miniproject.utill.SHA256;
 
+@Slf4j
 @ActiveProfiles("test")
-@Sql("classpath:truncate.sql")
-@Transactional
 @AutoConfigureMockMvc
 @SpringBootTest(webEnvironment = WebEnvironment.MOCK)
+@Sql("classpath:truncate.sql")
 public class PersonalApiControllerTest {
 
     private static final String APPLICATION_JSON = "application/json; charset=utf-8";
@@ -86,7 +89,7 @@ public class PersonalApiControllerTest {
 
     @Test
     @Sql("classpath:testsql/insertresumes.sql")
-    public void insertResumes_test() throws Exception {
+    public void insertResumes_test() throws Exception { // 이력서 작성
         // given
         ResumesInsertReqDto resumesInsertReqDto = new ResumesInsertReqDto();
 
@@ -132,7 +135,7 @@ public class PersonalApiControllerTest {
 
     @Test
     @Sql("classpath:testsql/findallmyresumes.sql")
-    public void findAllMyResumes_test() throws Exception {
+    public void findAllMyResumes_test() throws Exception { // 내 이력서 목록 보기
         // given
         Integer id = 1;
 
@@ -151,26 +154,27 @@ public class PersonalApiControllerTest {
 
     @Test
     @Sql("classpath:testsql/oneresumes.sql")
-    public void deleteResumes_test() throws Exception {
+    public void findByResumesId_test() throws Exception { // 이력서 상세보기
         // given
-        Integer id = 1;
+        Integer resumesId = 1;
 
         // when
         ResultActions resultActions = mvc
-                .perform(delete("/s/resumes/delete/" + id)
-                        .accept(APPLICATION_JSON)
+                .perform(MockMvcRequestBuilders.get("/resumes/" + resumesId).accept(APPLICATION_JSON)
                         .cookie(mockCookie)
                         .session(session));
 
         // then
         MvcResult mvcResult = resultActions.andReturn();
+        System.out.println("디버그 : " + mvcResult.getResponse().getContentAsString());
         resultActions.andExpect(jsonPath("$.code").value(1));
-        resultActions.andExpect(jsonPath("$.message").value("이력서 삭제 성공"));
+        resultActions.andExpect(jsonPath("$.message").value("내 이력서 상세 보기 성공"));
+        resultActions.andExpect(jsonPath("$.data.resumesTitle").value("resumes_title_example1"));
     }
 
     @Test
     @Sql("classpath:testsql/oneresumes.sql")
-    public void updateResumes_test() throws Exception {
+    public void updateResumes_test() throws Exception { // 이력서 수정
         // given
         Integer resumesId = 1;
         ResumesUpdateReqDto resumesUpdateReqDto = new ResumesUpdateReqDto();
@@ -214,21 +218,66 @@ public class PersonalApiControllerTest {
 
     @Test
     @Sql("classpath:testsql/oneresumes.sql")
-    public void findByResumesId_test() throws Exception {
+    public void deleteResumes_test() throws Exception { // 이력서 삭제
         // given
-        Integer resumesId = 1;
+        Integer id = 1;
 
         // when
         ResultActions resultActions = mvc
-                .perform(MockMvcRequestBuilders.get("/resumes/" + resumesId).accept(APPLICATION_JSON)
+                .perform(delete("/s/resumes/delete/" + id)
+                        .accept(APPLICATION_JSON)
                         .cookie(mockCookie)
                         .session(session));
 
         // then
         MvcResult mvcResult = resultActions.andReturn();
         resultActions.andExpect(jsonPath("$.code").value(1));
-        resultActions.andExpect(jsonPath("$.message").value("내 이력서 상세 보기 성공"));
-        resultActions.andExpect(jsonPath("$.data.resumesTitle").value("resumes_title_example1"));
+        resultActions.andExpect(jsonPath("$.message").value("이력서 삭제 성공"));
+    }
+
+    // 내정보보기 // 오류발생하는게 맞음 아직 해결못함
+
+    @Sql(scripts = "classpath:testsql/selectdetailforpersonal.sql")
+    @Test
+    public void findByPersonal_test() throws Exception {
+
+        // given
+
+        // when
+        ResultActions resultActions = mvc.perform(get("/s/api/personal/detail")
+                .session(session)
+                .cookie(mockCookie)
+                .accept(APPLICATION_JSON));
+
+        // then
+        MvcResult mvcResult = resultActions.andReturn();
+        System.out.println("debugggg: " + mvcResult.getResponse().getContentAsString());
+    }
+
+    // 내정보수정
+    @Sql(scripts = "classpath:testsql/selectdetailforpersonal.sql")
+    @Test
+    public void updatePersonalDetail_test() throws Exception {
+
+        // given
+        PersonalUpdatReqDto personalUpdateReqDto = new PersonalUpdatReqDto();
+        personalUpdateReqDto.setPersonalName("ssar");
+        personalUpdateReqDto.setPersonalPhoneNumber("010-9459-5116");
+        personalUpdateReqDto.setPersonalEmail("cndtjq1248@naver.com");
+        personalUpdateReqDto.setPersonalAddress("대구,달서구,장기동");
+        personalUpdateReqDto.setPersonalEducation("4년제");
+        personalUpdateReqDto.setLoginPassword("@@ps990104");
+        String body = om.writeValueAsString(personalUpdateReqDto);
+
+        // when
+        ResultActions resultActions = mvc.perform(put("/s/api/personal/update").content(body)
+                .contentType(APPLICATION_JSON).accept(APPLICATION_JSON).session(session).cookie(mockCookie));
+        System.out.println("debugggg:" + resultActions.andReturn().getResponse().getContentAsString());
+
+        // then
+        MvcResult mvcResult = resultActions.andReturn();
+        System.out.println("debugggg:" + mvcResult.getResponse().getContentAsString());
+
     }
 
 }

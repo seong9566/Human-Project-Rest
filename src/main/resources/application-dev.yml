@@ -9,10 +9,13 @@ spring:
     driver-class-name: org.mariadb.jdbc.Driver
     username: jobsmatch
     password: 1234
+    
   redis:
     host: localhost
     port: 6379
+    
 
+  
   
   # jpa:
   #   open-in-view: false
