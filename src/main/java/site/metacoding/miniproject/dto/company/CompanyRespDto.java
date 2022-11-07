@@ -48,10 +48,6 @@ public class CompanyRespDto {
             this.companyEmail = companyDetailRespDto.getCompanyEmail();
             this.companyPicture = companyDetailRespDto.getCompanyPicture();
             this.count = companyDetailRespDto.getCount();
-            this.companyAddress = companyDetailRespDto.getCompanyAddress();
-            this.zoneCode = companyDetailRespDto.getZoneCode();
-            this.roadJibunAddr = companyDetailRespDto.getRoadJibunAddr();
-            this.detailAddress = companyDetailRespDto.getDetailAddress();
         }
 
     }
