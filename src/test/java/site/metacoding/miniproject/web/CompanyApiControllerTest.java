@@ -1,9 +1,9 @@
 package site.metacoding.miniproject.web;
 
+import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.put;
 
 import java.sql.Timestamp;
-import java.util.Date;
 
 import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.BeforeAll;
@@ -17,6 +17,7 @@ import org.springframework.mock.web.MockCookie;
 import org.springframework.mock.web.MockHttpSession;
 import org.springframework.test.context.ActiveProfiles;
 import org.springframework.test.context.jdbc.Sql;
+import org.springframework.test.context.jdbc.Sql.ExecutionPhase;
 import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.test.web.servlet.MvcResult;
 import org.springframework.test.web.servlet.ResultActions;
@@ -26,6 +27,7 @@ import org.springframework.test.web.servlet.result.MockMvcResultMatchers;
 import com.fasterxml.jackson.databind.ObjectMapper;
 
 import lombok.extern.slf4j.Slf4j;
+import site.metacoding.miniproject.dto.company.CompanyReqDto.CompanyUpdateReqDto;
 import site.metacoding.miniproject.dto.jobpostingboard.JobPostingBoardReqDto.JobPostingBoardUpdateReqDto;
 import site.metacoding.miniproject.dto.user.UserRespDto.SignCompanyDto;
 import site.metacoding.miniproject.dto.user.UserRespDto.SignedDto;
@@ -188,6 +190,43 @@ public class CompanyApiControllerTest {
         MvcResult mvcResult = resultActions.andReturn();
         System.out.println("debugggg:" + mvcResult.getResponse().getContentAsString());
         resultActions.andExpect(MockMvcResultMatchers.jsonPath("$.code").value(1));
+    }
+
+    @Test
+    @Sql(scripts = "classpath:testsql/companytest.sql")
+    public void findByCompany_test() throws Exception {
+        // given
+
+        // when
+        ResultActions resultActions = mvc
+
+                .perform(get("/api/company/detail").session(session).cookie(mockCookie)
+                        .accept(APPLICATION_JSON));
+        // then
+        MvcResult mvcResult = resultActions.andReturn();
+        System.out.println("디버그 : " + mvcResult.getResponse().getContentAsString());
+
+    }
+
+    @Test
+    @Sql(scripts = "classpath:testsql/companytest.sql")
+    public void companyUpdate_test() throws Exception {
+        // given
+        CompanyUpdateReqDto companyUpdateReqDto = new CompanyUpdateReqDto();
+        companyUpdateReqDto.setCompanyName("박동훈");
+        companyUpdateReqDto.setCompanyEmail("sopu555555@naver.com");
+        companyUpdateReqDto.setCompanyPhoneNumber("01024102957");
+        // MockMultipartFile file = new MockMultipartFile("image", "test.png",
+        // "image/png",
+        // new FileInputStream("C:\\Users\\GGG\\4.jpg"));
+        companyUpdateReqDto.setCompanyPicture("file");
+        String body = om.writeValueAsString(companyUpdateReqDto);
+        // when
+        ResultActions resultActions = mvc
+                .perform(put("/s/api/company/update").session(session).cookie(mockCookie).content(body)
+                        .contentType(APPLICATION_JSON).accept(APPLICATION_JSON));
+        MvcResult mvcResult = resultActions.andReturn();
+        System.out.println("디버그 : " + mvcResult.getResponse().getContentAsString());
     }
 
 }
