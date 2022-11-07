@@ -98,7 +98,7 @@ public class CompanyApiControllerTest {
         session.clearAttributes();
     }
 
-    @Order(1)
+    @Order(2)
     @Test
     @Sql(scripts = "classpath:testsql/insertuserforpersonal.sql", executionPhase = ExecutionPhase.BEFORE_TEST_METHOD)
     public void findByCompany_test() throws Exception {
@@ -115,7 +115,9 @@ public class CompanyApiControllerTest {
 
     }
 
+    @Order(1)
     @Test
+    @Sql(scripts = "classpath:testsql/insertuserforpersonal.sql", executionPhase = ExecutionPhase.BEFORE_TEST_METHOD)
     public void companyUpdate_test() throws Exception {
         // given
         CompanyUpdateReqDto companyUpdateReqDto = new CompanyUpdateReqDto();
