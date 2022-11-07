@@ -74,13 +74,13 @@ public class AlarmApiControllerTest {
 
     @Order(1)
     @Test
-    @Sql("classpath:testsql/insertuserforpersonal.sql")
-    public void cookie_test() throws Exception {
+    @Sql("classpath:testsql/insertalarmfortest.sql")
+    public void refreshUserAlarm_test() throws Exception {
 
         // given
 
         // when
-        ResultActions resultActions = mvc.perform(get("/s/users/alarm")
+        ResultActions resultActions = mvc.perform(get("/s/api/users/alarm")
                 .session(session)
                 .cookie(mockCookie)
                 .accept(APPLICATION_JSON));
@@ -88,5 +88,18 @@ public class AlarmApiControllerTest {
         log.debug("디버그 : " + resultActions.andReturn().getResponse().getContentAsString());
     }
     
+    @Test
+    public void readedAlarm_test() {
+        //given
+
+        //when
+
+        //then
+    }
+
+    @Test
+    public void deleteUserAlarm_test() {
+
+    }
 
 }
