@@ -193,7 +193,7 @@ public class CompanyApiControllerTest {
     }
 
     @Test
-    @Sql(scripts = "classpath:testsql/insertuserforpersonal.sql", executionPhase = ExecutionPhase.BEFORE_TEST_METHOD)
+    @Sql(scripts = "classpath:testsql/companytest.sql")
     public void findByCompany_test() throws Exception {
         // given
 
@@ -209,7 +209,7 @@ public class CompanyApiControllerTest {
     }
 
     @Test
-    @Sql(scripts = "classpath:testsql/insertuserforpersonal.sql", executionPhase = ExecutionPhase.BEFORE_TEST_METHOD)
+    @Sql(scripts = "classpath:testsql/companytest.sql")
     public void companyUpdate_test() throws Exception {
         // given
         CompanyUpdateReqDto companyUpdateReqDto = new CompanyUpdateReqDto();
