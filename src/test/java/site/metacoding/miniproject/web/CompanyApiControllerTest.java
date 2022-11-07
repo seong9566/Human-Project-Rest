@@ -1,9 +1,8 @@
 package site.metacoding.miniproject.web;
 
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.put;
-
+import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
 import java.sql.Timestamp;
-import java.util.Date;
 
 import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.BeforeAll;
@@ -26,6 +25,7 @@ import org.springframework.test.web.servlet.result.MockMvcResultMatchers;
 import com.fasterxml.jackson.databind.ObjectMapper;
 
 import lombok.extern.slf4j.Slf4j;
+import site.metacoding.miniproject.dto.jobpostingboard.JobPostingBoardReqDto.JobPostingBoardInsertReqDto;
 import site.metacoding.miniproject.dto.jobpostingboard.JobPostingBoardReqDto.JobPostingBoardUpdateReqDto;
 import site.metacoding.miniproject.dto.user.UserRespDto.SignCompanyDto;
 import site.metacoding.miniproject.dto.user.UserRespDto.SignedDto;
@@ -133,42 +133,40 @@ public class CompanyApiControllerTest {
         resultActions.andExpect(MockMvcResultMatchers.status().isOk());
     }
 
-    // // 채용공소 추가하기
-    // @Test
-    // @Sql(scripts = "classpath:testsql/insertjobpostingBoard.sql", executionPhase
-    // = ExecutionPhase.BEFORE_TEST_METHOD)
-    // public void insertJobPostingBoard_test() throws Exception {
-    // // given
-    // JobPostingBoardInsertReqDto jobPostingBoardInsertReqDto = new
-    // JobPostingBoardInsertReqDto();
-    // jobPostingBoardInsertReqDto.setCompanyId(1);
-    // jobPostingBoardInsertReqDto.setJobPostingBoardTitle("title");
-    // jobPostingBoardInsertReqDto.setJobPostingBoardContent("contentcontet");
-    // jobPostingBoardInsertReqDto.setJobPostingBoardPlace("placeplace");
-    // jobPostingBoardInsertReqDto.setJobPostingSalary(10000);
-    // jobPostingBoardInsertReqDto.setJobPostingBoardDeadline(null);
-    // jobPostingBoardInsertReqDto.setCategoryBackend(true);
-    // jobPostingBoardInsertReqDto.setCategoryDevops(false);
-    // jobPostingBoardInsertReqDto.setCategoryFrontend(false);
-    // jobPostingBoardInsertReqDto.setOneYearLess(false);
-    // jobPostingBoardInsertReqDto.setTwoYearOver(false);
-    // jobPostingBoardInsertReqDto.setThreeYearOver(true);
-    // jobPostingBoardInsertReqDto.setFiveYearOver(false);
+    // 채용공소 추가하기
+    @Test
+    @Sql(scripts = "classpath:testsql/insertjobpostingBoard.sql")
+    public void insertJobPostingBoard_test() throws Exception {
+        // given
+        JobPostingBoardInsertReqDto jobPostingBoardInsertReqDto = new JobPostingBoardInsertReqDto();
+        jobPostingBoardInsertReqDto.setCompanyId(1);
+        jobPostingBoardInsertReqDto.setJobPostingBoardTitle("title");
+        jobPostingBoardInsertReqDto.setJobPostingBoardContent("contentcontet");
+        jobPostingBoardInsertReqDto.setJobPostingBoardPlace("placeplace");
+        jobPostingBoardInsertReqDto.setJobPostingSalary(10000);
+        jobPostingBoardInsertReqDto.setJobPostingBoardDeadline(null);
+        jobPostingBoardInsertReqDto.setCategoryBackend(true);
+        jobPostingBoardInsertReqDto.setCategoryDevops(false);
+        jobPostingBoardInsertReqDto.setCategoryFrontend(false);
+        jobPostingBoardInsertReqDto.setOneYearLess(false);
+        jobPostingBoardInsertReqDto.setTwoYearOver(false);
+        jobPostingBoardInsertReqDto.setThreeYearOver(true);
+        jobPostingBoardInsertReqDto.setFiveYearOver(false);
 
-    // String body = om.writeValueAsString(jobPostingBoardInsertReqDto);
+        String body = om.writeValueAsString(jobPostingBoardInsertReqDto);
 
-    // // when
-    // ResultActions resultActions =
-    // mvc.perform(MockMvcRequestBuilders.post("/s/api/jobpostingboard/insert")
-    // .content(body).contentType(APPLICATION_JSON).accept(APPLICATION_JSON).session(session));
+        // when
+        ResultActions resultActions = mvc.perform(post("/s/api/jobpostingboard/insert")
+                .content(body).contentType(APPLICATION_JSON).accept(APPLICATION_JSON).session(session)
+                .cookie(mockCookie));
 
-    // // then
-    // MvcResult mvcResult = resultActions.andReturn();
-    // System.out.println("debugggg:" +
-    // mvcResult.getResponse().getContentAsString());
-    // resultActions.andExpect(MockMvcResultMatchers.jsonPath("$.code").value(1));
+        // then
+        MvcResult mvcResult = resultActions.andReturn();
+        System.out.println("debugggg:" +
+                mvcResult.getResponse().getContentAsString());
+        resultActions.andExpect(MockMvcResultMatchers.jsonPath("$.code").value(1));
 
-    // }
+    }
 
     // 채용공고 삭제하기
     @Test
