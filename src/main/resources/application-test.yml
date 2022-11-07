@@ -16,6 +16,7 @@ spring:
       schema-locations: classpath:testdatabase.sql
       mode: always
 
+
   session:
     store-type: none
 
