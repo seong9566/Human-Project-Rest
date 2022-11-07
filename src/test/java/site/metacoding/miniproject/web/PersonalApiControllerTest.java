@@ -81,7 +81,6 @@ public class PersonalApiControllerTest {
     public void findByPersonal_test() throws Exception {
 
         // given
-        Integer personalId = 1;
 
         // when
         ResultActions resultActions = mvc.perform(get("/api/personal/detail")
