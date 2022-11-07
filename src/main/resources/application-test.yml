@@ -1,18 +1,20 @@
+
 server:
   port: 8001
   servlet:
     context-path: /
     encoding:
       charset: utf-8
-
 spring:
   datasource:
     url: jdbc:h2:mem:test;MODE=MYSQL
     driver-class-name: org.h2.Driver
     username: sa
     password:
-  # sql.init.mode: always
-  sql.init.schema-locations: classpath:testdatabase.sql
+  sql:
+    init:
+      schema-locations: classpath:testdatabase.sql
+      mode: always
 
 
   session:
@@ -37,9 +39,7 @@ spring:
   output:
     ansi:
       enabled: always
-  sql:
-    init:
-      mode: always
+
 
 logging:
   level:
