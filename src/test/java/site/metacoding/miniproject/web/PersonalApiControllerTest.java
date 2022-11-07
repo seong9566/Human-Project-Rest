@@ -1,5 +1,7 @@
 package site.metacoding.miniproject.web;
 
+import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.*;
+
 import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.BeforeEach;
@@ -8,12 +10,11 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureMockMvc;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.boot.test.context.SpringBootTest.WebEnvironment;
-import org.springframework.http.HttpHeaders;
+import org.springframework.core.annotation.Order;
 import org.springframework.mock.web.MockCookie;
 import org.springframework.mock.web.MockHttpSession;
 import org.springframework.test.context.ActiveProfiles;
 import org.springframework.test.context.jdbc.Sql;
-import org.springframework.test.context.jdbc.Sql.ExecutionPhase;
 import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.test.web.servlet.MvcResult;
 import org.springframework.test.web.servlet.ResultActions;
@@ -23,7 +24,6 @@ import org.springframework.test.web.servlet.result.MockMvcResultMatchers;
 import com.fasterxml.jackson.databind.ObjectMapper;
 
 import lombok.extern.slf4j.Slf4j;
-import site.metacoding.miniproject.domain.personal.Personal;
 import site.metacoding.miniproject.dto.personal.PersonalReqDto.PersonalUpdatReqDto;
 import site.metacoding.miniproject.dto.user.UserRespDto.SignPersonalDto;
 import site.metacoding.miniproject.dto.user.UserRespDto.SignedDto;
@@ -46,8 +46,6 @@ public class PersonalApiControllerTest {
 
     private MockHttpSession session;
 
-    private static HttpHeaders headers;
-
     private MockCookie mockCookie;
 
     @BeforeAll // 선언시 static으로 선언해야한다. - container에 띄우기 위해 사용한다.
@@ -57,28 +55,18 @@ public class PersonalApiControllerTest {
 
     @BeforeEach
     public void sessionInit() {
+
         session = new MockHttpSession();
         SignPersonalDto signPersonalDto = new SignPersonalDto();
 
         signPersonalDto.setPersonalId(1);
         SignedDto<?> signedDto = new SignedDto<>(1, "testuser1", signPersonalDto);
 
-        session.setAttribute("principal", signedDto);
-
         String JwtToken = CreateJWTToken.createToken(signedDto); // Authorization
         mockCookie = new MockCookie("Authorization", JwtToken);
 
-    }
+        session.setAttribute("principal", signedDto);
 
-    @BeforeEach
-    public void dataInit() {
-        session = new MockHttpSession();
-        Personal personal = Personal.builder().personalName("ssar")
-                .personalPhoneNumber("010-9459-5116")
-                .personalEmail("cndtjq1248@naver.com")
-                .personalEducation("4년제")
-                .personalAddress("대구광역시")
-                .build();
     }
 
     @AfterEach
@@ -87,26 +75,28 @@ public class PersonalApiControllerTest {
     }
 
     // 내정보보기
+    @Order(1)
+    @Sql(scripts = "classpath:testsql/selectdetailforpersonal.sql")
     @Test
-    @Sql(scripts = "classpath:create.sql", executionPhase = ExecutionPhase.BEFORE_TEST_METHOD)
     public void findByPersonal_test() throws Exception {
 
         // given
+        Integer personalId = 1;
 
         // when
-        ResultActions resultActions = mvc.perform(MockMvcRequestBuilders.get("/s/api/personal/detail")
+        ResultActions resultActions = mvc.perform(get("/api/personal/detail")
                 .session(session)
                 .cookie(mockCookie)
-                .contentType(APPLICATION_JSON)
                 .accept(APPLICATION_JSON));
 
         // then
         MvcResult mvcResult = resultActions.andReturn();
         System.out.println("debugggg: " + mvcResult.getResponse().getContentAsString());
-        resultActions.andExpect(MockMvcResultMatchers.status().isOk());
     }
 
     // 내정보수정
+    @Order(2)
+    @Sql(scripts = "classpath:testsql/selectdetailforpersonal.sql")
     @Test
     public void updatePersonalDetail_test() throws Exception {
 
@@ -122,14 +112,14 @@ public class PersonalApiControllerTest {
         String body = om.writeValueAsString(personalUpdateReqDto);
 
         // when
-        ResultActions resultActions = mvc.perform(MockMvcRequestBuilders.put("/s/api/personal/update").content(body)
+        ResultActions resultActions = mvc.perform(put("/api/personal/update").content(body)
                 .contentType(APPLICATION_JSON).accept(APPLICATION_JSON).session(session).cookie(mockCookie));
         System.out.println("debugggg:" + resultActions.andReturn().getResponse().getContentAsString());
 
         // then
         MvcResult mvcResult = resultActions.andReturn();
         System.out.println("debugggg:" + mvcResult.getResponse().getContentAsString());
-        resultActions.andExpect(MockMvcResultMatchers.jsonPath("$.code").value(1));
+
     }
 
 }

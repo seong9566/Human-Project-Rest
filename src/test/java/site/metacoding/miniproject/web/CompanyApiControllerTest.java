@@ -1,5 +1,7 @@
 package site.metacoding.miniproject.web;
 
+import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.*;
+
 import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.BeforeEach;
@@ -24,7 +26,7 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 
 import lombok.extern.slf4j.Slf4j;
 import site.metacoding.miniproject.config.MyBatisConfig;
-import site.metacoding.miniproject.domain.users.Users;
+
 import site.metacoding.miniproject.dto.jobpostingboard.JobPostingBoardReqDto.JobPostingBoardInsertReqDto;
 import site.metacoding.miniproject.dto.jobpostingboard.JobPostingBoardReqDto.JobPostingBoardUpdateReqDto;
 import site.metacoding.miniproject.dto.user.UserRespDto.SignPersonalDto;
@@ -49,8 +51,6 @@ public class CompanyApiControllerTest {
 
     private MockHttpSession session;
 
-    private static HttpHeaders headers;
-
     private MockCookie mockCookie;
 
     @BeforeAll // 선언시 static으로 선언해야한다. - container에 띄우기 위해 사용한다.
@@ -60,16 +60,17 @@ public class CompanyApiControllerTest {
 
     @BeforeEach
     public void sessionInit() {
+
         session = new MockHttpSession();
         SignPersonalDto signPersonalDto = new SignPersonalDto();
 
         signPersonalDto.setPersonalId(1);
         SignedDto<?> signedDto = new SignedDto<>(1, "testuser1", signPersonalDto);
 
-        session.setAttribute("principal", signedDto);
-
         String JwtToken = CreateJWTToken.createToken(signedDto); // Authorization
         mockCookie = new MockCookie("Authorization", JwtToken);
+
+        session.setAttribute("principal", signedDto);
 
     }
 
@@ -127,8 +128,8 @@ public class CompanyApiControllerTest {
 
     // 채용공고업데이트
     @Test
-    public void updatejobPostingBoard_test() throws Exception {
 
+    public void updatejobPostingBoard_test() throws Exception {
         // given
         JobPostingBoardUpdateReqDto jobPostingBoardUpdateReqDto = new JobPostingBoardUpdateReqDto();
         jobPostingBoardUpdateReqDto.setJobPostingBoardId(1);

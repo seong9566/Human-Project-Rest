@@ -51,7 +51,6 @@
 		u.login_password
 		FROM personal p
 		left OUTER JOIN users u
-
 		ON
 		p.personal_id = u.personal_id
 		WHERE p.personal_id =

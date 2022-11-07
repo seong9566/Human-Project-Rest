@@ -236,7 +236,7 @@ public class PersonalController {
 	// }
 
 	// 내정보 보기
-	@GetMapping("/s/api/personal/detail")
+	@GetMapping("/api/personal/detail")
 	public ResponseDto<?> findByPersonal() {
 		SignedDto<?> principal = (SignedDto<?>) session.getAttribute("principal");
 		SignPersonalDto signPersonalDto = (SignPersonalDto) principal.getUserInfo();
@@ -261,7 +261,7 @@ public class PersonalController {
 	// }
 
 	// 내정보 수정
-	@PutMapping("/s/api/personal/update")
+	@PutMapping("/api/personal/update")
 	public @ResponseBody ResponseDto<?> personalUpdate(@RequestBody PersonalUpdatReqDto personalUpdatReqDto) {
 		// ValidationCheckUtil.valCheckToUpdatePersonal(personalUpdatReqDto);
 		SignedDto<SignPersonalDto> principal = (SignedDto<SignPersonalDto>) session.getAttribute("principal");
