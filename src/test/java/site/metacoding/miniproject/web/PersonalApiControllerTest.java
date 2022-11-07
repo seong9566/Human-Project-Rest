@@ -229,7 +229,7 @@ public class PersonalApiControllerTest {
         resultActions.andExpect(jsonPath("$.message").value("이력서 삭제 성공"));
     }
 
-    // 내정보보기 // 오류발생하는게 맞음 아직 해결못함
+    // 내정보보기
     @Sql({ "classpath:truncate.sql", "classpath:testsql/selectdetailforpersonal.sql" })
     @Test
     public void findByPersonal_test() throws Exception {
