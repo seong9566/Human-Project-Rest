@@ -7,6 +7,8 @@ import java.util.regex.Pattern;
 import org.springframework.util.ObjectUtils;
 
 import site.metacoding.miniproject.dto.company.CompanyReqDto.CompanyJoinDto;
+import site.metacoding.miniproject.dto.company.CompanyReqDto.CompanyUpdateReqDto;
+import site.metacoding.miniproject.dto.jobpostingboard.JobPostingBoardReqDto.JobPostingBoardInsertReqDto;
 import site.metacoding.miniproject.dto.personal.PersonalReqDto.PersonalJoinDto;
 import site.metacoding.miniproject.dto.personal.PersonalReqDto.PersonalUpdatReqDto;
 import site.metacoding.miniproject.exception.NormalException;
@@ -128,13 +130,13 @@ public class ValidationCheckUtil {
 		}
 
 		Boolean phoneNumberCheck = Pattern.matches("\\d{3}-\\d{3,4}-\\d{4}$",
-		personalUpdateReqDto.getPersonalPhoneNumber());
+				personalUpdateReqDto.getPersonalPhoneNumber());
 		if (ObjectUtils.isEmpty(personalUpdateReqDto.getPersonalPhoneNumber()) || (!phoneNumberCheck)) {
 			errors.put("PersonalPhoneNumber", "전화번호 입력 규격에 맞지 않습니다. ex) 010-0000-0000");
 		}
 
 		Boolean emailCheck = Pattern.matches("^[a-zA-Z0-9]+@[a-zA-Z0-9]{4,}.{1}?[a-zA-Z]{2,3}$",
-		personalUpdateReqDto.getPersonalEmail());
+				personalUpdateReqDto.getPersonalEmail());
 		if (ObjectUtils.isEmpty(personalUpdateReqDto.getPersonalEmail()) || (!emailCheck)) {
 			errors.put("PersonalEmail", "이메일 입력형식으로 해주세요 ex) example@exmple.com");
 		}
@@ -145,6 +147,41 @@ public class ValidationCheckUtil {
 			}
 		}
 
+	}
+
+	public static void valCheckToUpdateCompany(CompanyUpdateReqDto companyUpdateReqDto) {
+
+		if (companyUpdateReqDto == null)
+			throw new NormalException("잘못된 요청입니다.");
+
+		// 검증 오류 결과 보관
+		Map<String, String> errors = new HashMap<>();
+
+		Boolean passwordCheck = Pattern.matches(
+				"^(?=.*[a-z])(?=.*[A-Z])(?=.*\\d)(?=.*[$@$!%*?&])[A-Za-z\\d$@$!%*?&]{8,25}",
+				companyUpdateReqDto.getLoginPassword());
+		if (ObjectUtils.isEmpty(companyUpdateReqDto.getLoginPassword())
+				|| (!passwordCheck)) {
+			errors.put("password", "패스워드는 대문자, 소문자, 특수문자가 적어도 하나씩은 있어야 하며 최소 8자리여야 하며 최대 25자리까지 가능합니다.");
+		}
+
+		Boolean phoneNumberCheck = Pattern.matches("\\d{3}-\\d{3,4}-\\d{4}$",
+				companyUpdateReqDto.getCompanyPhoneNumber());
+		if (ObjectUtils.isEmpty(companyUpdateReqDto.getCompanyPhoneNumber()) || (!phoneNumberCheck)) {
+			errors.put("personalPhoneNumber", "전화번호 입력 규격에 맞지 않습니다. ex) 010-0000-0000");
+		}
+
+		Boolean emailCheck = Pattern.matches("^[a-zA-Z0-9]+@[a-zA-Z0-9]{4,}.{1}?[a-zA-Z]{2,3}$",
+				companyUpdateReqDto.getCompanyEmail());
+		if (ObjectUtils.isEmpty(companyUpdateReqDto.getCompanyEmail()) || (!emailCheck)) {
+			errors.put("PersonalEmail", "이메일 입력형식으로 해주세요 ex) example@exmple.com");
+		}
+
+		if (!errors.isEmpty()) {
+			for (String key : errors.keySet()) {
+				throw new ValCheckException(errors.get(key));
+			}
+		}
 	}
 
 }

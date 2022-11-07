@@ -5,7 +5,7 @@
 	<select id="findAll" resultType="site.metacoding.miniproject.domain.personal.Personal">
 		SELECT * FROM users
 	</select>
-	
+
 	<select id="findById" resultType="site.metacoding.miniproject.domain.personal.Personal">
 	SELECT *
 	FROM personal
@@ -17,12 +17,6 @@
 		VALUES(#{personalName},#{personalEmail}, #{personalEducation}, #{personalPhoneNumber}, #{personalAddress}, NOW())
 	</insert>
 
-	<select id="personalInfoById" resultType="site.metacoding.miniproject.web.dto.response.personal.PersonalInfoDto">
-		SELECT personal_name, personal_email, personal_education, personal_phone_number, personal_address
-		FROM personal
-		WHERE personal_id = #{personalId}
-	</select>
-	
 	<select id="personaldetailById"
 		resultType="site.metacoding.miniproject.domain.personal.Personal">
 		SELECT personal_id, personal_name, personal_email, personal_phone_number

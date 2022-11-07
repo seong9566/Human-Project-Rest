@@ -13,6 +13,6 @@ public interface CategoryDao {
 
 	public void deleteById(Integer categoryId);
 
-	public void jobPostingUpdate(Category category);
+	public void updateJobPostingBoard(Category category);
 
 }

@@ -1,29 +1,22 @@
 package site.metacoding.miniproject.web;
 
-import java.security.Principal;
-import java.util.List;
-
 import javax.servlet.http.HttpSession;
 
-import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.bind.annotation.RestController;
 
 import lombok.RequiredArgsConstructor;
+import site.metacoding.miniproject.dto.ResponseDto;
 import site.metacoding.miniproject.dto.like.LikeReqDto.CompanyLikeReqDto;
 import site.metacoding.miniproject.dto.like.LikeReqDto.PersonalLikeReqDto;
-import site.metacoding.miniproject.dto.like.LikeRespDto.CompanyLikeRespDto;
 import site.metacoding.miniproject.dto.user.UserRespDto.SignCompanyDto;
 import site.metacoding.miniproject.dto.user.UserRespDto.SignPersonalDto;
 import site.metacoding.miniproject.dto.user.UserRespDto.SignedDto;
 import site.metacoding.miniproject.service.company.CompanyLikeService;
 import site.metacoding.miniproject.service.personal.PersonalLikeService;
-import site.metacoding.miniproject.web.dto.request.personal.PersonalLikeDto;
-import site.metacoding.miniproject.web.dto.response.ResponseDto;
 
 @RequiredArgsConstructor
 @RestController

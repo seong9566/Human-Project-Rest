@@ -23,7 +23,6 @@ public class JobPostingBoard {
 	private Timestamp jobPostingBoardDeadline;
 	private Timestamp createdAt;
 
-	// 서비스로직
 	// TimeStamp > String
 	private String formatDeadLine;
 	private String state;
