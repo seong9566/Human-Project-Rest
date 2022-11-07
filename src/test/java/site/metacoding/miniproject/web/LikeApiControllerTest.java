@@ -24,6 +24,7 @@ import org.springframework.transaction.annotation.Transactional;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
 
+import site.metacoding.miniproject.dto.like.LikeReqDto.CompanyLikeReqDto;
 import site.metacoding.miniproject.dto.user.UserRespDto.SignPersonalDto;
 import site.metacoding.miniproject.dto.user.UserRespDto.SignedDto;
 import site.metacoding.miniproject.utill.JWTToken.CreateJWTToken;
@@ -47,6 +48,7 @@ public class LikeApiControllerTest {
 
     }
 
+    // PersonalLike 테스트
     // @BeforeEach // test메서드 진입전에 트랜잭션 발동
     // public void sessionInit() {
 
@@ -62,6 +64,8 @@ public class LikeApiControllerTest {
     // mockCookie = new MockCookie("Authorization", JwtToken);
 
     // }
+
+    // CompanyLike 테스트
     @BeforeEach
     public void sessionInit() {
 
@@ -106,7 +110,6 @@ public class LikeApiControllerTest {
     @Test
     public void deletePersonalLike_test() throws Exception {
         Integer resumesId = 1;
-
         ResultActions resultActions = mvc
                 .perform(delete("/s/api/personalLike/" + resumesId)
                         .accept(APPLICATION_JSON)
@@ -118,17 +121,19 @@ public class LikeApiControllerTest {
         System.out.println("디버그 : " + mvcResult.getResponse().getContentAsString());
     }
 
-    @Sql(scripts = "classpath:testdatabase.sql", executionPhase = ExecutionPhase.BEFORE_TEST_METHOD)
+    @Sql(scripts = "classpath:testsql/insertuserforlike.sql", executionPhase = ExecutionPhase.BEFORE_TEST_METHOD)
     @Test
     public void insertCompanyLike_test() throws Exception {
 
         // given
         Integer companyId = 1;
+        CompanyLikeReqDto companyLikeReqDto = new CompanyLikeReqDto();
 
+        String body = om.writeValueAsString(companyLikeReqDto);
         // when
         ResultActions resultActions = mvc
                 .perform(MockMvcRequestBuilders.post("/s/api/companyLike/" + companyId).session(session)
-                        .cookie(mockCookie)
+                        .cookie(mockCookie).content(body)
                         .contentType(APPLICATION_JSON).accept(APPLICATION_JSON));
         System.out.println("디버그 : " + resultActions.andReturn().getResponse().getContentAsString());
         // then
