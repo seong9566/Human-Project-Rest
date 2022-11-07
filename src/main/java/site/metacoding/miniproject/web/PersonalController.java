@@ -126,15 +126,6 @@ public class PersonalController {
 	@GetMapping("/personal/jobPostingBoard/{jobPostingBoardId}")
 	public ResponseDto<?> jobPostingDetailForm(@PathVariable Integer jobPostingBoardId) {
 		JobPostingDetailWithPersonalRespDto jobPostingPS = personalService.jobPostingBoardDetail(jobPostingBoardId);
-
-		// SignedDto<?> principal = (SignedDto<?>) session.getAttribute("principal");
-		// CompanyAddressDto addressPS =
-		// companyService.findByAddress(jobPostingPS.getCompanyId());
-		// model.addAttribute("address", addressPS);
-		// model.addAttribute("jobPostingPS", jobPostingPS);
-
-		// companyService.jobPostingBoardDetail(jobPostingBoardId, jobPostingBoardId);
-		// personalService.jobPostingBoardDetail(jobPostingBoardId);
 		return new ResponseDto<>(1, "채용공고 상세보기", jobPostingPS);
 	}
 

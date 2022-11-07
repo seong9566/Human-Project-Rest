@@ -255,9 +255,11 @@ public class PersonalService {
 	// 채용공고 상세 보기(개인)
 	@Transactional(readOnly = true)
 	public JobPostingDetailWithPersonalRespDto jobPostingBoardDetail(Integer jobPostingBoardId) {
-		// .. 로직이 너무 더러운데..
 		JobPostingDetailWithPersonalRespDto jobPostingBoardDetailRespDto = jobPostingBoardDao
 				.findByJobPostingBoardToPer(jobPostingBoardId);
+		if (jobPostingBoardDetailRespDto == null) {
+			throw new ApiException("해당 채용공고가 존재하지 않습니다.");
+		}
 		Timestamp ts = jobPostingBoardDetailRespDto.getJobPostingBoardDeadline();
 		Date date = new Date();
 		date.setTime(ts.getTime());
