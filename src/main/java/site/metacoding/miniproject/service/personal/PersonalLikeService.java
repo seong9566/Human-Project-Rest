@@ -17,6 +17,8 @@ import site.metacoding.miniproject.domain.users.Users;
 import site.metacoding.miniproject.domain.users.UsersDao;
 import site.metacoding.miniproject.dto.like.LikeReqDto.PersonalLikeReqDto;
 import site.metacoding.miniproject.dto.like.LikeRespDto.PersonalLikeRespDto;
+import site.metacoding.miniproject.dto.user.UserRespDto.SignCompanyDto;
+import site.metacoding.miniproject.dto.user.UserRespDto.SignedDto;
 import site.metacoding.miniproject.utill.AlarmEnum;
 
 @RequiredArgsConstructor
@@ -30,7 +32,6 @@ public class PersonalLikeService {
 	@Transactional(rollbackFor = RuntimeException.class)
 	public PersonalLikeRespDto 좋아요(Integer resumesId, PersonalLikeReqDto personalLikeReqDto) {
 		HashMap<String, Integer> personallikes = new HashMap<>();
-		Company companyinfo = (Company) signedDto.getUserinfo();
 
 		PersonalLike personalLikePS = personalLikeReqDto.personalLikeEntity();
 		personalLikesDao.insert(personalLikePS);

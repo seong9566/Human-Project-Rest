@@ -42,21 +42,11 @@ import site.metacoding.miniproject.utill.JWTToken.CreateJWTToken;
 public class CompanyApiControllerTest {
     private static final String APPLICATION_JSON = "application/json; charset=utf-8";
     @Autowired
-    private UsersDao usersDao;
-    @Autowired
     private MockMvc mvc;
-
     @Autowired
     private ObjectMapper om;
-
     private MockHttpSession session;
-
-    private static HttpHeaders headers;
-
     private MockCookie mockCookie;
-
-    @Autowired
-    private CompanyDao companyDao;
 
     @BeforeAll // 선언시 static으로 선언해야한다. - container에 띄우기 위해 사용한다.
     public static void init() {
@@ -88,7 +78,6 @@ public class CompanyApiControllerTest {
     @Sql(scripts = "classpath:testsql/insertuserforpersonal.sql", executionPhase = ExecutionPhase.BEFORE_TEST_METHOD)
     public void findByCompany_test() throws Exception {
         // given
-        Integer companyId = 1;
 
         // when
         ResultActions resultActions = mvc
