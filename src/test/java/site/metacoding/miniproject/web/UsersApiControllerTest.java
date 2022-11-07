@@ -178,6 +178,7 @@ public class UsersApiControllerTest {
 
     }
 
+    @Order(2)
     @Test
     @Sql("classpath:testsql/insertuserforpersonal.sql")
     public void userIdSameCheck_test() throws Exception {
