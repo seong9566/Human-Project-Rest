@@ -1,7 +1,8 @@
 package site.metacoding.miniproject.web;
 
-import static org.mockito.Answers.RETURNS_MOCKS;
-import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.*;
+import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
+import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.multipart;
+import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.jsonPath;
 
 import org.junit.jupiter.api.AfterEach;
@@ -16,7 +17,6 @@ import org.springframework.boot.test.context.SpringBootTest.WebEnvironment;
 import org.springframework.core.io.Resource;
 import org.springframework.core.io.ResourceLoader;
 import org.springframework.http.HttpMethod;
-import org.springframework.mock.web.MockCookie;
 import org.springframework.mock.web.MockHttpSession;
 import org.springframework.mock.web.MockMultipartFile;
 import org.springframework.test.context.ActiveProfiles;
@@ -29,10 +29,9 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 import lombok.extern.slf4j.Slf4j;
 import site.metacoding.miniproject.dto.company.CompanyReqDto.CompanyJoinDto;
 import site.metacoding.miniproject.dto.personal.PersonalReqDto.PersonalJoinDto;
+import site.metacoding.miniproject.dto.user.UserReqDto.LoginDto;
 import site.metacoding.miniproject.dto.user.UserRespDto.SignPersonalDto;
 import site.metacoding.miniproject.dto.user.UserRespDto.SignedDto;
-import site.metacoding.miniproject.utill.JWTToken.CreateJWTToken;
-import site.metacoding.miniproject.web.dto.request.etc.LoginDto;
 
 @Slf4j
 @ActiveProfiles("test")
@@ -54,8 +53,6 @@ public class UsersApiControllerTest {
 
     private MockHttpSession session;
 
-    private MockCookie mockCookie;
-
     @BeforeAll // 선언시 static으로 선언해야한다. - container에 띄우기 위해 사용한다.
     public static void init() {
 
@@ -71,9 +68,6 @@ public class UsersApiControllerTest {
         SignedDto<?> signedDto = new SignedDto<>(1, "testuser1", signPersonalDto);
 
         session.setAttribute("principal", signedDto);
-
-        String JwtToken = CreateJWTToken.createToken(signedDto); // Authorization
-        mockCookie = new MockCookie("Authorization", JwtToken);
 
     }
 
@@ -190,18 +184,22 @@ public class UsersApiControllerTest {
 
         // given
 
-        String loginId = "testuser";
+        String loginId = "testuser1";
 
         // when
 
         ResultActions resultActions = mvc.perform(get("/checkId/" + loginId)
                 .accept(APPLICATION_JSON))
-                .andExpect(jsonPath("$.code").value("-1"))
-                .andDo(mvc.perform(get("/checkId/" + "testuser2").accept(APPLICATION_JSON)));
-
-        log.debug("디버그 : " + resultActions.andReturn().getResponse().getContentAsString());
+                
 
         // then
+                .andExpect(jsonPath("$.code").value("-1"))
+                .andDo(result -> {
+                    mvc.perform(get("/checkId/" + "testuser2").accept(APPLICATION_JSON))
+                            .andExpect(jsonPath("$.code").value("1"))
+                            .andExpect(jsonPath("$.data").value("true"));
+                            
+                });
     }
 
 }

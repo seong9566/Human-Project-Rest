@@ -87,5 +87,6 @@ public class AlarmApiControllerTest {
         // then
         log.debug("디버그 : " + resultActions.andReturn().getResponse().getContentAsString());
     }
+    
 
 }

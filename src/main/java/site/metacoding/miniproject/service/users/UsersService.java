@@ -25,13 +25,13 @@ import site.metacoding.miniproject.dto.alarm.AlarmRespDto.UserAlarmRespDto;
 import site.metacoding.miniproject.dto.alarm.AlarmRespDto.UserAlarmRespDtoToChecked;
 import site.metacoding.miniproject.dto.company.CompanyReqDto.CompanyJoinDto;
 import site.metacoding.miniproject.dto.personal.PersonalReqDto.PersonalJoinDto;
+import site.metacoding.miniproject.dto.user.UserReqDto.LoginDto;
 import site.metacoding.miniproject.dto.user.UserRespDto.SignCompanyDto;
 import site.metacoding.miniproject.dto.user.UserRespDto.SignPersonalDto;
 import site.metacoding.miniproject.dto.user.UserRespDto.SignedDto;
 import site.metacoding.miniproject.exception.ApiException;
 import site.metacoding.miniproject.utill.PermissionCheck.UserPermissionCheck;
 import site.metacoding.miniproject.utill.SHA256;
-import site.metacoding.miniproject.web.dto.request.etc.LoginDto;
 
 @Service
 @RequiredArgsConstructor
