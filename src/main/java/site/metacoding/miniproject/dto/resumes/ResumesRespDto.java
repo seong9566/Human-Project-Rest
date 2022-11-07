@@ -58,6 +58,7 @@ public class ResumesRespDto {
         public ResumesAllByIdRespDto(Resumes resumes) {
             this.resumesTitle = resumes.getResumesTitle();
             this.resumesPlace = resumes.getResumesPlace();
+            this.personalId = resumes.getPersonalId();
         }
     }
 
@@ -97,6 +98,7 @@ public class ResumesRespDto {
 
         public ResumesDetailRespDto(Resumes resumes, Category category, Career career, Portfolio portfolio,
                 Personal personal) {
+            this.personalId = personal.getPersonalId();
             this.resumesTitle = resumes.getResumesTitle();
             this.resumesPicture = resumes.getResumesPicture();
             this.resumesIntroduce = resumes.getResumesIntroduce();

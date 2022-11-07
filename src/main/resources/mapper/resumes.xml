@@ -22,6 +22,7 @@
 	<select id="findByResumesId"
 		resultType="site.metacoding.miniproject.dto.resumes.ResumesRespDto$ResumesDetailRespDto">
 		SELECT p.personal_name, p.personal_email,
+		p.personal_id,
 		p.personal_education, p.personal_phone_number,
 		r.resumes_id, r.resumes_title, r.resumes_picture, r.resumes_introduce,
 		r.resumes_place, r.resumes_category_id,

@@ -48,7 +48,7 @@ public class PersonalController {
 	}
 
 	// 내가 작성한 이력서 목록 보기
-	@GetMapping("/resumes/myList")
+	@GetMapping("/s/resumes/myList")
 	public ResponseDto<?> findAllMyResumes(ResumesAllByIdRespDto resumesAllByIdRespDto) {
 		SignedDto<?> principal = (SignedDto<?>) session.getAttribute("principal");
 		SignPersonalDto signPersonalDto = (SignPersonalDto) principal.getUserInfo();
