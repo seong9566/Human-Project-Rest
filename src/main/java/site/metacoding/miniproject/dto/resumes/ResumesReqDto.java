@@ -138,37 +138,5 @@ public class ResumesReqDto {
                         this.resumesPicture = imgName;
                 }
 
-                public Resumes ResumesUpdateReqDtoToResumesEntity() {
-                        return Resumes.builder()
-                                        .resumesTitle(resumesTitle)
-                                        .resumesPicture(resumesPicture)
-                                        .resumesIntroduce(resumesIntroduce)
-                                        .resumesPlace(resumesPlace)
-                                        .build();
-                }
-
-                public Category ResumesUpdateReqDtoToCategoryEntity() {
-                        return Category.builder()
-                                        .categoryFrontend(categoryFrontend)
-                                        .categoryBackend(categoryBackend)
-                                        .categoryDevops(categoryDevops)
-                                        .build();
-                }
-
-                public Career ResumesUpdateReqDtoToCareerEntity() {
-                        return Career.builder()
-                                        .oneYearLess(oneYearLess)
-                                        .twoYearOver(twoYearOver)
-                                        .threeYearOver(threeYearOver)
-                                        .fiveYearOver(fiveYearOver)
-                                        .build();
-                }
-
-                public Portfolio ResumesUpdateReqDtoToPortfolioEntity() {
-                        return Portfolio.builder()
-                                        .portfolioFile(portfolioFile)
-                                        .portfolioSource(portfolioSource)
-                                        .build();
-                }
         }
 }

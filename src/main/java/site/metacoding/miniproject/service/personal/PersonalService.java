@@ -137,21 +137,19 @@ public class PersonalService {
 		resumesUpdateReqDto.setCategoryId(resumesPS.getResumesCategoryId());
 		resumesUpdateReqDto.setPortfolioId(resumesPS.getPortfolioId());
 		resumesUpdateReqDto.setCareerId(resumesPS.getCareerId());
-		resumesPS = resumesUpdateReqDto.ResumesUpdateReqDtoToResumesEntity();
+		resumesPS.updateResumes(resumesUpdateReqDto);
 		resumesDao.update(resumesPS);
 
 		Category categoryPS = categoryDao.findById(resumesUpdateReqDto.getCategoryId());
-		categoryPS = resumesUpdateReqDto
-				.ResumesUpdateReqDtoToCategoryEntity();
+		categoryPS.updateCategory(resumesUpdateReqDto);
 		categoryDao.update(categoryPS);
 
 		Portfolio portfolioPS = portfolioDao.findById(resumesUpdateReqDto.getPortfolioId());
-		portfolioPS = resumesUpdateReqDto
-				.ResumesUpdateReqDtoToPortfolioEntity();
+		portfolioPS.updatePortfolio(resumesUpdateReqDto);
 		portfolioDao.update(portfolioPS);
 
 		Career careerPS = careerDao.findById(resumesUpdateReqDto.getCareerId());
-		careerPS = resumesUpdateReqDto.ResumesUpdateReqDtoToCareerEntity();
+		careerPS.updateCareer(resumesUpdateReqDto);
 		careerDao.update(careerPS);
 
 		ResumesUpdateRespDto resumesUpdateRespDto = new ResumesUpdateRespDto(resumesPS, categoryPS, careerPS,
