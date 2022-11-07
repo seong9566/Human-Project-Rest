@@ -107,7 +107,6 @@ public class PersonalController {
 
 		return new ResponseDto<>(1, "성공", personalService.findByPersonal(signPersonalDto.getPersonalId()));
 		// principal.getUserinfo().getPersonalId()
-
 	}
 
 	// 내정보 수정

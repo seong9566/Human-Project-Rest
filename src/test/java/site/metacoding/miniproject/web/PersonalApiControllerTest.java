@@ -242,6 +242,7 @@ public class PersonalApiControllerTest {
     @Test
     public void findByPersonal_test() throws Exception {
         // given
+
         // when
         ResultActions resultActions = mvc.perform(get("/s/api/personal/detail")
                 .session(session)
