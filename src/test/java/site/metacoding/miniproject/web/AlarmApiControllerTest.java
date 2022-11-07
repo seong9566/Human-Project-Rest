@@ -1,7 +1,7 @@
 package site.metacoding.miniproject.web;
 
-import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
-import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.put;
+import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.*;
+import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.jsonPath;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -32,7 +32,6 @@ import site.metacoding.miniproject.utill.JWTToken.CreateJWTToken;
 
 @Slf4j
 @ActiveProfiles("test")
-@Sql("classpath:truncate.sql")
 @AutoConfigureMockMvc
 @SpringBootTest(webEnvironment = WebEnvironment.MOCK)
 public class AlarmApiControllerTest {
@@ -77,7 +76,7 @@ public class AlarmApiControllerTest {
 
     @Order(1)
     @Test
-    @Sql("classpath:testsql/insertalarmfortest.sql")
+    @Sql(value = { "classpath:truncate.sql", "classpath:testsql/insertalarmfortest.sql"})
     public void refreshUserAlarm_test() throws Exception {
 
         // given
@@ -92,43 +91,90 @@ public class AlarmApiControllerTest {
         log.debug("디버그 : " + resultActions.andReturn().getResponse().getContentAsString());
     }
     
+
+    
+    @Order(2)
     @Test
+    @Sql(value = { "classpath:truncate.sql", "classpath:testsql/insertalarmfortest.sql"})
     public void readedAlarm_test() throws Exception {
 
         //given
         AlarmReqListDtoToCheck alarmReqListDtoToCheck = new AlarmReqListDtoToCheck();
         List<Integer> alarmsId = new ArrayList<>();
 
-        alarmsId.add(1);
-        alarmsId.add(2);
+        alarmsId.add(4);
+        alarmsId.add(5);
+        alarmsId.add(6);
 
         alarmReqListDtoToCheck.setAlarmsId(alarmsId);
 
 
-        String body = om.writeValueAsString(alarmsId);
+        String body = om.writeValueAsString(alarmReqListDtoToCheck);
 
 
         //when
         ResultActions resultActions = mvc.perform(put("/s/api/users/alarm/readed")
+                .content(body)
                 .cookie(mockCookie)
                 .session(session)
-                .content(body)
                 .contentType(APPLICATION_JSON)
-                .accept(APPLICATION_JSON));
+                .accept(APPLICATION_JSON))
+                .andExpect(jsonPath("$.code").value("-1"))
+                .andDo(result -> {
 
+                    final List<Integer> fixedAlarmsId = alarmsId;
+
+                    fixedAlarmsId.clear();
+
+                    fixedAlarmsId.add(1);
+                    fixedAlarmsId.add(2);
+                    fixedAlarmsId.add(3);
+            
+                    final AlarmReqListDtoToCheck fixedbody = alarmReqListDtoToCheck;
+                    
+                    fixedbody.setAlarmsId(fixedAlarmsId);
+
+
+                    mvc.perform(
+                    put("/s/api/users/alarm/readed")
+                    .content(om.writeValueAsString(fixedbody))
+                    .cookie(mockCookie)
+                    .session(session)
+                    .contentType(APPLICATION_JSON)
+                    .accept(APPLICATION_JSON))
+
+                    
         //then
-        log.debug("디버그 : " + resultActions.andReturn().getResponse().getStatus());
-        log.debug("디버그 : " + resultActions.andReturn().getResponse().getContentAsString());
+                    .andExpect(jsonPath("$.code").value("1"));
+    });
     }
 
     @Test
-    public void deleteUserAlarm_test() {
+    @Sql(value = { "classpath:truncate.sql", "classpath:testsql/insertalarmfortest.sql"})
+    public void deleteUserAlarm_test() throws Exception{
+
         //given
+
+        Integer alarmId = 5;
 
         //when
 
+        ResultActions resultActions = mvc
+                .perform(delete("/s/api/users/alarm/delete/" + alarmId)
+                .session(session)
+                .cookie(mockCookie)
+                .accept(APPLICATION_JSON))
+        
         //then
 
+                .andExpect(jsonPath("$.code").value("-1"))
+                .andDo(result -> {
+                    mvc.perform(delete("/s/api/users/alarm/delete/" + 1)
+                    .session(session)
+                    .cookie(mockCookie)
+                    .accept(APPLICATION_JSON))
+                    .andExpect(jsonPath("$.code").value("1"));
+                });
     }
 
 }
