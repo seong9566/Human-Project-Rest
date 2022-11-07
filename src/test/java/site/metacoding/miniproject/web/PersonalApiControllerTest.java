@@ -1,5 +1,6 @@
 package site.metacoding.miniproject.web;
 
+import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.multipart;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.jsonPath;
 
@@ -81,7 +82,7 @@ public class PersonalApiControllerTest {
     }
 
     @Test
-    @Sql("classpath:testsql/insertResumes.sql")
+    @Sql("classpath:testsql/insertresumes.sql")
     public void insertResumes_test() throws Exception {
         // given
         ResumesInsertReqDto resumesInsertReqDto = new ResumesInsertReqDto();
@@ -127,17 +128,40 @@ public class PersonalApiControllerTest {
     }
 
     @Test
+    @Sql("classpath:testsql/findbyresumesid.sql")
     public void findByResumesId_test() throws Exception {
+        // given
+        Integer resumesId = 1;
+
+        // when
+        ResultActions resultActions = mvc
+                .perform(MockMvcRequestBuilders.get("/resumes/" + resumesId).accept(APPLICATION_JSON)
+                        .cookie(mockCookie)
+                        .session(session));
+
+        // then
+        MvcResult mvcResult = resultActions.andReturn();
+        System.out.println("디버그 : " + mvcResult.getResponse().getContentAsString());
+        resultActions.andExpect(jsonPath("$.code").value(1));
+        resultActions.andExpect(jsonPath("$.message").value("내 이력서 상세 보기 성공"));
+    }
+
+    @Test
+    @Sql("classpath:testsql/findallmyresumes.sql")
+    public void findAllMyResumes_test() throws Exception {
         // given
         Integer id = 1;
 
         // when
         ResultActions resultActions = mvc
-                .perform(MockMvcRequestBuilders.get("/resumes/" + id).accept(APPLICATION_JSON));
+                .perform(get("/s/resumes/myList").accept(APPLICATION_JSON)
+                        .cookie(mockCookie)
+                        .session(session));
 
         // then
         MvcResult mvcResult = resultActions.andReturn();
+        System.out.println("디버그 : " + mvcResult.getResponse().getContentAsString());
         resultActions.andExpect(jsonPath("$.code").value(1));
-        resultActions.andExpect(jsonPath("$.message").value("내 이력서 상세 보기 성공"));
+        resultActions.andExpect(jsonPath("$.message").value("내 이력서 목록 보기 성공"));
     }
 }
