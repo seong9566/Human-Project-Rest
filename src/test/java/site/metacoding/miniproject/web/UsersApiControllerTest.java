@@ -94,7 +94,7 @@ public class UsersApiControllerTest {
 
         // when
         ResultActions resultActions = mvc
-                .perform(post("/join/personal").content(body)
+                .perform(post("/api/join/personal").content(body)
                         .contentType("application/json; charset=utf-8").accept(APPLICATION_JSON));
 
         // then
@@ -125,7 +125,7 @@ public class UsersApiControllerTest {
                 body.getBytes());
 
         ResultActions resultActions = mvc.perform(
-                multipart(HttpMethod.POST, "/join/company")
+                multipart(HttpMethod.POST, "/api/join/company")
                         .file(file)
                         .file(multipartBody)
                         .accept(APPLICATION_JSON));
@@ -169,7 +169,7 @@ public class UsersApiControllerTest {
         // given
 
         // when
-        ResultActions resultActions = mvc.perform(get("/loginForm")
+        ResultActions resultActions = mvc.perform(get("/api/loginForm")
                 .session(session)
                 .accept(APPLICATION_JSON));
         // then
@@ -189,7 +189,7 @@ public class UsersApiControllerTest {
 
         // when
 
-        ResultActions resultActions = mvc.perform(get("/checkId/" + loginId)
+        ResultActions resultActions = mvc.perform(get("/api/checkId/" + loginId)
                 .accept(APPLICATION_JSON))
                 
 
