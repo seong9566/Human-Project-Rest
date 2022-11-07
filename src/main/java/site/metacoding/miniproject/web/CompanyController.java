@@ -86,7 +86,7 @@ public class CompanyController {
 		return new ResponseDto<>(1, "채용공고 상세보기", companyService.jobPostingBoardDetail(jobPostingBoardId, companyId));
 	}
 
-	@PutMapping("/s/api/jobposting/update/{jobPostingBoardId}")
+	@PutMapping("/s/api/jobPostingBoard/update/{jobPostingBoardId}")
 	public ResponseDto<?> updatejobPostingBoard(@PathVariable Integer jobPostingBoardId,
 			@RequestBody JobPostingBoardUpdateReqDto jobPostingBoardUpdateReqDto) {
 		// @Param("categoryId") Integer categoryId, @Param("careerId")Integer careerId,

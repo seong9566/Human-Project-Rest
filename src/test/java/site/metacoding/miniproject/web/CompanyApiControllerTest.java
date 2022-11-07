@@ -103,7 +103,7 @@ public class CompanyApiControllerTest {
 
         // when
         ResultActions resultActions = mvc
-                .perform(put("/s/api/jobposting/update/" + 1)
+                .perform(put("/s/api/jobPostingBoard/update/" + 1)
                         .content(body)
                         .contentType(APPLICATION_JSON)
                         .session(session)

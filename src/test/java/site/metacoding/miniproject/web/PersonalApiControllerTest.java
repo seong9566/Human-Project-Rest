@@ -168,7 +168,7 @@ public class PersonalApiControllerTest {
     }
 
     // 내정보보기 // 오류발생하는게 맞음 아직 해결못함
-    @Order(1)
+
     @Sql(scripts = "classpath:testsql/selectdetailforpersonal.sql")
     @Test
     public void findByPersonal_test() throws Exception {
@@ -176,7 +176,7 @@ public class PersonalApiControllerTest {
         // given
 
         // when
-        ResultActions resultActions = mvc.perform(get("/api/personal/detail")
+        ResultActions resultActions = mvc.perform(get("/s/api/personal/detail")
                 .session(session)
                 .cookie(mockCookie)
                 .accept(APPLICATION_JSON));
@@ -187,7 +187,6 @@ public class PersonalApiControllerTest {
     }
 
     // 내정보수정
-    @Order(2)
     @Sql(scripts = "classpath:testsql/selectdetailforpersonal.sql")
     @Test
     public void updatePersonalDetail_test() throws Exception {
