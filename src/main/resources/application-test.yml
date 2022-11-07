@@ -13,6 +13,8 @@ spring:
     password:
   # sql.init.mode: always
 
+
+
   session:
     store-type: none
 
@@ -43,7 +45,3 @@ logging:
   level:
     root: DEBUG
     #'[org.hibernate]': DEBUG - 하이버네이트 사용 안함
-
-
-
-

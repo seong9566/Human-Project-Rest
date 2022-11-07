@@ -1,6 +1,6 @@
 CREATE TABLE users (
   users_id INTEGER auto_increment PRIMARY KEY,
-  login_id varchar(20) UNIQUE,
+  login_id varchar(20),
   login_password varchar(100),
   personal_id integer,
   company_id integer,

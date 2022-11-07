@@ -20,8 +20,6 @@ import org.springframework.test.web.servlet.MvcResult;
 import org.springframework.test.web.servlet.ResultActions;
 import org.springframework.test.web.servlet.request.MockMvcRequestBuilders;
 import org.springframework.test.web.servlet.result.MockMvcResultMatchers;
-import org.springframework.transaction.annotation.Transactional;
-
 import com.fasterxml.jackson.databind.ObjectMapper;
 
 import site.metacoding.miniproject.dto.like.LikeReqDto.CompanyLikeReqDto;
@@ -30,8 +28,6 @@ import site.metacoding.miniproject.dto.user.UserRespDto.SignedDto;
 import site.metacoding.miniproject.utill.JWTToken.CreateJWTToken;
 
 @ActiveProfiles("test")
-@Sql("classpath:truncate.sql")
-@Transactional
 @AutoConfigureMockMvc
 @SpringBootTest(webEnvironment = WebEnvironment.MOCK)
 public class LikeApiControllerTest {
@@ -144,7 +140,7 @@ public class LikeApiControllerTest {
         resultActions.andExpect(MockMvcResultMatchers.jsonPath("$.code").value(1));
     }
 
-    @Sql(scripts = "classpath:testsql/insertuserforlike.sql")
+    @Sql({ "classpath:truncate.sql", "classpath:testsql/insertuserforlike.sql" })
     @Test
     public void deleteCompanyLike_test() throws Exception {
         Integer companyId = 1;
