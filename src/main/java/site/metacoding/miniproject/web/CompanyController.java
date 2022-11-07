@@ -86,8 +86,8 @@ public class CompanyController {
 		return new ResponseDto<>(1, "채용공고 상세보기", companyService.jobPostingBoardDetail(jobPostingBoardId, companyId));
 	}
 
-	@PutMapping("/s/api/jobpostingboard/update/{jobPostingBoardId}")
-	public ResponseDto<?> companyUpdate(@PathVariable Integer jobPostingBoardId,
+	@PutMapping("/s/api/jobPostingBoard/update/{jobPostingBoardId}")
+	public ResponseDto<?> updatejobPostingBoard(@PathVariable Integer jobPostingBoardId,
 			@RequestBody JobPostingBoardUpdateReqDto jobPostingBoardUpdateReqDto) {
 		// @Param("categoryId") Integer categoryId, @Param("careerId")Integer careerId,
 
@@ -97,7 +97,7 @@ public class CompanyController {
 
 	// 채용 공고 삭제
 	@DeleteMapping("/s/company/jobPostingBoard/delete/{jobPostingBoardId}")
-	public @ResponseBody ResponseDto<?> deleteResumes(@PathVariable Integer jobPostingBoardId) {
+	public @ResponseBody ResponseDto<?> deleteJobPostingBoard(@PathVariable Integer jobPostingBoardId) {
 		companyService.deleteJobposting(jobPostingBoardId);
 		return new ResponseDto<>(1, "채용공고 삭제 성공", null);
 	}
