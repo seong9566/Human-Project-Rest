@@ -201,7 +201,7 @@ public class CompanyApiControllerTest {
     }
 
     @Test
-    @Sql(scripts = "classpath:testsql/insertjobpostingBoard.sql")
+    @Sql({ "classpath:truncate.sql", "classpath:testsql/insertjobpostingBoard.sql" })
     public void findByjobPostingBoard_test() throws Exception { // 채용공고 상세 보기 완료
         // given
         Integer jobPostingBoardId = 1;
