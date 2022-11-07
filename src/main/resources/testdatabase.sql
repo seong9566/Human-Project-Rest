@@ -204,5 +204,3 @@ ALTER TABLE job_posting_board ADD FOREIGN KEY (job_posting_board_category_id) RE
 
 ALTER TABLE resumes ADD FOREIGN KEY (resumes_category_id) REFERENCES category (category_id);
 
-INSERT INTO company(company_name,company_picture,company_email,company_phone_number,company_address,created_at) VALUES('박동훈', '사진입니다', 'ssar@nate.com','01024102957','화명동', NOW());
-INSERT INTO users (login_id,login_password,personal_id,company_id,created_at)values('ssar', '03AC674216F3E15C761EE1A5E255F067953623C8B388B4459E13F978D7C846F4', NULL,1, NOW());

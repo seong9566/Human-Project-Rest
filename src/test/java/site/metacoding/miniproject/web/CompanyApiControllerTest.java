@@ -7,6 +7,7 @@ import java.io.FileInputStream;
 
 import javax.servlet.http.HttpServletResponse;
 
+import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
@@ -17,13 +18,17 @@ import org.springframework.boot.test.context.SpringBootTest.WebEnvironment;
 import org.springframework.context.annotation.Import;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.MediaType;
+import org.springframework.mock.web.MockCookie;
 import org.springframework.mock.web.MockHttpSession;
 import org.springframework.mock.web.MockMultipartFile;
 import org.springframework.test.context.ActiveProfiles;
 import org.springframework.test.context.jdbc.Sql;
+import org.springframework.test.context.jdbc.Sql.ExecutionPhase;
+import org.springframework.test.context.web.WebAppConfiguration;
 import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.test.web.servlet.MvcResult;
 import org.springframework.test.web.servlet.ResultActions;
+import org.springframework.transaction.annotation.Transactional;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
 
@@ -43,9 +48,10 @@ import site.metacoding.miniproject.web.dto.request.etc.LoginDto;
 
 @Slf4j
 @ActiveProfiles("test")
+@Transactional
 @AutoConfigureMockMvc
+@WebAppConfiguration
 @SpringBootTest(webEnvironment = WebEnvironment.MOCK)
-@Import(MyBatisConfig.class)
 @Sql("classpath:testdatabase.sql")
 public class CompanyApiControllerTest {
     private static final String APPLICATION_JSON = "application/json; charset=utf-8";
@@ -61,56 +67,51 @@ public class CompanyApiControllerTest {
 
     private static HttpHeaders headers;
 
+    private MockCookie mockCookie;
+
     @Autowired
     private CompanyDao companyDao;
 
     @BeforeAll // 선언시 static으로 선언해야한다. - container에 띄우기 위해 사용한다.
     public static void init() {
-        headers = new HttpHeaders();
-        headers.setContentType(MediaType.APPLICATION_JSON);
+
     }
 
     @BeforeEach // test메서드 진입전에 트랜잭션 발동
-    public void sessionInit(LoginDto loginDto, HttpServletResponse resp) {
-        String loginId = "ssar";
-        String loginPassword = "1234";
+    public void sessionInit() {
 
-        Users userInfo = usersDao.findByIdAndPassword(loginId, loginPassword);
+        session = new MockHttpSession();
+        SignCompanyDto signCompanyDto = new SignCompanyDto();
 
-        if (userInfo == null) {
-            throw new ApiException("아이디 또는 패스워드가 틀렸습니다.");
-        }
+        signCompanyDto.setCompanyId(3);
+        SignedDto<?> signedDto = new SignedDto<>(3, "testuser1", signCompanyDto);
 
-        if (userInfo.getCompanyId() != null) {
-            Company companyPS = companyDao.findById(userInfo.getCompanyId());
+        session.setAttribute("principal", signedDto);
 
-            SignCompanyDto signCompanyDto = new SignCompanyDto(companyPS);
-            SignedDto<?> signedDto = new SignedDto<>(1, loginId, signCompanyDto);
-            session.setAttribute("principal", signedDto);
-            signedDto = new SignedDto<>(userInfo.getUsersId(), userInfo.getLoginId(), signCompanyDto);
-            session = new MockHttpSession();
-            signCompanyDto.setCompanyId(1);
-
-            String token = CreateJWTToken.createToken(signedDto);
-
-            resp.addHeader("Authorization", "Bearer " + token);
-            resp.addCookie(CookieForToken.setCookie(token));
-        }
+        String JwtToken = CreateJWTToken.createToken(signedDto); // Authorization
+        mockCookie = new MockCookie("Authorization", JwtToken);
 
     }
 
+    @AfterEach
+    public void sessionClear() {
+        session.clearAttributes();
+    }
+
     @Test
+    @Sql(scripts = "classpath:testsql/insertuserforpersonal.sql", executionPhase = ExecutionPhase.BEFORE_TEST_METHOD)
     public void findByCompany_test() throws Exception {
         // given
         // when
         ResultActions resultActions = mvc
 
-                .perform(get("/s/api/company/detail").session(session)
-                        .contentType("application/json; charset=utf-8").accept(APPLICATION_JSON));
+                .perform(get("/api/company/detail").session(session).cookie(mockCookie)
+                        .accept(APPLICATION_JSON));
 
         // then
         MvcResult mvcResult = resultActions.andReturn();
         System.out.println("디버그 : " + mvcResult.getResponse().getContentAsString());
+
     }
 
     @Test

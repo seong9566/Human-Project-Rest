@@ -4,10 +4,12 @@ import javax.servlet.http.Cookie;
 import javax.servlet.http.HttpServletResponse;
 import javax.servlet.http.HttpSession;
 
+import org.springframework.http.MediaType;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
+import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RequestPart;
 import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.multipart.MultipartFile;
@@ -32,11 +34,13 @@ public class UsersController {
 
 	@GetMapping("/loginForm")
 	public ResponseDto<?> loginForm() {
+
 		ResponseDto<?> responseDto;
-		if (session.getAttribute("principal") != null) {
-			responseDto = new ResponseDto<>(-1, "이미 로그인 되어 있음", null);
+		SignedDto<?> signedDto = (SignedDto<?>) session.getAttribute("principal");
+		if (signedDto != null) {
+			responseDto = new ResponseDto<>(-1, "이미 로그인 되어 있음", signedDto);
 		} else {
-			responseDto = new ResponseDto<>(1, "성공", null);
+			responseDto = new ResponseDto<>(1, "성공", signedDto);
 		}
 		return responseDto;
 	}
@@ -123,7 +127,6 @@ public class UsersController {
 	@PostMapping(value = "/join/company")
 	public ResponseDto<?> joinCompany(@RequestPart(value = "file", required = false) MultipartFile file,
 			@RequestPart("joinDto") CompanyJoinDto joinDto, HttpServletResponse resp) {
-
 		joinDto.setFile(file);
 		SignedDto<?> signedDto = userService.joinCompany(joinDto);
 
