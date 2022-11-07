@@ -8,7 +8,6 @@ import site.metacoding.miniproject.dto.jobpostingboard.JobPostingBoardRespDto.Jo
 import site.metacoding.miniproject.dto.jobpostingboard.JobPostingBoardRespDto.JobPostingBoardDetailRespDto;
 import site.metacoding.miniproject.dto.jobpostingboard.JobPostingBoardRespDto.JobPostingDetailWithPersonalRespDto;
 import site.metacoding.miniproject.dto.jobpostingboard.JobPostingBoardRespDto.PagingDto;
-import site.metacoding.miniproject.web.dto.response.personal.PersonalMainDto;
 
 public interface JobPostingBoardDao {
 	public void insert(JobPostingBoard jobPostingBoard);
@@ -28,13 +27,14 @@ public interface JobPostingBoardDao {
 	public JobPostingDetailWithPersonalRespDto findByJobPostingBoardToPer(Integer jobPostingBoardId);
 
 	// 채용공고 리스트
-	public List<PersonalMainDto> findAll(int startNum);
+	// public List<PersonalMainDto> findAll(int startNum);
 
 	// 페이징
 	public PagingDto jobPostingBoardPaging(@Param("page") Integer page, @Param("keyword") String keyword);
 
 	// 검색 결과 리스트
-	public List<PersonalMainDto> findSearch(@Param("startNum") int startNum, @Param("keyword") String keyword);
+	// public List<PersonalMainDto> findSearch(@Param("startNum") int startNum,
+	// @Param("keyword") String keyword);
 
 	// 전체 채용공고 목록 보기 (페이징+검색+카테고리id별)
 	public List<JobPostingBoard> findCategory(@Param("startNum") Integer startNum, @Param("id") Integer id);

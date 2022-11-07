@@ -156,7 +156,7 @@
 		) paging
 	</select>
 
-	<select id="findAll"
+	<!-- <select id="findAll"
 		resultType="site.metacoding.miniproject.web.dto.response.personal.PersonalMainDto">
 		SELECT job_posting_board_id, job_posting_board_title, job_posting_board_deadline,
 		if(job_posting_board_deadline > NOW(),'모집중','모집 마감') state 
@@ -171,7 +171,7 @@
 		FROM job_posting_board
 		WHERE job_posting_board_title like CONCAT('%', #{keyword}, '%')
 		OFFSET #{startNum} ROWS FETCH NEXT 5 ROWS ONLY
-	</select>
+	</select> -->
 
 	<select id="findCategory"
 		resultType="site.metacoding.miniproject.domain.jobpostingboard.JobPostingBoard">
