@@ -46,12 +46,12 @@ public class AlarmApiControllerTest {
 
     private MockCookie mockCookie;
 
-    @BeforeAll // 선언시 static으로 선언해야한다. - container에 띄우기 위해 사용한다.
+    @BeforeAll
     public static void init() {
 
     }
 
-    @BeforeEach // test메서드 진입전에 트랜잭션 발동
+    @BeforeEach
     public void sessionInit() {
 
         session = new MockHttpSession();
@@ -87,5 +87,6 @@ public class AlarmApiControllerTest {
         // then
         log.debug("디버그 : " + resultActions.andReturn().getResponse().getContentAsString());
     }
+    
 
 }
