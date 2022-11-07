@@ -69,6 +69,12 @@ public class SubscribeService {
     public List<Subscribe> subscribeCancelToCompany(Integer subscribeId, SignedDto<?> signedDto) {
         
         SignPersonalDto personalInfo = (SignPersonalDto) signedDto.getUserInfo();
+
+        Subscribe subscribe = subscribeDao.findById(subscribeId);
+
+        if (subscribe == null) {
+            throw new ApiException("구독내역이 없습니다");
+        }
         
         subscribeDao.deleteById(subscribeId);
         List<Subscribe> subscribes = subscribeDao.findByPersonalId(personalInfo.getPersonalId());
