@@ -4,8 +4,8 @@ import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.bind.annotation.RestControllerAdvice;
 
+import site.metacoding.miniproject.dto.ResponseDto;
 import site.metacoding.miniproject.utill.Script;
-import site.metacoding.miniproject.web.dto.response.ResponseDto;
 
 @RestControllerAdvice
 public class GlobalExceptionHandler {

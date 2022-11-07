@@ -13,10 +13,10 @@ import org.springframework.web.bind.annotation.ResponseBody;
 
 import lombok.RequiredArgsConstructor;
 import site.metacoding.miniproject.domain.subscribe.Subscribe;
+import site.metacoding.miniproject.dto.ResponseDto;
 import site.metacoding.miniproject.dto.user.UserRespDto.SignedDto;
 import site.metacoding.miniproject.exception.ApiException;
 import site.metacoding.miniproject.service.users.SubscribeService;
-import site.metacoding.miniproject.web.dto.response.ResponseDto;
 
 @Controller
 @RequiredArgsConstructor

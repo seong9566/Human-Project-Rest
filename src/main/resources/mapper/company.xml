@@ -79,4 +79,23 @@
 		#{companyId}
 	</select>
 
+	<select id="findByCompanyToPer"
+		resultType="site.metacoding.miniproject.dto.company.CompanyRespDto$CompanyDetailWithPerRespDto">
+		SELECT 
+		u.users_id,
+		u.login_id,
+		u.login_password,
+		c.company_name,
+		c.company_id,
+		c.company_phone_number,
+		c.company_email,
+		c.company_picture,
+		c.company_address,
+		(SELECT COUNT(company_like_id) FROM company_like WHERE company_id = #{companyId}) count
+		FROM company c
+		LEFT OUTER JOIN users u
+		ON c.company_id = u.company_id
+		WHERE c.company_id = #{companyId}
+	</select>
+
 </mapper>

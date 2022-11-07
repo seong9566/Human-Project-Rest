@@ -108,4 +108,36 @@ public class CompanyRespDto {
         }
     }
 
+    @Setter
+    @Getter
+    @NoArgsConstructor
+    public static class CompanyDetailWithPerRespDto { // CompanyInfoDto -> CompanyDetailRespDto
+        private Integer companyId;
+        private String companyName;
+        private String companyPhoneNumber;
+        private String companyEmail;
+        private String companyPicture;
+        private Integer count;
+
+        private Integer companyForAddressId;
+        private String zoneCode;
+        private String roadJibunAddr;
+        private String detailAddress;
+
+        public CompanyDetailWithPerRespDto(CompanyDetailWithPerRespDto companyDetailWithPerRespDto,
+                CompanyAddressRespDto companyAddressRespDto) {
+            this.companyId = companyDetailWithPerRespDto.getCompanyId();
+            this.companyName = companyDetailWithPerRespDto.getCompanyName();
+            this.companyPhoneNumber = companyDetailWithPerRespDto.getCompanyPhoneNumber();
+            this.companyEmail = companyDetailWithPerRespDto.getCompanyEmail();
+            this.companyPicture = companyDetailWithPerRespDto.getCompanyPicture();
+            this.count = companyDetailWithPerRespDto.getCount();
+
+            this.companyForAddressId = companyAddressRespDto.getCompanyId();
+            this.zoneCode = companyAddressRespDto.getZoneCode();
+            this.roadJibunAddr = companyAddressRespDto.getRoadJibunAddr();
+            this.detailAddress = companyAddressRespDto.getDetailAddress();
+        }
+
+    }
 }
