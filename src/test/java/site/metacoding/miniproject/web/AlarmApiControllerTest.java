@@ -33,9 +33,9 @@ import site.metacoding.miniproject.utill.JWTToken.CreateJWTToken;
 
 @Slf4j
 @ActiveProfiles("test")
-@Sql("classpath:truncate.sql")
 @AutoConfigureMockMvc
 @SpringBootTest(webEnvironment = WebEnvironment.MOCK)
+@Sql("classpath:truncate.sql")
 public class AlarmApiControllerTest {
 
     private static final String APPLICATION_JSON = "application/json; charset=utf-8";
@@ -93,6 +93,7 @@ public class AlarmApiControllerTest {
         log.debug("디버그 : " + resultActions.andReturn().getResponse().getContentAsString());
     }
     
+
     @Order(2)
     @Test
     @Sql("classpath:testsql/insertalarmfortest.sql")
