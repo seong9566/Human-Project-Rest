@@ -1,6 +1,9 @@
 package site.metacoding.miniproject.web;
 
-import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.*;
+import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.put;
+
+import java.sql.Timestamp;
+import java.util.Date;
 
 import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.BeforeAll;
@@ -10,12 +13,10 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureMockMvc;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.boot.test.context.SpringBootTest.WebEnvironment;
-import org.springframework.core.annotation.Order;
 import org.springframework.mock.web.MockCookie;
 import org.springframework.mock.web.MockHttpSession;
 import org.springframework.test.context.ActiveProfiles;
 import org.springframework.test.context.jdbc.Sql;
-import org.springframework.test.context.jdbc.Sql.ExecutionPhase;
 import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.test.web.servlet.MvcResult;
 import org.springframework.test.web.servlet.ResultActions;
@@ -25,7 +26,6 @@ import org.springframework.test.web.servlet.result.MockMvcResultMatchers;
 import com.fasterxml.jackson.databind.ObjectMapper;
 
 import lombok.extern.slf4j.Slf4j;
-import site.metacoding.miniproject.dto.jobpostingboard.JobPostingBoardReqDto.JobPostingBoardInsertReqDto;
 import site.metacoding.miniproject.dto.jobpostingboard.JobPostingBoardReqDto.JobPostingBoardUpdateReqDto;
 import site.metacoding.miniproject.dto.user.UserRespDto.SignCompanyDto;
 import site.metacoding.miniproject.dto.user.UserRespDto.SignedDto;
@@ -35,7 +35,7 @@ import site.metacoding.miniproject.utill.JWTToken.CreateJWTToken;
 @ActiveProfiles("test")
 @AutoConfigureMockMvc
 @SpringBootTest(webEnvironment = WebEnvironment.MOCK)
-@Sql("classpath:testdatabase.sql")
+@Sql("classpath:truncate.sql")
 public class CompanyApiControllerTest {
 
     private static final String APPLICATION_JSON = "application/json; charset=utf-8";
@@ -77,9 +77,8 @@ public class CompanyApiControllerTest {
     }
 
     // 채용공고업데이트
-    @Order(1)
-    @Sql(scripts = "classpath:testsql/insertjobpostingBoard.sql", executionPhase = ExecutionPhase.BEFORE_TEST_METHOD)
     @Test
+    @Sql(scripts = "classpath:testsql/insertjobpostingboard.sql")
     public void updatejobPostingBoard_test() throws Exception {
 
         // given
@@ -89,7 +88,7 @@ public class CompanyApiControllerTest {
         jobPostingBoardUpdateReqDto.setJobPostingBoardContent("content");
         jobPostingBoardUpdateReqDto.setJobPostingSalary(1000);
         jobPostingBoardUpdateReqDto.setJobPostingBoardPlace("place");
-        jobPostingBoardUpdateReqDto.setJobPostingBoardDeadline(null);
+        jobPostingBoardUpdateReqDto.setJobPostingBoardDeadline(new Timestamp(100L));
 
         jobPostingBoardUpdateReqDto.setCategoryBackend(true);
         jobPostingBoardUpdateReqDto.setCategoryDevops(false);
@@ -98,25 +97,29 @@ public class CompanyApiControllerTest {
         jobPostingBoardUpdateReqDto.setOneYearLess(true);
         jobPostingBoardUpdateReqDto.setTwoYearOver(false);
         jobPostingBoardUpdateReqDto.setThreeYearOver(false);
-        jobPostingBoardUpdateReqDto.setFiveYearOver(null);
+        jobPostingBoardUpdateReqDto.setFiveYearOver(false);
 
         String body = om.writeValueAsString(jobPostingBoardUpdateReqDto);
 
         // when
         ResultActions resultActions = mvc
-                .perform(put("/api/jobposting/update/" + 1)
-                        .content(body).session(session).cookie(mockCookie)
+                .perform(put("/s/api/jobposting/update/" + 1)
+                        .content(body)
+                        .contentType(APPLICATION_JSON)
+                        .session(session)
+                        .cookie(mockCookie)
                         .accept(APPLICATION_JSON));
+
         // then
         MvcResult mvcResult = resultActions.andReturn();
-        System.out.println("debugggg:" + mvcResult.getResponse().getContentAsString());
+        System.out.println("debugggg:" + mvcResult.getResponse().getStatus());
         resultActions.andExpect(MockMvcResultMatchers.jsonPath("$.code").value(1));
 
     }
 
     // 채용공고 목록보기
     @Test
-    @Sql(scripts = "classpath:testsql/insertjobpostingBoard.sql", executionPhase = ExecutionPhase.BEFORE_TEST_METHOD)
+    @Sql(scripts = "classpath:testsql/insertjobpostingBoard.sql")
     public void jobPostingBoardList_test() throws Exception {
         // given
 
@@ -169,19 +172,22 @@ public class CompanyApiControllerTest {
 
     // 채용공고 삭제하기
     @Test
+    @Sql(scripts = "classpath:testsql/insertjobpostingBoard.sql")
     public void deleteJobPostingBoard_test() throws Exception {
         // given
-        Long id = 1L;
 
+        Integer id = 1;
         // when
         ResultActions resultActions = mvc
-                .perform(MockMvcRequestBuilders.delete("/s/company/jobPostingBoard/delete/" + id)
-                        .contentType(APPLICATION_JSON).accept(APPLICATION_JSON).session(session));
+                .perform(MockMvcRequestBuilders.delete("/s/company/jobPostingBoard/delete/1")
+                        .session(session)
+                        .cookie(mockCookie)
+                        .accept(APPLICATION_JSON));
 
         // then
         MvcResult mvcResult = resultActions.andReturn();
         System.out.println("debugggg:" + mvcResult.getResponse().getContentAsString());
-        resultActions.andExpect(MockMvcResultMatchers.jsonPath("$.code").value(1L));
+        resultActions.andExpect(MockMvcResultMatchers.jsonPath("$.code").value(1));
     }
 
 }

@@ -101,7 +101,6 @@ public class PersonalApiControllerTest {
 
         // given
         PersonalUpdatReqDto personalUpdateReqDto = new PersonalUpdatReqDto();
-        personalUpdateReqDto.setPersonalId(1);
         personalUpdateReqDto.setPersonalName("ssar");
         personalUpdateReqDto.setPersonalPhoneNumber("010-9459-5116");
         personalUpdateReqDto.setPersonalEmail("cndtjq1248@naver.com");
