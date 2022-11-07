@@ -86,20 +86,6 @@ public class CompanyController {
 		return new ResponseDto<>(1, "채용공고 상세보기", companyService.jobPostingBoardDetail(jobPostingBoardId, companyId));
 	}
 
-	// // 채용 공고 수정 폼
-	// @GetMapping("/company/jobPostingBoardUpdate/{jobPostingBoardId}")
-	// public String jobPostingBoardUpdate(Model model, @PathVariable Integer
-	// jobPostingBoardId) {
-	// JobPostingBoardDetailDto jobPostingPS =
-	// companyService.jobPostingOne(jobPostingBoardId);
-	// SignedDto<?> principal = (SignedDto<?>) session.getAttribute("principal");
-	// CompanyAddressRespDto addressPS =
-	// companyService.findByAddress(principal.getCompanyId());
-	// model.addAttribute("address", addressPS);
-	// model.addAttribute("jobPostingPS", jobPostingPS);
-	// return "company/jobPostingBoardUpdate";
-	// }
-
 	@PutMapping("/s/api/jobposting/update/{jobPostingBoardId}")
 	public ResponseDto<?> updatejobPostingBoard(@PathVariable Integer jobPostingBoardId,
 			@RequestBody JobPostingBoardUpdateReqDto jobPostingBoardUpdateReqDto) {
@@ -110,7 +96,7 @@ public class CompanyController {
 	}
 
 	// 채용 공고 삭제
-	@DeleteMapping("/company/jobPostingBoard/delete/{jobPostingBoardId}")
+	@DeleteMapping("/s/company/jobPostingBoard/delete/{jobPostingBoardId}")
 	public @ResponseBody ResponseDto<?> deleteJobPostingBoard(@PathVariable Integer jobPostingBoardId) {
 		companyService.deleteJobposting(jobPostingBoardId);
 		return new ResponseDto<>(1, "채용공고 삭제 성공", null);

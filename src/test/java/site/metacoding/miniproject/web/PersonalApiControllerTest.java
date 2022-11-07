@@ -1,13 +1,8 @@
 package site.metacoding.miniproject.web;
 
-import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.*;
-
-import org.junit.jupiter.api.AfterEach;
-import org.junit.jupiter.api.BeforeAll;
-import org.junit.jupiter.api.BeforeEach;
-import org.junit.jupiter.api.Test;
-import org.springframework.beans.factory.annotation.Autowired;
+import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.multipart;
+import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.put;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.jsonPath;
 
 import org.junit.jupiter.api.AfterEach;
@@ -18,12 +13,9 @@ import org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureMock
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.boot.test.context.SpringBootTest.WebEnvironment;
 import org.springframework.core.annotation.Order;
-import org.springframework.mock.web.MockCookie;
-import org.springframework.mock.web.MockHttpSession;
 import org.springframework.core.io.Resource;
 import org.springframework.core.io.ResourceLoader;
 import org.springframework.http.HttpMethod;
-import org.springframework.http.MediaType;
 import org.springframework.mock.web.MockCookie;
 import org.springframework.mock.web.MockHttpSession;
 import org.springframework.mock.web.MockMultipartFile;
@@ -33,22 +25,11 @@ import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.test.web.servlet.MvcResult;
 import org.springframework.test.web.servlet.ResultActions;
 import org.springframework.test.web.servlet.request.MockMvcRequestBuilders;
-import org.springframework.test.web.servlet.MockMvc;
-import org.springframework.test.web.servlet.MvcResult;
-import org.springframework.test.web.servlet.ResultActions;
-import org.springframework.test.web.servlet.request.MockMvcRequestBuilders;
-import org.springframework.test.web.servlet.result.MockMvcResultMatchers;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
 
 import lombok.extern.slf4j.Slf4j;
 import site.metacoding.miniproject.dto.personal.PersonalReqDto.PersonalUpdatReqDto;
-import site.metacoding.miniproject.dto.user.UserRespDto.SignPersonalDto;
-import site.metacoding.miniproject.dto.user.UserRespDto.SignedDto;
-import site.metacoding.miniproject.utill.JWTToken.CreateJWTToken;
-
-import com.fasterxml.jackson.databind.ObjectMapper;
-
 import site.metacoding.miniproject.dto.resumes.ResumesReqDto.ResumesInsertReqDto;
 import site.metacoding.miniproject.dto.user.UserRespDto.SignPersonalDto;
 import site.metacoding.miniproject.dto.user.UserRespDto.SignedDto;
@@ -103,7 +84,7 @@ public class PersonalApiControllerTest {
     }
 
     @Test
-    @Sql("classpath:testsql/insertResumes.sql")
+    @Sql("classpath:testsql/insertresumes.sql")
     public void insertResumes_test() throws Exception {
         // given
         ResumesInsertReqDto resumesInsertReqDto = new ResumesInsertReqDto();
@@ -149,18 +130,41 @@ public class PersonalApiControllerTest {
     }
 
     @Test
+    @Sql("classpath:testsql/findbyresumesid.sql")
     public void findByResumesId_test() throws Exception {
+        // given
+        Integer resumesId = 1;
+
+        // when
+        ResultActions resultActions = mvc
+                .perform(MockMvcRequestBuilders.get("/resumes/" + resumesId).accept(APPLICATION_JSON)
+                        .cookie(mockCookie)
+                        .session(session));
+
+        // then
+        MvcResult mvcResult = resultActions.andReturn();
+        System.out.println("디버그 : " + mvcResult.getResponse().getContentAsString());
+        resultActions.andExpect(jsonPath("$.code").value(1));
+        resultActions.andExpect(jsonPath("$.message").value("내 이력서 상세 보기 성공"));
+    }
+
+    @Test
+    @Sql("classpath:testsql/findallmyresumes.sql")
+    public void findAllMyResumes_test() throws Exception {
         // given
         Integer id = 1;
 
         // when
         ResultActions resultActions = mvc
-                .perform(MockMvcRequestBuilders.get("/resumes/" + id).accept(APPLICATION_JSON));
+                .perform(get("/s/resumes/myList").accept(APPLICATION_JSON)
+                        .cookie(mockCookie)
+                        .session(session));
 
         // then
         MvcResult mvcResult = resultActions.andReturn();
+        System.out.println("디버그 : " + mvcResult.getResponse().getContentAsString());
         resultActions.andExpect(jsonPath("$.code").value(1));
-        resultActions.andExpect(jsonPath("$.message").value("내 이력서 상세 보기 성공"));
+        resultActions.andExpect(jsonPath("$.message").value("내 이력서 목록 보기 성공"));
     }
 
     // 내정보보기 // 오류발생하는게 맞음 아직 해결못함
