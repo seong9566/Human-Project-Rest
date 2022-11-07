@@ -12,7 +12,6 @@ spring:
     username: sa
     password:
   # sql.init.mode: always
-  sql.init.schema-locations: classpath:testdatabase.sql
 
   session:
     store-type: none

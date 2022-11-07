@@ -121,20 +121,22 @@ public class LikeApiControllerTest {
         System.out.println("디버그 : " + mvcResult.getResponse().getContentAsString());
     }
 
-    @Sql(scripts = "classpath:testsql/insertuserforlike.sql", executionPhase = ExecutionPhase.BEFORE_TEST_METHOD)
+    @Sql({ "classpath:truncate.sql", "classpath:testsql/insertuserforlike.sql" })
     @Test
     public void insertCompanyLike_test() throws Exception {
 
         // given
         Integer companyId = 1;
         CompanyLikeReqDto companyLikeReqDto = new CompanyLikeReqDto();
-
+        companyLikeReqDto.setAlarmId(1);
+        companyLikeReqDto.setCompanyId(1);
+        companyLikeReqDto.setPersonalId(1);
         String body = om.writeValueAsString(companyLikeReqDto);
         // when
         ResultActions resultActions = mvc
-                .perform(MockMvcRequestBuilders.post("/s/api/companyLike/" + companyId).session(session)
-                        .cookie(mockCookie).content(body)
-                        .contentType(APPLICATION_JSON).accept(APPLICATION_JSON));
+                .perform(MockMvcRequestBuilders.post("/s/api/companyLike/" + companyId).content(body).session(session)
+                        .cookie(mockCookie)
+                        .accept(APPLICATION_JSON));
         System.out.println("디버그 : " + resultActions.andReturn().getResponse().getContentAsString());
         // then
         MvcResult mvcResult = resultActions.andReturn();
@@ -142,10 +144,10 @@ public class LikeApiControllerTest {
         resultActions.andExpect(MockMvcResultMatchers.jsonPath("$.code").value(1));
     }
 
-    @Sql(scripts = "classpath:testsql/insertuserforlike.sql", executionPhase = ExecutionPhase.BEFORE_TEST_METHOD)
+    @Sql(scripts = "classpath:testsql/insertuserforlike.sql")
     @Test
     public void deleteCompanyLike_test() throws Exception {
-        Integer companyId = 2;
+        Integer companyId = 1;
 
         ResultActions resultActions = mvc
                 .perform(delete("/s/api/companyLike/{companyId}" + companyId)

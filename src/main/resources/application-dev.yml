@@ -2,7 +2,6 @@ server:
   port: 8000
   servlet:
     context-path: /
-spring.jpa.defer-datasource-initialization: true
 
 spring:
   datasource:
