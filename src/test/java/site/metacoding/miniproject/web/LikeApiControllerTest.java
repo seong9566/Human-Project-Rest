@@ -1,6 +1,7 @@
 package site.metacoding.miniproject.web;
 
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.delete;
+import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
 
 import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.BeforeAll;
@@ -23,6 +24,8 @@ import org.springframework.test.web.servlet.result.MockMvcResultMatchers;
 import com.fasterxml.jackson.databind.ObjectMapper;
 
 import site.metacoding.miniproject.dto.like.LikeReqDto.CompanyLikeReqDto;
+import site.metacoding.miniproject.dto.like.LikeReqDto.PersonalLikeReqDto;
+import site.metacoding.miniproject.dto.user.UserRespDto.SignCompanyDto;
 import site.metacoding.miniproject.dto.user.UserRespDto.SignPersonalDto;
 import site.metacoding.miniproject.dto.user.UserRespDto.SignedDto;
 import site.metacoding.miniproject.utill.JWTToken.CreateJWTToken;
@@ -45,31 +48,14 @@ public class LikeApiControllerTest {
     }
 
     // PersonalLike 테스트
-    // @BeforeEach // test메서드 진입전에 트랜잭션 발동
-    // public void sessionInit() {
-
-    // session = new MockHttpSession();
-    // SignCompanyDto signCompanyDto = new SignCompanyDto();
-
-    // signCompanyDto.setCompanyId(1);
-    // SignedDto<?> signedDto = new SignedDto<>(1, "testuser1", signCompanyDto);
-
-    // session.setAttribute("principal", signedDto);
-
-    // String JwtToken = CreateJWTToken.createToken(signedDto); // Authorization
-    // mockCookie = new MockCookie("Authorization", JwtToken);
-
-    // }
-
-    // CompanyLike 테스트
-    @BeforeEach
+    @BeforeEach // test메서드 진입전에 트랜잭션 발동
     public void sessionInit() {
 
         session = new MockHttpSession();
-        SignPersonalDto signPersonalDto = new SignPersonalDto();
+        SignCompanyDto signCompanyDto = new SignCompanyDto();
 
-        signPersonalDto.setPersonalId(1);
-        SignedDto<?> signedDto = new SignedDto<>(1, "testuser1", signPersonalDto);
+        signCompanyDto.setCompanyId(1);
+        SignedDto<?> signedDto = new SignedDto<>(1, "testuser1", signCompanyDto);
 
         session.setAttribute("principal", signedDto);
 
@@ -77,6 +63,23 @@ public class LikeApiControllerTest {
         mockCookie = new MockCookie("Authorization", JwtToken);
 
     }
+
+    // CompanyLike 테스트
+    // @BeforeEach
+    // public void sessionInit() {
+
+    // session = new MockHttpSession();
+    // SignPersonalDto signPersonalDto = new SignPersonalDto();
+
+    // signPersonalDto.setPersonalId(1);
+    // SignedDto<?> signedDto = new SignedDto<>(1, "testuser1", signPersonalDto);
+
+    // session.setAttribute("principal", signedDto);
+
+    // String JwtToken = CreateJWTToken.createToken(signedDto); // Authorization
+    // mockCookie = new MockCookie("Authorization", JwtToken);
+
+    // }
 
     @AfterEach
     public void sessionClear() {
@@ -89,11 +92,16 @@ public class LikeApiControllerTest {
 
         // given
         Integer resumesId = 1;
+        PersonalLikeReqDto personalLikeReqDto = new PersonalLikeReqDto();
+        personalLikeReqDto.setAlarmId(2);
+        personalLikeReqDto.setCompanyId(1);
+        personalLikeReqDto.setResumesId(1);
+        String body = om.writeValueAsString(personalLikeReqDto);
 
         // when
         ResultActions resultActions = mvc
                 .perform(MockMvcRequestBuilders.post("/s/api/personalLike/" + resumesId).session(session)
-                        .cookie(mockCookie)
+                        .cookie(mockCookie).content(body)
                         .contentType(APPLICATION_JSON).accept(APPLICATION_JSON));
         System.out.println("디버그 : " + resultActions.andReturn().getResponse().getContentAsString());
         // then
@@ -102,12 +110,13 @@ public class LikeApiControllerTest {
         resultActions.andExpect(MockMvcResultMatchers.jsonPath("$.code").value(1));
     }
 
-    @Sql(scripts = "classpath:testsql/insertuserforlike.sql", executionPhase = ExecutionPhase.BEFORE_TEST_METHOD)
+    @Sql({ "classpath:truncate.sql", "classpath:testsql/insertuserforlike.sql" })
     @Test
     public void deletePersonalLike_test() throws Exception {
         Integer resumesId = 1;
         ResultActions resultActions = mvc
-                .perform(delete("/s/api/personalLike/" + resumesId)
+                .perform(delete("/s/api/personalLike/" + resumesId).session(session)
+                        .cookie(mockCookie)
                         .accept(APPLICATION_JSON)
                         .session(session));
 
@@ -147,13 +156,46 @@ public class LikeApiControllerTest {
         Integer companyId = 1;
 
         ResultActions resultActions = mvc
-                .perform(delete("/s/api/companyLike/{companyId}" + companyId)
-                        .accept(APPLICATION_JSON)
+                .perform(delete("/s/api/companyLike/" + companyId)
+                        .accept(APPLICATION_JSON).session(session)
+                        .cookie(mockCookie)
                         .session(session));
 
         // then/ charset=utf-8안넣으면바로한글이깨진다
 
         MvcResult mvcResult = resultActions.andReturn();
         System.out.println("디버그 : " + mvcResult.getResponse().getContentAsString());
+    }
+
+    @Sql({ "classpath:truncate.sql", "classpath:testsql/insertuserforlike.sql" })
+    @Test
+    public void findAllPersonalLike_test() throws Exception {
+        // given
+
+        // when
+        ResultActions resultActions = mvc
+
+                .perform(get("/s/api/resumeList").session(session).cookie(mockCookie)
+                        .accept(APPLICATION_JSON));
+        // then
+        MvcResult mvcResult = resultActions.andReturn();
+        System.out.println("디버그 : " + mvcResult.getResponse().getContentAsString());
+
+    }
+
+    @Sql({ "classpath:truncate.sql", "classpath:testsql/insertuserforlike.sql" })
+    @Test
+    public void bestCompanye_test() throws Exception {
+        // given
+
+        // when
+        ResultActions resultActions = mvc
+
+                .perform(get("/api/bestcompany").session(session).cookie(mockCookie)
+                        .accept(APPLICATION_JSON));
+        // then
+        MvcResult mvcResult = resultActions.andReturn();
+        System.out.println("디버그 : " + mvcResult.getResponse().getContentAsString());
+
     }
 }
