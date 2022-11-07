@@ -11,8 +11,10 @@ spring:
     driver-class-name: org.h2.Driver
     username: sa
     password:
-  # sql.init.mode: always
-  sql.init.schema-locations: classpath:testdatabase.sql
+  sql:
+    init:
+      schema-locations: classpath:testdatabase.sql
+      mode: always
 
   session:
     store-type: none
@@ -36,9 +38,7 @@ spring:
   output:
     ansi:
       enabled: always
-  sql:
-    init:
-      mode: always
+
 
 logging:
   level:
