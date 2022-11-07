@@ -1,6 +1,6 @@
 CREATE TABLE users (
   users_id INTEGER auto_increment PRIMARY KEY,
-  login_id varchar(20) UNIQUE,
+  login_id varchar(20),
   login_password varchar(100),
   personal_id integer,
   company_id integer,
@@ -190,5 +190,5 @@ ALTER TABLE job_posting_board ADD FOREIGN KEY (job_posting_board_career_id) REFE
 
 ALTER TABLE job_posting_board ADD FOREIGN KEY (job_posting_board_category_id) REFERENCES category (category_id);
 
-
 ALTER TABLE resumes ADD FOREIGN KEY (resumes_category_id) REFERENCES category (category_id);
+
