@@ -13,5 +13,5 @@ public interface CareerDao {
 
 	public void deleteById(Integer careerId);
 
-	public void jobPostingUpdate(Career career);
+	public void updateJobPostingBoard(Career career);
 }

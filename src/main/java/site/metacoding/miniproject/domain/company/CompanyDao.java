@@ -4,6 +4,7 @@ import java.util.List;
 
 import site.metacoding.miniproject.dto.company.CompanyRespDto.CompanyAddressRespDto;
 import site.metacoding.miniproject.dto.company.CompanyRespDto.CompanyDetailRespDto;
+import site.metacoding.miniproject.dto.company.CompanyRespDto.CompanyDetailWithPerRespDto;
 import site.metacoding.miniproject.dto.company.CompanyRespDto.CompanyUpdateFormRespDto;
 
 public interface CompanyDao {
@@ -18,6 +19,8 @@ public interface CompanyDao {
 	public void deleteById(Integer id);
 
 	public CompanyDetailRespDto findByCompany(Integer companyId);
+
+	public CompanyDetailWithPerRespDto findByCompanyToPer(Integer companyId);
 
 	public CompanyAddressRespDto findByAddress(Integer companyId);
 
