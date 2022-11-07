@@ -93,7 +93,6 @@ public class ResumesRespDto {
         private Integer resumesId;
         private Integer careerId;
         private Integer portfolioId;
-        private Integer categoryId;
         private Integer resumesCategoryId;
 
         public ResumesDetailRespDto(Resumes resumes, Category category, Career career, Portfolio portfolio,
