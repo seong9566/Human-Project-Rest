@@ -191,15 +191,14 @@ public class UsersApiControllerTest {
 
         ResultActions resultActions = mvc.perform(get("/api/checkId/" + loginId)
                 .accept(APPLICATION_JSON))
-                
 
-        // then
+                // then
                 .andExpect(jsonPath("$.code").value("-1"))
                 .andDo(result -> {
                     mvc.perform(get("/checkId/" + "testuser2").accept(APPLICATION_JSON))
                             .andExpect(jsonPath("$.code").value("1"))
                             .andExpect(jsonPath("$.data").value("true"));
-                            
+
                 });
     }
 
