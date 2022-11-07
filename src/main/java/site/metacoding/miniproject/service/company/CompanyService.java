@@ -45,10 +45,6 @@ public class CompanyService {
 	private final CompanyDao companyDao;
 	private final UsersDao usersDao;
 
-	public CompanyAddressRespDto findByAddress(Integer companyId) {
-		return companyDao.findByAddress(companyId);
-	}
-
 	@Transactional(readOnly = true)
 	public CompanyDetailRespDto findByCompany(Integer companyId) {
 		CompanyAddressRespDto companyAddressRespDto = companyDao.findByAddress(companyId);
@@ -171,8 +167,6 @@ public class CompanyService {
 	}
 
 	// 채용공고 수정 (jobpostingboard,career,Category)
-	// 채용 공고 수정에 대한 Validation 필요함.
-	// 세션에 있는 company와 jobposting의 작성자 가 다를경우 예외처리 해주어야함.
 	@Transactional(rollbackFor = Exception.class)
 	public JobPostingBoardUpdateRespDto updateJobPostingBoard(
 			JobPostingBoardUpdateReqDto jobPostingBoardUpdateReqDto, Integer jobPostingBoardId) {

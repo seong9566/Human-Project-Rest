@@ -27,8 +27,6 @@ import site.metacoding.miniproject.dto.resumes.ResumesRespDto.ResumesUpdateRespD
 import site.metacoding.miniproject.dto.user.UserRespDto.SignPersonalDto;
 import site.metacoding.miniproject.dto.user.UserRespDto.SignedDto;
 import site.metacoding.miniproject.exception.ApiException;
-import site.metacoding.miniproject.service.company.CompanyService;
-import site.metacoding.miniproject.service.personal.PersonalLikeService;
 import site.metacoding.miniproject.service.personal.PersonalService;
 
 @RequiredArgsConstructor
