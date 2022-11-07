@@ -95,12 +95,12 @@ public class UsersApiControllerTest {
         // when
         ResultActions resultActions = mvc
                 .perform(post("/api/join/personal").content(body)
-                        .contentType("application/json; charset=utf-8").accept(APPLICATION_JSON));
+                        .contentType(APPLICATION_JSON).accept(APPLICATION_JSON));
 
         // then
-        resultActions.andExpect(jsonPath("$.code").value("1"));
-        resultActions.andExpect(jsonPath("$.message").value("계정생성완료"));
-        resultActions.andExpect(jsonPath("$.data.usersId").value("1"));
+        resultActions.andExpect(jsonPath("$.code").value("1"))
+        .andExpect(jsonPath("$.message").value("계정생성완료"))
+        .andExpect(jsonPath("$.data.usersId").value("1"));
 
     }
 
@@ -131,9 +131,9 @@ public class UsersApiControllerTest {
                         .accept(APPLICATION_JSON));
 
         // then
-        resultActions.andExpect(jsonPath("$.code").value("1"));
-        resultActions.andExpect(jsonPath("$.message").value("계정생성완료"));
-        resultActions.andExpect(jsonPath("$.data.usersId").value("1"));
+        resultActions.andExpect(jsonPath("$.code").value("1"))
+        .andExpect(jsonPath("$.message").value("계정생성완료"))
+        .andExpect(jsonPath("$.data.usersId").value("1"));
     }
 
     @Order(3)
@@ -158,9 +158,9 @@ public class UsersApiControllerTest {
         // log.debug("디버그 : " + whatIsThat);
 
         // then
-        resultActions.andExpect(jsonPath("$.code").value("1"));
-        resultActions.andExpect(jsonPath("$.message").value("로그인완료"));
-        resultActions.andExpect(jsonPath("$.data.userInfo.personalId").value("1"));
+        resultActions.andExpect(jsonPath("$.code").value("1"))
+        .andExpect(jsonPath("$.message").value("로그인완료"))
+        .andExpect(jsonPath("$.data.userInfo.personalId").value("1"));
     }
 
     @Order(4)

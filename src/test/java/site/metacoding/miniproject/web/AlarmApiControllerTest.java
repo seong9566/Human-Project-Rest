@@ -1,7 +1,10 @@
 package site.metacoding.miniproject.web;
 
-import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.*;
-import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.jsonPath;
+import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
+import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.put;
+
+import java.util.ArrayList;
+import java.util.List;
 
 import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.BeforeAll;
@@ -12,7 +15,6 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureMockMvc;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.boot.test.context.SpringBootTest.WebEnvironment;
-import org.springframework.core.io.ResourceLoader;
 import org.springframework.mock.web.MockCookie;
 import org.springframework.mock.web.MockHttpSession;
 import org.springframework.test.context.ActiveProfiles;
@@ -23,6 +25,7 @@ import org.springframework.test.web.servlet.ResultActions;
 import com.fasterxml.jackson.databind.ObjectMapper;
 
 import lombok.extern.slf4j.Slf4j;
+import site.metacoding.miniproject.dto.alarm.AlarmReqDto.AlarmReqListDtoToCheck;
 import site.metacoding.miniproject.dto.user.UserRespDto.SignPersonalDto;
 import site.metacoding.miniproject.dto.user.UserRespDto.SignedDto;
 import site.metacoding.miniproject.utill.JWTToken.CreateJWTToken;
@@ -84,21 +87,47 @@ public class AlarmApiControllerTest {
                 .session(session)
                 .cookie(mockCookie)
                 .accept(APPLICATION_JSON));
+
         // then
         log.debug("디버그 : " + resultActions.andReturn().getResponse().getContentAsString());
     }
     
     @Test
-    public void readedAlarm_test() {
+    public void readedAlarm_test() throws Exception {
+
+        //given
+        AlarmReqListDtoToCheck alarmReqListDtoToCheck = new AlarmReqListDtoToCheck();
+        List<Integer> alarmsId = new ArrayList<>();
+
+        alarmsId.add(1);
+        alarmsId.add(2);
+
+        alarmReqListDtoToCheck.setAlarmsId(alarmsId);
+
+
+        String body = om.writeValueAsString(alarmsId);
+
+
+        //when
+        ResultActions resultActions = mvc.perform(put("/s/api/users/alarm/readed")
+                .cookie(mockCookie)
+                .session(session)
+                .content(body)
+                .contentType(APPLICATION_JSON)
+                .accept(APPLICATION_JSON));
+
+        //then
+        log.debug("디버그 : " + resultActions.andReturn().getResponse().getStatus());
+        log.debug("디버그 : " + resultActions.andReturn().getResponse().getContentAsString());
+    }
+
+    @Test
+    public void deleteUserAlarm_test() {
         //given
 
         //when
 
         //then
-    }
-
-    @Test
-    public void deleteUserAlarm_test() {
 
     }
 
