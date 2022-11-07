@@ -1,6 +1,11 @@
 package site.metacoding.miniproject.web;
 
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
+import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.put;
+
+import java.io.FileInputStream;
+
+import javax.servlet.http.HttpServletResponse;
 
 import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.BeforeEach;
@@ -13,6 +18,7 @@ import org.springframework.context.annotation.Import;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.MediaType;
 import org.springframework.mock.web.MockHttpSession;
+import org.springframework.mock.web.MockMultipartFile;
 import org.springframework.test.context.ActiveProfiles;
 import org.springframework.test.context.jdbc.Sql;
 import org.springframework.test.web.servlet.MockMvc;
@@ -25,9 +31,15 @@ import lombok.extern.slf4j.Slf4j;
 import site.metacoding.miniproject.config.MyBatisConfig;
 import site.metacoding.miniproject.domain.company.Company;
 import site.metacoding.miniproject.domain.company.CompanyDao;
-import site.metacoding.miniproject.domain.personal.PersonalDao;
+import site.metacoding.miniproject.domain.users.Users;
 import site.metacoding.miniproject.domain.users.UsersDao;
-import site.metacoding.miniproject.utill.SHA256;
+import site.metacoding.miniproject.dto.company.CompanyReqDto.CompanyUpdateReqDto;
+import site.metacoding.miniproject.dto.user.UserRespDto.SignCompanyDto;
+import site.metacoding.miniproject.dto.user.UserRespDto.SignedDto;
+import site.metacoding.miniproject.exception.ApiException;
+import site.metacoding.miniproject.utill.JWTToken.CookieForToken;
+import site.metacoding.miniproject.utill.JWTToken.CreateJWTToken;
+import site.metacoding.miniproject.web.dto.request.etc.LoginDto;
 
 @Slf4j
 @ActiveProfiles("test")
@@ -37,7 +49,8 @@ import site.metacoding.miniproject.utill.SHA256;
 @Sql("classpath:testdatabase.sql")
 public class CompanyApiControllerTest {
     private static final String APPLICATION_JSON = "application/json; charset=utf-8";
-
+    @Autowired
+    private UsersDao usersDao;
     @Autowired
     private MockMvc mvc;
 
@@ -57,24 +70,64 @@ public class CompanyApiControllerTest {
         headers.setContentType(MediaType.APPLICATION_JSON);
     }
 
-    @BeforeEach
-    public void sessionInit() {
-        session = new MockHttpSession();
-        Company company = Company.builder().companyId(1).companyName("박동훈").companyEmail("sopu55555@naver.com")
-                .companyPhoneNumber("01024102957")
-                .companyAddress("우리집").companyPicture("ddd").build();
+    @BeforeEach // test메서드 진입전에 트랜잭션 발동
+    public void sessionInit(LoginDto loginDto, HttpServletResponse resp) {
+        String loginId = "ssar";
+        String loginPassword = "1234";
+
+        Users userInfo = usersDao.findByIdAndPassword(loginId, loginPassword);
+
+        if (userInfo == null) {
+            throw new ApiException("아이디 또는 패스워드가 틀렸습니다.");
+        }
+
+        if (userInfo.getCompanyId() != null) {
+            Company companyPS = companyDao.findById(userInfo.getCompanyId());
+
+            SignCompanyDto signCompanyDto = new SignCompanyDto(companyPS);
+            SignedDto<?> signedDto = new SignedDto<>(1, loginId, signCompanyDto);
+            session.setAttribute("principal", signedDto);
+            signedDto = new SignedDto<>(userInfo.getUsersId(), userInfo.getLoginId(), signCompanyDto);
+            session = new MockHttpSession();
+            signCompanyDto.setCompanyId(1);
+
+            String token = CreateJWTToken.createToken(signedDto);
+
+            resp.addHeader("Authorization", "Bearer " + token);
+            resp.addCookie(CookieForToken.setCookie(token));
+        }
+
     }
 
     @Test
     public void findByCompany_test() throws Exception {
         // given
-
         // when
         ResultActions resultActions = mvc
+
                 .perform(get("/s/api/company/detail").session(session)
                         .contentType("application/json; charset=utf-8").accept(APPLICATION_JSON));
 
         // then
+        MvcResult mvcResult = resultActions.andReturn();
+        System.out.println("디버그 : " + mvcResult.getResponse().getContentAsString());
+    }
+
+    @Test
+    public void companyUpdate_test() throws Exception {
+        // given
+        CompanyUpdateReqDto companyUpdateReqDto = new CompanyUpdateReqDto();
+        companyUpdateReqDto.setCompanyName("박동훈");
+        companyUpdateReqDto.setCompanyEmail("sopu555555@naver.com");
+        companyUpdateReqDto.setCompanyPhoneNumber("01024102957");
+        // MockMultipartFile file = new MockMultipartFile("image", "test.png",
+        // "image/png",
+        // new FileInputStream("C:\\Users\\GGG\\4.jpg"));
+        companyUpdateReqDto.setCompanyPicture("file");
+        String body = om.writeValueAsString(companyUpdateReqDto);
+        // when
+        ResultActions resultActions = mvc.perform(put("/s/api/company/update").content(body)
+                .contentType(APPLICATION_JSON).accept(APPLICATION_JSON).session(session));
         MvcResult mvcResult = resultActions.andReturn();
         System.out.println("디버그 : " + mvcResult.getResponse().getContentAsString());
     }
