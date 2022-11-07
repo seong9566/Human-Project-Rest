@@ -81,6 +81,7 @@ public class PersonalApiControllerTest {
     }
 
     @Test
+    @Sql("classpath:testsql/insertResumes.sql")
     public void insertResumes_test() throws Exception {
         // given
         ResumesInsertReqDto resumesInsertReqDto = new ResumesInsertReqDto();
@@ -94,13 +95,9 @@ public class PersonalApiControllerTest {
         resumesInsertReqDto.setTwoYearOver(false);
         resumesInsertReqDto.setThreeYearOver(false);
         resumesInsertReqDto.setFiveYearOver(false);
-        resumesInsertReqDto.setPersonalId(1);
-        resumesInsertReqDto.setCareerId(1);
-        resumesInsertReqDto.setPortfolioId(1);
         resumesInsertReqDto.setResumesTitle("이력서제목1");
         resumesInsertReqDto.setResumesPicture("사진자리");
         resumesInsertReqDto.setResumesIntroduce("자기소개1");
-        resumesInsertReqDto.setResumesCategoryId(1);
         resumesInsertReqDto.setResumesPlace("부산경남");
 
         String filename = "p4.jpg";
