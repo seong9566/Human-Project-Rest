@@ -124,13 +124,14 @@ public class LikeApiControllerTest {
         // given
         Integer companyId = 1;
         CompanyLikeReqDto companyLikeReqDto = new CompanyLikeReqDto();
-        companyLikeReqDto.setAlarmId(1);
         companyLikeReqDto.setCompanyId(1);
+        companyLikeReqDto.setAlarmId(1);
         companyLikeReqDto.setPersonalId(1);
         String body = om.writeValueAsString(companyLikeReqDto);
         // when
         ResultActions resultActions = mvc
-                .perform(MockMvcRequestBuilders.post("/s/api/companyLike/" + companyId).content(body).session(session)
+                .perform(MockMvcRequestBuilders.post("/s/api/companyLike/" + companyId)
+                        .content(body).session(session)
                         .cookie(mockCookie)
                         .accept(APPLICATION_JSON));
         System.out.println("디버그 : " + resultActions.andReturn().getResponse().getContentAsString());
