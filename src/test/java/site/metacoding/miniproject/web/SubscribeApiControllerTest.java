@@ -1,16 +1,18 @@
 package site.metacoding.miniproject.web;
 
+import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.*;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
+import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.jsonPath;
 
 import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.BeforeEach;
-import org.junit.jupiter.api.Order;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureMockMvc;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.boot.test.context.SpringBootTest.WebEnvironment;
+import org.springframework.core.annotation.Order;
 import org.springframework.mock.web.MockCookie;
 import org.springframework.mock.web.MockHttpSession;
 import org.springframework.test.context.ActiveProfiles;
@@ -18,7 +20,6 @@ import org.springframework.test.context.jdbc.Sql;
 import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.test.web.servlet.ResultActions;
 
-import com.fasterxml.jackson.databind.ObjectMapper;
 
 import lombok.extern.slf4j.Slf4j;
 import site.metacoding.miniproject.dto.user.UserRespDto.SignPersonalDto;
@@ -35,9 +36,6 @@ public class SubscribeApiControllerTest {
 
     @Autowired
     private MockMvc mvc;
-
-    @Autowired
-    private ObjectMapper om;
 
     private MockHttpSession session;
 
@@ -72,24 +70,34 @@ public class SubscribeApiControllerTest {
     @Order(1)
     @Test
     @Sql({"classpath:truncate.sql", "classpath:testsql/insertcompanyfortest.sql", "classpath:testsql/insertuserforpersonal.sql"})
-    public void subscribeToCompany_test() throws Exception{
+    public void subscribeToCompany_test() throws Exception {
         //given
         Integer companyId = 1;
         //when
         ResultActions resultActions = mvc.perform(
-                get("/s/api/subscribe/" + companyId).session(session).cookie(mockCookie).accept(APPLICATION_JSON));
-        //then
-        log.debug("디버그 : " + resultActions.andReturn().getResponse().getContentAsString());
-        
+                get("/s/api/subscribe/" + companyId)
+                .session(session)
+                .cookie(mockCookie).accept(APPLICATION_JSON))
+                //then
+                .andExpect(jsonPath("$.code").value("1")
+        );
     }
     
+    @Order(2)
     @Test
-    public void subscribeCancelToCompany_test()  throws Exception{
+    @Sql({"classpath:truncate.sql", "classpath:testsql/insertcompanyfortest.sql", "classpath:testsql/insertuserforpersonal.sql", "classpath:testsql/insertsubscribefortest.sql"})
+    public void subscribeCancelToCompany_test() throws Exception {
         //given
-
+        Integer subscribeId = 1;
         //when
+        
+        ResultActions resultActions = mvc.perform(delete("/s/api/subscribe/" + subscribeId)
+        .session(session)
+        .cookie(mockCookie)
+        .accept(APPLICATION_JSON))
 
         //then
+        .andExpect(jsonPath("$.code").value("1"));
     }
 
 }
