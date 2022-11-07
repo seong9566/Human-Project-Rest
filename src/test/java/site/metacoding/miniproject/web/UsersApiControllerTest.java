@@ -148,7 +148,7 @@ public class UsersApiControllerTest {
         String body = om.writeValueAsString(loginDto);
 
         // when
-        ResultActions resultActions = mvc.perform(post("/login")
+        ResultActions resultActions = mvc.perform(post("/api/login")
                 .content(body)
                 .contentType(APPLICATION_JSON)
                 .accept(APPLICATION_JSON));
@@ -173,8 +173,8 @@ public class UsersApiControllerTest {
                 .session(session)
                 .accept(APPLICATION_JSON));
         // then
-        resultActions.andExpect(jsonPath("$.code").value("-1"));
-        resultActions.andExpect(jsonPath("$.message").value("이미 로그인 되어 있음"));
+        resultActions.andExpect(jsonPath("$.code").value("-1"))
+        .andExpect(jsonPath("$.message").value("이미 로그인 되어 있음"));
 
     }
 
@@ -191,12 +191,12 @@ public class UsersApiControllerTest {
 
         ResultActions resultActions = mvc.perform(get("/api/checkId/" + loginId)
                 .accept(APPLICATION_JSON))
-                
+
 
         // then
                 .andExpect(jsonPath("$.code").value("-1"))
                 .andDo(result -> {
-                    mvc.perform(get("/checkId/" + "testuser2").accept(APPLICATION_JSON))
+                    mvc.perform(get("/api/checkId/" + "testuser2").accept(APPLICATION_JSON))
                             .andExpect(jsonPath("$.code").value("1"))
                             .andExpect(jsonPath("$.data").value("true"));
                             
