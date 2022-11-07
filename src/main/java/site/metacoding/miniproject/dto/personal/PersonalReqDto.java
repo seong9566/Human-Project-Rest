@@ -49,7 +49,6 @@ public class PersonalReqDto {
 
     public static class PersonalUpdatReqDto { // PersonalUpdateDto -> PersonalUpdateReqDto
 
-        private Integer personalId;
         private String personalName;
         private String personalEmail;
         private String personalEducation;
@@ -75,7 +74,6 @@ public class PersonalReqDto {
             this.loginPassword = sha256.encrypt(this.loginPassword);
 
             return Users.builder()
-                    .personalId(personalId)
                     .loginPassword(loginPassword)
                     .build();
         }

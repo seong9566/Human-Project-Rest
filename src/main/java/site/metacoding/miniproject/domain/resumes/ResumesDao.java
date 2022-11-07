@@ -6,7 +6,6 @@ import org.apache.ibatis.annotations.Param;
 
 import site.metacoding.miniproject.dto.resumes.ResumesRespDto.PagingDto;
 import site.metacoding.miniproject.dto.resumes.ResumesRespDto.ResumesDetailRespDto;
-import site.metacoding.miniproject.web.dto.response.company.CompanyMainDto;
 
 public interface ResumesDao {
 
