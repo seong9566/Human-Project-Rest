@@ -13,6 +13,7 @@ import org.springframework.mock.web.MockCookie;
 import org.springframework.mock.web.MockHttpSession;
 import org.springframework.test.context.ActiveProfiles;
 import org.springframework.test.context.jdbc.Sql;
+import org.springframework.test.context.jdbc.Sql.ExecutionPhase;
 import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.test.web.servlet.MvcResult;
 import org.springframework.test.web.servlet.ResultActions;
@@ -27,7 +28,6 @@ import site.metacoding.miniproject.dto.personal.PersonalReqDto.PersonalUpdatReqD
 import site.metacoding.miniproject.dto.user.UserRespDto.SignPersonalDto;
 import site.metacoding.miniproject.dto.user.UserRespDto.SignedDto;
 import site.metacoding.miniproject.utill.JWTToken.CreateJWTToken;
-import site.metacoding.miniproject.web.dto.request.etc.LoginDto;
 
 @Slf4j
 @ActiveProfiles("test")
@@ -88,22 +88,16 @@ public class PersonalApiControllerTest {
 
     // 내정보보기
     @Test
+    @Sql(scripts = "classpath:create.sql", executionPhase = ExecutionPhase.BEFORE_TEST_METHOD)
     public void findByPersonal_test() throws Exception {
 
         // given
-        // given
-        String loginId = "testuser1";
-        String loginPassword = "Qwer1234!!!";
-        LoginDto loginDto = new LoginDto(loginId, loginPassword);
-
-        String body = om.writeValueAsString(loginDto);
 
         // when
         ResultActions resultActions = mvc.perform(MockMvcRequestBuilders.get("/s/api/personal/detail")
                 .session(session)
                 .cookie(mockCookie)
                 .contentType(APPLICATION_JSON)
-                .content(body)
                 .accept(APPLICATION_JSON));
 
         // then

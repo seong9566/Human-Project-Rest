@@ -1,5 +1,6 @@
 package site.metacoding.miniproject.web;
 
+import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
@@ -9,7 +10,7 @@ import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.boot.test.context.SpringBootTest.WebEnvironment;
 import org.springframework.context.annotation.Import;
 import org.springframework.http.HttpHeaders;
-import org.springframework.http.MediaType;
+import org.springframework.mock.web.MockCookie;
 import org.springframework.mock.web.MockHttpSession;
 import org.springframework.test.context.ActiveProfiles;
 import org.springframework.test.context.jdbc.Sql;
@@ -26,6 +27,9 @@ import site.metacoding.miniproject.config.MyBatisConfig;
 import site.metacoding.miniproject.domain.users.Users;
 import site.metacoding.miniproject.dto.jobpostingboard.JobPostingBoardReqDto.JobPostingBoardInsertReqDto;
 import site.metacoding.miniproject.dto.jobpostingboard.JobPostingBoardReqDto.JobPostingBoardUpdateReqDto;
+import site.metacoding.miniproject.dto.user.UserRespDto.SignPersonalDto;
+import site.metacoding.miniproject.dto.user.UserRespDto.SignedDto;
+import site.metacoding.miniproject.utill.JWTToken.CreateJWTToken;
 
 @Slf4j
 @ActiveProfiles("test")
@@ -47,17 +51,31 @@ public class CompanyApiControllerTest {
 
     private static HttpHeaders headers;
 
+    private MockCookie mockCookie;
+
     @BeforeAll // 선언시 static으로 선언해야한다. - container에 띄우기 위해 사용한다.
     public static void init() {
-        headers = new HttpHeaders();
-        headers.setContentType(MediaType.APPLICATION_JSON);
+
     }
 
     @BeforeEach
     public void sessionInit() {
-        session = new MockHttpSession();// 직접 new를 했음 // MockHttpSession해야 Mock이 된다.
-        Users users = Users.builder().usersId(1).build();
-        session.setAttribute("principal", users);
+        session = new MockHttpSession();
+        SignPersonalDto signPersonalDto = new SignPersonalDto();
+
+        signPersonalDto.setPersonalId(1);
+        SignedDto<?> signedDto = new SignedDto<>(1, "testuser1", signPersonalDto);
+
+        session.setAttribute("principal", signedDto);
+
+        String JwtToken = CreateJWTToken.createToken(signedDto); // Authorization
+        mockCookie = new MockCookie("Authorization", JwtToken);
+
+    }
+
+    @AfterEach
+    public void sessionClear() {
+        session.clearAttributes();
     }
 
     // 채용공고 목록보기
