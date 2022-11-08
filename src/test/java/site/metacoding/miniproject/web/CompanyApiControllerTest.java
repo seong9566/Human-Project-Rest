@@ -198,8 +198,7 @@ public class CompanyApiControllerTest {
         ResultActions resultActions = mvc
                 .perform(MockMvcRequestBuilders.get("/s/api/jobPostingBoard/detail/" + jobPostingBoardId)
                         .accept(APPLICATION_JSON)
-                        .cookie(mockCookie)
-                        .session(session));
+                        .cookie(mockCookie));
 
         // then
         MvcResult mvcResult = resultActions.andReturn();

@@ -95,7 +95,7 @@ public class PersonalController {
 		resumesAllRespDto.setId(id);
 		resumesAllRespDto.setPage(page);
 		resumesAllRespDto.setStartNum(startNum);
-		resumesAllRespDto.setKeyword(keyword);
+		// resumesAllRespDto.setKeyword(keyword);
 		return new ResponseDto<>(1, "전체 이력서 목록 보기 성공", personalService.findAllResumes(resumesAllRespDto));
 	}
 

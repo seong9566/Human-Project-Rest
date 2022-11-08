@@ -262,15 +262,17 @@ public class PersonalApiControllerTest {
     @Sql({ "classpath:truncate.sql", "classpath:testsql/findallresumes.sql" })
     @Test
     public void findAllResumes_test() throws Exception {
+        int id = 1;
         ResumesAllRespDto resumesAllRespDto = new ResumesAllRespDto();
-        resumesAllRespDto.setId(1);
-        resumesAllRespDto.setStartNum(1);
-        resumesAllRespDto.setKeyword("s");
-        resumesAllRespDto.setResumesTitle("안녕");
+        resumesAllRespDto.setId(id);
+        resumesAllRespDto.setKeyword("안");
+        resumesAllRespDto.setPage(0);
+
         String body = om.writeValueAsString(resumesAllRespDto);
-        ResultActions resultActions = mvc.perform(get("/resumes/resumesList/" + resumesAllRespDto.getId()).content(body)
+        ResultActions resultActions = mvc.perform(get("/resumes/resumesList/" + id)
+                .content(body)
                 .cookie(mockCookie)
-                .accept(APPLICATION_JSON));
+                .accept(APPLICATION_JSON).contentType(APPLICATION_JSON));
 
         // then
         MvcResult mvcResult = resultActions.andReturn();

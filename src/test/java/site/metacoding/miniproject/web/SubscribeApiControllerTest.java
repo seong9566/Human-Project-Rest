@@ -20,7 +20,6 @@ import org.springframework.test.context.jdbc.Sql;
 import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.test.web.servlet.ResultActions;
 
-
 import lombok.extern.slf4j.Slf4j;
 import site.metacoding.miniproject.dto.user.UserRespDto.SignPersonalDto;
 import site.metacoding.miniproject.dto.user.UserRespDto.SignedDto;
@@ -69,35 +68,36 @@ public class SubscribeApiControllerTest {
 
     @Order(1)
     @Test
-    @Sql({"classpath:truncate.sql", "classpath:testsql/insertcompanyfortest.sql", "classpath:testsql/insertuserforpersonal.sql"})
+    @Sql({ "classpath:truncate.sql", "classpath:testsql/insertcompanyfortest.sql",
+            "classpath:testsql/insertuserforpersonal.sql" })
     public void subscribeToCompany_test() throws Exception {
-        //given
+        // given
         Integer companyId = 1;
-        //when
+        // when
         ResultActions resultActions = mvc.perform(
                 get("/s/api/subscribe/" + companyId)
-                .session(session)
-                .cookie(mockCookie).accept(APPLICATION_JSON))
-                //then
-                .andExpect(jsonPath("$.code").value("1")
-        );
+                        .session(session)
+                        .cookie(mockCookie).accept(APPLICATION_JSON))
+                // then
+                .andExpect(jsonPath("$.code").value("1"));
     }
-    
+
     @Order(2)
     @Test
-    @Sql({"classpath:truncate.sql", "classpath:testsql/insertcompanyfortest.sql", "classpath:testsql/insertuserforpersonal.sql", "classpath:testsql/insertsubscribefortest.sql"})
+    @Sql({ "classpath:truncate.sql", "classpath:testsql/insertcompanyfortest.sql",
+            "classpath:testsql/insertuserforpersonal.sql", "classpath:testsql/insertsubscribefortest.sql" })
     public void subscribeCancelToCompany_test() throws Exception {
-        //given
+        // given
         Integer subscribeId = 1;
-        //when
-        
-        ResultActions resultActions = mvc.perform(delete("/s/api/subscribe/" + subscribeId)
-        .session(session)
-        .cookie(mockCookie)
-        .accept(APPLICATION_JSON))
+        // when
 
-        //then
-        .andExpect(jsonPath("$.code").value("1"));
+        ResultActions resultActions = mvc.perform(delete("/s/api/subscribe/" + subscribeId)
+                .session(session)
+                .cookie(mockCookie)
+                .accept(APPLICATION_JSON))
+
+                // then
+                .andExpect(jsonPath("$.code").value("1"));
     }
 
 }
