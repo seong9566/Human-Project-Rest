@@ -35,23 +35,17 @@ public class PersonalRespDto {
         private String personalPhoneNumber;
         private String personalEducation;
 
-        private Integer personalForAddressId;
         private String zoneCode;
         private String roadJibunAddr;
         private String detailAddress;
 
-        public PersonalDetailRespDto(Personal personal, PersonalAddressRespDto personalAddressRespDto) {
+        public PersonalDetailRespDto(Personal personal) {
 
             this.personalId = personal.getPersonalId();
             this.personalName = personal.getPersonalName();
             this.personalEmail = personal.getPersonalEmail();
             this.personalPhoneNumber = personal.getPersonalPhoneNumber();
             this.personalEducation = personal.getPersonalEducation();
-
-            this.personalForAddressId = personalAddressRespDto.getPersonalId();
-            this.zoneCode = personalAddressRespDto.getZoneCode();
-            this.roadJibunAddr = personalAddressRespDto.getRoadJibunAddr();
-            this.detailAddress = personalAddressRespDto.getDetailAddress();
 
         }
     }

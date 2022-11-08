@@ -194,15 +194,21 @@ public class PersonalService {
 		}
 	}
 
-	// 개인 정보에 보기
+	// 개인 정보 보기
 	@Transactional(readOnly = true)
 	public PersonalDetailRespDto findByPersonal(Integer personalId) {
-		PersonalAddressRespDto personalAddressRespDto = personalDao.personalAddressById(personalId);
 		Personal personalPS = personalDao.personaldetailById(personalId);
 		if (personalPS == null) {
 			throw new ApiException("해당 정보를 찾을 수 없습니다.");
 		}
-		PersonalDetailRespDto personalDetailRespDto = new PersonalDetailRespDto(personalPS, personalAddressRespDto);
+		PersonalDetailRespDto personalDetailRespDto = new PersonalDetailRespDto(personalPS);
+		String address = personalPS.getPersonalAddress();
+		String[] arry = address.split(",");
+		for (int i = 0; i < arry.length; i++) {
+			personalDetailRespDto.setZoneCode(arry[0]);
+			personalDetailRespDto.setRoadJibunAddr(arry[1]);
+			personalDetailRespDto.setDetailAddress(arry[2]);
+		}
 
 		return personalDetailRespDto;
 	}
@@ -268,13 +274,19 @@ public class PersonalService {
 
 	@Transactional(readOnly = true)
 	public CompanyDetailWithPerRespDto findByCompany(Integer companyId) {
-		CompanyAddressRespDto companyAddressRespDto = companyDao.findByAddress(companyId);
 		CompanyDetailWithPerRespDto companyPS = companyDao.findByCompanyToPer(companyId);
 		if (companyPS == null) {
 			throw new ApiException("회사 정보를 찾을 수 없습니다.");
 		}
-		CompanyDetailWithPerRespDto companyDetailRespDto = new CompanyDetailWithPerRespDto(companyPS,
-				companyAddressRespDto);
+		CompanyDetailWithPerRespDto companyDetailRespDto = new CompanyDetailWithPerRespDto(companyPS);
+		String address = companyDetailRespDto.getCompanyAddress();
+		String[] arry = address.split(",");
+		for (int i = 0; i < arry.length; i++) {
+			companyDetailRespDto.setZoneCode(arry[0]);
+			companyDetailRespDto.setRoadJibunAddr(arry[1]);
+			companyDetailRespDto.setDetailAddress(arry[2]);
+		}
+
 		return companyDetailRespDto;
 	}
 }

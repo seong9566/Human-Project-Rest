@@ -3,24 +3,20 @@ package site.metacoding.miniproject.web;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.delete;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
 
-import org.junit.jupiter.api.AfterEach;
-import org.junit.jupiter.api.BeforeAll;
-import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureMockMvc;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.boot.test.context.SpringBootTest.WebEnvironment;
 import org.springframework.mock.web.MockCookie;
-import org.springframework.mock.web.MockHttpSession;
 import org.springframework.test.context.ActiveProfiles;
 import org.springframework.test.context.jdbc.Sql;
-import org.springframework.test.context.jdbc.Sql.ExecutionPhase;
 import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.test.web.servlet.MvcResult;
 import org.springframework.test.web.servlet.ResultActions;
 import org.springframework.test.web.servlet.request.MockMvcRequestBuilders;
 import org.springframework.test.web.servlet.result.MockMvcResultMatchers;
+
 import com.fasterxml.jackson.databind.ObjectMapper;
 
 import site.metacoding.miniproject.dto.like.LikeReqDto.CompanyLikeReqDto;
@@ -39,58 +35,38 @@ public class LikeApiControllerTest {
     private MockMvc mvc;
     @Autowired
     private ObjectMapper om;
-    private MockHttpSession session;
-    private MockCookie mockCookie;
+    private static MockCookie mockCookie;
 
-    @BeforeAll // 선언시 static으로 선언해야한다. - container에 띄우기 위해 사용한다.
-    public static void init() {
+    public static void sessionCompanyInit() {
 
-    }
-
-    // PersonalLike 테스트
-    @BeforeEach // test메서드 진입전에 트랜잭션 발동
-    public void sessionInit() {
-
-        session = new MockHttpSession();
         SignCompanyDto signCompanyDto = new SignCompanyDto();
 
         signCompanyDto.setCompanyId(1);
         SignedDto<?> signedDto = new SignedDto<>(1, "testuser1", signCompanyDto);
-
-        session.setAttribute("principal", signedDto);
 
         String JwtToken = CreateJWTToken.createToken(signedDto); // Authorization
         mockCookie = new MockCookie("Authorization", JwtToken);
 
     }
 
-    // CompanyLike 테스트
-    // @BeforeEach
-    // public void sessionInit() {
+    public void sessionPersonalInit() {
 
-    // session = new MockHttpSession();
-    // SignPersonalDto signPersonalDto = new SignPersonalDto();
+        SignPersonalDto signPersonalDto = new SignPersonalDto();
 
-    // signPersonalDto.setPersonalId(1);
-    // SignedDto<?> signedDto = new SignedDto<>(1, "testuser1", signPersonalDto);
+        signPersonalDto.setPersonalId(1);
+        SignedDto<?> signedDto = new SignedDto<>(1, "testuser1", signPersonalDto);
 
-    // session.setAttribute("principal", signedDto);
+        String JwtToken = CreateJWTToken.createToken(signedDto); // Authorization
+        mockCookie = new MockCookie("Authorization", JwtToken);
 
-    // String JwtToken = CreateJWTToken.createToken(signedDto); // Authorization
-    // mockCookie = new MockCookie("Authorization", JwtToken);
-
-    // }
-
-    @AfterEach
-    public void sessionClear() {
-        session.clearAttributes();
     }
 
-    @Sql(scripts = "classpath:testsql/insertuserforlike.sql", executionPhase = ExecutionPhase.BEFORE_TEST_METHOD)
+    @Sql({ "classpath:truncate.sql", "classpath:testsql/insertuserforlike.sql" })
     @Test
     public void insertPersonalLike_test() throws Exception {
 
         // given
+        sessionCompanyInit();
         Integer resumesId = 1;
         PersonalLikeReqDto personalLikeReqDto = new PersonalLikeReqDto();
         personalLikeReqDto.setAlarmId(2);
@@ -100,30 +76,27 @@ public class LikeApiControllerTest {
 
         // when
         ResultActions resultActions = mvc
-                .perform(MockMvcRequestBuilders.post("/s/api/personalLike/" + resumesId).session(session)
-                        .cookie(mockCookie).content(body)
-                        .contentType(APPLICATION_JSON).accept(APPLICATION_JSON));
-        System.out.println("디버그 : " + resultActions.andReturn().getResponse().getContentAsString());
+                .perform(MockMvcRequestBuilders.post("/s/api/personalLike/" + resumesId)
+                        .content(body).cookie(mockCookie)
+                        .accept(APPLICATION_JSON));
         // then
-        MvcResult mvcResult = resultActions.andReturn();
-        System.out.println("디버그 : " + mvcResult.getResponse().getContentAsString());
+
         resultActions.andExpect(MockMvcResultMatchers.jsonPath("$.code").value(1));
     }
 
     @Sql({ "classpath:truncate.sql", "classpath:testsql/insertuserforlike.sql" })
     @Test
     public void deletePersonalLike_test() throws Exception {
+        sessionCompanyInit();
         Integer resumesId = 1;
         ResultActions resultActions = mvc
-                .perform(delete("/s/api/personalLike/" + resumesId).session(session)
+                .perform(delete("/s/api/personalLike/" + resumesId)
                         .cookie(mockCookie)
-                        .accept(APPLICATION_JSON)
-                        .session(session));
+                        .accept(APPLICATION_JSON));
 
         // then/ charset=utf-8안넣으면바로한글이깨진다
 
         MvcResult mvcResult = resultActions.andReturn();
-        System.out.println("디버그 : " + mvcResult.getResponse().getContentAsString());
     }
 
     @Sql({ "classpath:truncate.sql", "classpath:testsql/insertuserforlike.sql" })
@@ -131,6 +104,7 @@ public class LikeApiControllerTest {
     public void insertCompanyLike_test() throws Exception {
 
         // given
+        sessionPersonalInit();
         Integer companyId = 1;
         CompanyLikeReqDto companyLikeReqDto = new CompanyLikeReqDto();
         companyLikeReqDto.setCompanyId(1);
@@ -140,46 +114,41 @@ public class LikeApiControllerTest {
         // when
         ResultActions resultActions = mvc
                 .perform(MockMvcRequestBuilders.post("/s/api/companyLike/" + companyId)
-                        .content(body).session(session)
+                        .content(body)
                         .cookie(mockCookie)
                         .accept(APPLICATION_JSON));
-        System.out.println("디버그 : " + resultActions.andReturn().getResponse().getContentAsString());
         // then
-        MvcResult mvcResult = resultActions.andReturn();
-        System.out.println("디버그 : " + mvcResult.getResponse().getContentAsString());
         resultActions.andExpect(MockMvcResultMatchers.jsonPath("$.code").value(1));
     }
 
     @Sql({ "classpath:truncate.sql", "classpath:testsql/insertuserforlike.sql" })
     @Test
     public void deleteCompanyLike_test() throws Exception {
+        sessionPersonalInit();
         Integer companyId = 1;
 
         ResultActions resultActions = mvc
                 .perform(delete("/s/api/companyLike/" + companyId)
-                        .accept(APPLICATION_JSON).session(session)
-                        .cookie(mockCookie)
-                        .session(session));
+                        .accept(APPLICATION_JSON)
+                        .cookie(mockCookie));
 
         // then/ charset=utf-8안넣으면바로한글이깨진다
 
         MvcResult mvcResult = resultActions.andReturn();
-        System.out.println("디버그 : " + mvcResult.getResponse().getContentAsString());
     }
 
     @Sql({ "classpath:truncate.sql", "classpath:testsql/insertuserforlike.sql" })
     @Test
     public void findAllPersonalLike_test() throws Exception {
         // given
-
+        sessionCompanyInit();
         // when
         ResultActions resultActions = mvc
 
-                .perform(get("/s/api/resumeList").session(session).cookie(mockCookie)
+                .perform(get("/s/api/resumeList").cookie(mockCookie)
                         .accept(APPLICATION_JSON));
         // then
         MvcResult mvcResult = resultActions.andReturn();
-        System.out.println("디버그 : " + mvcResult.getResponse().getContentAsString());
 
     }
 
@@ -187,15 +156,13 @@ public class LikeApiControllerTest {
     @Test
     public void bestCompanye_test() throws Exception {
         // given
-
         // when
         ResultActions resultActions = mvc
 
-                .perform(get("/api/bestcompany").session(session).cookie(mockCookie)
+                .perform(get("/api/bestcompany").cookie(mockCookie)
                         .accept(APPLICATION_JSON));
         // then
         MvcResult mvcResult = resultActions.andReturn();
-        System.out.println("디버그 : " + mvcResult.getResponse().getContentAsString());
 
     }
 }
