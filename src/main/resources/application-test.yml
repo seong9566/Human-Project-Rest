@@ -20,10 +20,6 @@ spring:
   session:
     store-type: none
 
-  redis:
-    host: localhost
-    port: 6379
-    password: 
     
   h2:
     console:

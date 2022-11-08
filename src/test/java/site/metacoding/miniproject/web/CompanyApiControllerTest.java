@@ -161,8 +161,7 @@ public class CompanyApiControllerTest {
 
         // then
         MvcResult mvcResult = resultActions.andReturn();
-        System.out.println("debugggg:" +
-                mvcResult.getResponse().getContentAsString());
+
         //
         resultActions.andExpect(MockMvcResultMatchers.jsonPath("$.code").value(1));
         resultActions.andExpect(MockMvcResultMatchers.status().isOk());
@@ -202,7 +201,6 @@ public class CompanyApiControllerTest {
 
         // then
         MvcResult mvcResult = resultActions.andReturn();
-        System.out.println("디버그 : " + mvcResult.getResponse().getContentAsString());
         resultActions.andExpect(jsonPath("$.code").value(1));
         resultActions.andExpect(jsonPath("$.message").value("채용공고 상세보기"));
         resultActions.andExpect(jsonPath("$.data.jobPostingBoardTitle").value("title"));
