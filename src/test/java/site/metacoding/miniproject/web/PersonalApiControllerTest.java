@@ -2,9 +2,7 @@ package site.metacoding.miniproject.web;
 
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.delete;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
-import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.multipart;
-import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.put;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.put;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.jsonPath;
 
@@ -15,7 +13,6 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureMockMvc;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.boot.test.context.SpringBootTest.WebEnvironment;
-import org.springframework.core.annotation.Order;
 import org.springframework.core.io.Resource;
 import org.springframework.core.io.ResourceLoader;
 import org.springframework.http.HttpMethod;
@@ -31,7 +28,6 @@ import org.springframework.test.web.servlet.request.MockMvcRequestBuilders;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
 
-import lombok.extern.slf4j.Slf4j;
 import site.metacoding.miniproject.dto.personal.PersonalReqDto.PersonalUpdatReqDto;
 import site.metacoding.miniproject.dto.resumes.ResumesReqDto.ResumesInsertReqDto;
 import site.metacoding.miniproject.dto.resumes.ResumesReqDto.ResumesUpdateReqDto;
@@ -42,11 +38,9 @@ import site.metacoding.miniproject.service.personal.PersonalService;
 import site.metacoding.miniproject.utill.JWTToken.CreateJWTToken;
 import site.metacoding.miniproject.utill.SHA256;
 
-@Slf4j
 @ActiveProfiles("test")
 @AutoConfigureMockMvc
 @SpringBootTest(webEnvironment = WebEnvironment.MOCK)
-@Sql("classpath:truncate.sql")
 public class PersonalApiControllerTest {
 
     private static final String APPLICATION_JSON = "application/json; charset=utf-8";
@@ -68,28 +62,19 @@ public class PersonalApiControllerTest {
 
     private MockCookie mockCookie;
 
-    private MockHttpSession session;
-
     @BeforeEach
     public void sessionInit() {
-        session = new MockHttpSession();
+
         SignPersonalDto signPersonalDto = new SignPersonalDto();
         signPersonalDto.setPersonalId(1);
         SignedDto<?> signedDto = new SignedDto<>(1, "testusers1", signPersonalDto);
-
-        session.setAttribute("principal", signedDto);
 
         String JwtToken = CreateJWTToken.createToken(signedDto);
         mockCookie = new MockCookie("Authorization", JwtToken);
     }
 
-    @AfterEach
-    public void sessionClear() {
-        session.clearAttributes();
-    }
-
     @Test
-    @Sql("classpath:testsql/insertresumes.sql")
+    @Sql({ "classpath:truncate.sql", "classpath:testsql/insertresumes.sql" })
     public void insertResumes_test() throws Exception { // 이력서 작성
         // given
         ResumesInsertReqDto resumesInsertReqDto = new ResumesInsertReqDto();
@@ -122,8 +107,7 @@ public class PersonalApiControllerTest {
                         .file(file)
                         .file(multipartBody)
                         .accept(APPLICATION_JSON)
-                        .cookie(mockCookie)
-                        .session(session));
+                        .cookie(mockCookie));
 
         // then
         MvcResult mvcResult = resultActions.andReturn();
@@ -135,7 +119,7 @@ public class PersonalApiControllerTest {
     }
 
     @Test
-    @Sql("classpath:testsql/findallmyresumes.sql")
+    @Sql({ "classpath:truncate.sql", "classpath:testsql/findallmyresumes.sql" })
     public void findAllMyResumes_test() throws Exception { // 내 이력서 목록 보기
         // given
         Integer id = 1;
@@ -143,8 +127,7 @@ public class PersonalApiControllerTest {
         // when
         ResultActions resultActions = mvc
                 .perform(get("/s/resumes/myList").accept(APPLICATION_JSON)
-                        .cookie(mockCookie)
-                        .session(session));
+                        .cookie(mockCookie));
 
         // then
         MvcResult mvcResult = resultActions.andReturn();
@@ -154,7 +137,7 @@ public class PersonalApiControllerTest {
     }
 
     @Test
-    @Sql("classpath:testsql/oneresumes.sql")
+    @Sql({ "classpath:truncate.sql", "classpath:testsql/oneresumes.sql" })
     public void findByResumesId_test() throws Exception { // 이력서 상세보기
         // given
         Integer resumesId = 1;
@@ -162,8 +145,7 @@ public class PersonalApiControllerTest {
         // when
         ResultActions resultActions = mvc
                 .perform(MockMvcRequestBuilders.get("/resumes/" + resumesId).accept(APPLICATION_JSON)
-                        .cookie(mockCookie)
-                        .session(session));
+                        .cookie(mockCookie));
 
         // then
         MvcResult mvcResult = resultActions.andReturn();
@@ -174,7 +156,7 @@ public class PersonalApiControllerTest {
     }
 
     @Test
-    @Sql("classpath:testsql/oneresumes.sql")
+    @Sql({ "classpath:truncate.sql", "classpath:testsql/oneresumes.sql" })
     public void updateResumes_test() throws Exception { // 이력서 수정
         // given
         Integer resumesId = 1;
@@ -207,8 +189,7 @@ public class PersonalApiControllerTest {
                         .file(file)
                         .file(multipartBody)
                         .accept(APPLICATION_JSON)
-                        .cookie(mockCookie)
-                        .session(session));
+                        .cookie(mockCookie));
 
         // then
         MvcResult mvcResult = resultActions.andReturn();
@@ -227,8 +208,7 @@ public class PersonalApiControllerTest {
         ResultActions resultActions = mvc
                 .perform(delete("/s/resumes/delete/" + id)
                         .accept(APPLICATION_JSON)
-                        .cookie(mockCookie)
-                        .session(session));
+                        .cookie(mockCookie));
 
         // then
         MvcResult mvcResult = resultActions.andReturn();
@@ -236,17 +216,14 @@ public class PersonalApiControllerTest {
         resultActions.andExpect(jsonPath("$.message").value("이력서 삭제 성공"));
     }
 
-    // 내정보보기 // 오류발생하는게 맞음 아직 해결못함
-
-    @Sql(scripts = "classpath:testsql/selectdetailforpersonal.sql")
+    // 내정보보기
+    @Sql({ "classpath:truncate.sql", "classpath:testsql/selectdetailforpersonal.sql" })
     @Test
     public void findByPersonal_test() throws Exception {
-
         // given
 
         // when
         ResultActions resultActions = mvc.perform(get("/s/api/personal/detail")
-                .session(session)
                 .cookie(mockCookie)
                 .accept(APPLICATION_JSON));
 
@@ -256,7 +233,7 @@ public class PersonalApiControllerTest {
     }
 
     // 내정보수정
-    @Sql(scripts = "classpath:testsql/selectdetailforpersonal.sql")
+    @Sql({ "classpath:truncate.sql", "classpath:testsql/selectdetailforpersonal.sql" })
     @Test
     public void updatePersonalDetail_test() throws Exception {
 
@@ -272,7 +249,7 @@ public class PersonalApiControllerTest {
 
         // when
         ResultActions resultActions = mvc.perform(put("/s/api/personal/update").content(body)
-                .contentType(APPLICATION_JSON).accept(APPLICATION_JSON).session(session).cookie(mockCookie));
+                .contentType(APPLICATION_JSON).accept(APPLICATION_JSON).cookie(mockCookie));
         System.out.println("debugggg:" + resultActions.andReturn().getResponse().getContentAsString());
 
         // then
@@ -296,12 +273,50 @@ public class PersonalApiControllerTest {
         resumesAllByIdRespDto.setKeyword(keyword);
         String body = om.writeValueAsString(resumesAllByIdRespDto);
         ResultActions resultActions = mvc.perform(get("/resumes/resumesList/" + id).content(body)
-                .session(session)
                 .cookie(mockCookie)
                 .accept(APPLICATION_JSON));
 
         // then
         MvcResult mvcResult = resultActions.andReturn();
         System.out.println("debugggg: " + mvcResult.getResponse().getContentAsString());
+    }
+
+    @Test
+    @Sql({ "classpath:truncate.sql", "classpath:testsql/insertcompanyfortest.sql" })
+    public void companyDetailform_test() throws Exception { // 개인 - 회사 정보보기
+        // given
+        Integer companyId = 1;
+
+        // when
+        ResultActions resultActions = mvc
+                .perform(MockMvcRequestBuilders.get("/personal/company/" + companyId).accept(APPLICATION_JSON)
+                        .cookie(mockCookie));
+
+        // then
+        MvcResult mvcResult = resultActions.andReturn();
+        System.out.println("디버그 : " + mvcResult.getResponse().getContentAsString());
+        resultActions.andExpect(jsonPath("$.code").value(1));
+        resultActions.andExpect(jsonPath("$.message").value("회사정보보기"));
+        resultActions.andExpect(jsonPath("$.data.companyName").value("testCompanyname"));
+    }
+
+    @Test
+    @Sql({ "classpath:truncate.sql", "classpath:testsql/insertjobpostingBoard.sql" })
+    public void jobPostingDetailForm_test() throws Exception { // 개인 - 채용공고 상세 보기
+        // given
+        Integer jobPostingBoardId = 1;
+
+        // when
+        ResultActions resultActions = mvc
+                .perform(MockMvcRequestBuilders.get("/personal/jobPostingBoard/" + jobPostingBoardId)
+                        .accept(APPLICATION_JSON)
+                        .cookie(mockCookie));
+
+        // then
+        MvcResult mvcResult = resultActions.andReturn();
+        System.out.println("디버그 : " + mvcResult.getResponse().getContentAsString());
+        resultActions.andExpect(jsonPath("$.code").value(1));
+        resultActions.andExpect(jsonPath("$.message").value("채용공고 상세보기"));
+        resultActions.andExpect(jsonPath("$.data.jobPostingBoardTitle").value("title"));
     }
 }

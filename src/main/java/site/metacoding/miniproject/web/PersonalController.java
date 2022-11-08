@@ -107,7 +107,6 @@ public class PersonalController {
 
 		return new ResponseDto<>(1, "성공", personalService.findByPersonal(signPersonalDto.getPersonalId()));
 		// principal.getUserinfo().getPersonalId()
-
 	}
 
 	// 내정보 수정
@@ -136,10 +135,6 @@ public class PersonalController {
 		if (companyPS == null) {
 			throw new ApiException("해당 회사를 찾을 수 없습니다.");
 		}
-		// CompanyAddressDto addressPS = companyService.findByAddress(companyId);
-		// model.addAttribute("address", addressPS);
-		// model.addAttribute("companyInfo", companyPS);
-		// System.out.println("companyPS : " + companyPS.getCount());
 		return new ResponseDto<>(1, "회사정보보기", companyPS);
 	}
 

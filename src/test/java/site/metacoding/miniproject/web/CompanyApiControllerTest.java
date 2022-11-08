@@ -2,7 +2,9 @@ package site.metacoding.miniproject.web;
 
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.put;
+import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.jsonPath;
 
+import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.*;
 import java.sql.Timestamp;
 
 import org.junit.jupiter.api.AfterEach;
@@ -25,9 +27,11 @@ import org.springframework.test.web.servlet.request.MockMvcRequestBuilders;
 import org.springframework.test.web.servlet.result.MockMvcResultMatchers;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
+import com.jayway.jsonpath.JsonPath;
 
 import lombok.extern.slf4j.Slf4j;
 import site.metacoding.miniproject.dto.company.CompanyReqDto.CompanyUpdateReqDto;
+import site.metacoding.miniproject.dto.jobpostingboard.JobPostingBoardReqDto.JobPostingBoardInsertReqDto;
 import site.metacoding.miniproject.dto.jobpostingboard.JobPostingBoardReqDto.JobPostingBoardUpdateReqDto;
 import site.metacoding.miniproject.dto.user.UserRespDto.SignCompanyDto;
 import site.metacoding.miniproject.dto.user.UserRespDto.SignedDto;
@@ -37,7 +41,6 @@ import site.metacoding.miniproject.utill.JWTToken.CreateJWTToken;
 @ActiveProfiles("test")
 @AutoConfigureMockMvc
 @SpringBootTest(webEnvironment = WebEnvironment.MOCK)
-@Sql("classpath:truncate.sql")
 public class CompanyApiControllerTest {
 
     private static final String APPLICATION_JSON = "application/json; charset=utf-8";
@@ -47,8 +50,6 @@ public class CompanyApiControllerTest {
 
     @Autowired
     private ObjectMapper om;
-
-    private MockHttpSession session;
 
     private MockCookie mockCookie;
 
@@ -60,7 +61,6 @@ public class CompanyApiControllerTest {
     @BeforeEach
     public void sessionInit() {
 
-        session = new MockHttpSession();
         SignCompanyDto signCompanyDto = new SignCompanyDto();
 
         signCompanyDto.setCompanyId(1);
@@ -69,18 +69,12 @@ public class CompanyApiControllerTest {
         String JwtToken = CreateJWTToken.createToken(signedDto); // Authorization
         mockCookie = new MockCookie("Authorization", JwtToken);
 
-        session.setAttribute("principal", signedDto);
-
-    }
-
-    @AfterEach
-    public void sessionClear() {
-        session.clearAttributes();
     }
 
     // 채용공고업데이트
     @Test
-    @Sql(scripts = "classpath:testsql/insertjobpostingboard.sql")
+
+    @Sql({ "classpath:truncate.sql", "classpath:testsql/insertjobpostingboard.sql" })
     public void updatejobPostingBoard_test() throws Exception {
 
         // given
@@ -108,7 +102,6 @@ public class CompanyApiControllerTest {
                 .perform(put("/s/api/jobPostingBoard/update/" + 1)
                         .content(body)
                         .contentType(APPLICATION_JSON)
-                        .session(session)
                         .cookie(mockCookie)
                         .accept(APPLICATION_JSON));
 
@@ -121,13 +114,15 @@ public class CompanyApiControllerTest {
 
     // 채용공고 목록보기
     @Test
-    @Sql(scripts = "classpath:testsql/insertjobpostingBoard.sql")
+
+    @Sql({ "classpath:truncate.sql", "classpath:testsql/insertjobpostingboard.sql" })
     public void jobPostingBoardList_test() throws Exception {
         // given
 
         // when
         ResultActions resultActions = mvc.perform(MockMvcRequestBuilders.get("/s/company/jobPostingBoardList")
-                .session(session).cookie(mockCookie).content(APPLICATION_JSON).accept(APPLICATION_JSON));
+
+                .cookie(mockCookie).content(APPLICATION_JSON).accept(APPLICATION_JSON));
 
         // then
         MvcResult mvcResult = resultActions.andReturn();
@@ -135,46 +130,48 @@ public class CompanyApiControllerTest {
         resultActions.andExpect(MockMvcResultMatchers.status().isOk());
     }
 
-    // // 채용공소 추가하기
-    // @Test
-    // @Sql(scripts = "classpath:testsql/insertjobpostingBoard.sql", executionPhase
-    // = ExecutionPhase.BEFORE_TEST_METHOD)
-    // public void insertJobPostingBoard_test() throws Exception {
-    // // given
-    // JobPostingBoardInsertReqDto jobPostingBoardInsertReqDto = new
-    // JobPostingBoardInsertReqDto();
-    // jobPostingBoardInsertReqDto.setCompanyId(1);
-    // jobPostingBoardInsertReqDto.setJobPostingBoardTitle("title");
-    // jobPostingBoardInsertReqDto.setJobPostingBoardContent("contentcontet");
-    // jobPostingBoardInsertReqDto.setJobPostingBoardPlace("placeplace");
-    // jobPostingBoardInsertReqDto.setJobPostingSalary(10000);
-    // jobPostingBoardInsertReqDto.setJobPostingBoardDeadline(null);
-    // jobPostingBoardInsertReqDto.setCategoryBackend(true);
-    // jobPostingBoardInsertReqDto.setCategoryDevops(false);
-    // jobPostingBoardInsertReqDto.setCategoryFrontend(false);
-    // jobPostingBoardInsertReqDto.setOneYearLess(false);
-    // jobPostingBoardInsertReqDto.setTwoYearOver(false);
-    // jobPostingBoardInsertReqDto.setThreeYearOver(true);
-    // jobPostingBoardInsertReqDto.setFiveYearOver(false);
+    // 채용공고 추가하기
+    @Test
+    @Sql({ "classpath:truncate.sql", "classpath:testsql/companytest.sql" })
+    public void insertJobPostingBoard_test() throws Exception {
 
-    // String body = om.writeValueAsString(jobPostingBoardInsertReqDto);
+        // given
+        JobPostingBoardInsertReqDto jobPostingBoardInsertReqDto = new JobPostingBoardInsertReqDto();
+        jobPostingBoardInsertReqDto.setJobPostingBoardTitle("title");
+        jobPostingBoardInsertReqDto.setJobPostingBoardContent("contentcontet");
+        jobPostingBoardInsertReqDto.setJobPostingBoardPlace("placeplace");
+        jobPostingBoardInsertReqDto.setJobPostingSalary(10000);
+        jobPostingBoardInsertReqDto.setJobPostingBoardDeadline(null);
+        jobPostingBoardInsertReqDto.setCategoryBackend(true);
+        jobPostingBoardInsertReqDto.setCategoryDevops(false);
+        jobPostingBoardInsertReqDto.setCategoryFrontend(false);
+        jobPostingBoardInsertReqDto.setOneYearLess(false);
+        jobPostingBoardInsertReqDto.setTwoYearOver(false);
+        jobPostingBoardInsertReqDto.setThreeYearOver(true);
+        jobPostingBoardInsertReqDto.setFiveYearOver(false);
 
-    // // when
-    // ResultActions resultActions =
-    // mvc.perform(MockMvcRequestBuilders.post("/s/api/jobpostingboard/insert")
-    // .content(body).contentType(APPLICATION_JSON).accept(APPLICATION_JSON).session(session));
+        String body = om.writeValueAsString(jobPostingBoardInsertReqDto);
+        log.debug("mytest : " + body);
+        // when
+        ResultActions resultActions = mvc.perform(post("/s/api/jobpostingboard/insert")
+                .content(body)
+                .cookie(mockCookie)
+                .contentType(APPLICATION_JSON)
+                .accept(APPLICATION_JSON));
 
-    // // then
-    // MvcResult mvcResult = resultActions.andReturn();
-    // System.out.println("debugggg:" +
-    // mvcResult.getResponse().getContentAsString());
-    // resultActions.andExpect(MockMvcResultMatchers.jsonPath("$.code").value(1));
+        // then
+        MvcResult mvcResult = resultActions.andReturn();
+        System.out.println("debugggg:" +
+                mvcResult.getResponse().getContentAsString());
+        //
+        resultActions.andExpect(MockMvcResultMatchers.jsonPath("$.code").value(1));
+        resultActions.andExpect(MockMvcResultMatchers.status().isOk());
 
-    // }
+    }
 
     // 채용공고 삭제하기
     @Test
-    @Sql(scripts = "classpath:testsql/insertjobpostingBoard.sql")
+    @Sql({ "classpath:truncate.sql", "classpath:testsql/insertjobpostingBoard.sql" })
     public void deleteJobPostingBoard_test() throws Exception {
         // given
 
@@ -182,7 +179,6 @@ public class CompanyApiControllerTest {
         // when
         ResultActions resultActions = mvc
                 .perform(MockMvcRequestBuilders.delete("/s/company/jobPostingBoard/delete/1")
-                        .session(session)
                         .cookie(mockCookie)
                         .accept(APPLICATION_JSON));
 
@@ -193,7 +189,7 @@ public class CompanyApiControllerTest {
     }
 
     @Test
-    @Sql(scripts = "classpath:testsql/companytest.sql")
+    @Sql("classpath:testsql/companytest.sql")
     public void findByCompany_test() throws Exception {
         // given
 
@@ -208,7 +204,7 @@ public class CompanyApiControllerTest {
     }
 
     @Test
-    @Sql(scripts = "classpath:testsql/companytest.sql")
+    @Sql({ "classpath:truncate.sql", "classpath:testsql/companytest.sql" })
     public void companyUpdate_test() throws Exception {
         // given
         CompanyUpdateReqDto companyUpdateReqDto = new CompanyUpdateReqDto();
