@@ -85,10 +85,13 @@ public class AlarmApiControllerTest {
         ResultActions resultActions = mvc.perform(get("/s/api/users/alarm")
                 .session(session)
                 .cookie(mockCookie)
-                .accept(APPLICATION_JSON));
+                .accept(APPLICATION_JSON))
 
         // then
-        log.debug("디버그 : " + resultActions.andReturn().getResponse().getContentAsString());
+        
+                .andExpect(jsonPath("$.code").value("1"))
+                .andExpect(jsonPath("$.message").value("통신 성공"));
+        
     }
     
 
