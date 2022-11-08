@@ -76,19 +76,11 @@
 
 	<select id="resumesPaging"
 		resultType="site.metacoding.miniproject.dto.resumes.ResumesRespDto$PagingDto">
-		SELECT totalCount, totalPage, currentPage,
-		if(currentPage=0, 1, 0)
-		FIRST,
-		if(currentPage=totalPage-1, 1, 0) LAST
-		FROM(
 		SELECT count(*)
 		totalCount,
 		ceil(count(*)/5) totalPage,
-		#{page} currentPage,
-		0 first,
-		0 last
+		#{page} currentPage
 		FROM resumes
-		) paging
 	</select>
 
 	<select id="findSearch"
