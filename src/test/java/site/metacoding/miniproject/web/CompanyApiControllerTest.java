@@ -200,11 +200,10 @@ public class CompanyApiControllerTest {
         // when
         ResultActions resultActions = mvc
 
-                .perform(get("/api/company/detail").session(session).cookie(mockCookie)
+                .perform(get("/api/company/detail").cookie(mockCookie)
                         .accept(APPLICATION_JSON));
         // then
         MvcResult mvcResult = resultActions.andReturn();
-        System.out.println("디버그 : " + mvcResult.getResponse().getContentAsString());
 
     }
 
@@ -223,10 +222,8 @@ public class CompanyApiControllerTest {
         String body = om.writeValueAsString(companyUpdateReqDto);
         // when
         ResultActions resultActions = mvc
-                .perform(put("/s/api/company/update").session(session).cookie(mockCookie).content(body)
+                .perform(put("/s/api/company/update").cookie(mockCookie).content(body)
                         .contentType(APPLICATION_JSON).accept(APPLICATION_JSON));
-        MvcResult mvcResult = resultActions.andReturn();
-        System.out.println("디버그 : " + mvcResult.getResponse().getContentAsString());
     }
 
 }
