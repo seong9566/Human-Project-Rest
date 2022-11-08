@@ -24,8 +24,6 @@ public class Alarm {
 	private Boolean alarmCheck;
 	private Timestamp createdAt;
 
-	
-
 	@Builder
 	public Alarm(Integer alarmId, Integer usersId, Integer alarmApplyId, Integer alarmIncruitId,
 			Integer alarmSubscribeId, Integer alarmCompanyLikeId, Integer alarmPersonalLikeId, String alarmMessage,
@@ -41,15 +39,15 @@ public class Alarm {
 		this.alarmCheck = alarmCheck;
 		this.createdAt = createdAt;
 	}
-	
+
 	// null값 방지용 알람삽입 생성자
 	public Alarm(Integer usersId, HashMap<String, Integer> map, String username) {
 		this.usersId = usersId;
-		this.alarmApplyId = map.get("alarmApplyId") == null ? 0 : map.get("alarmApplyId");
-		this.alarmIncruitId = map.get("alarmIncruitId") == null ? 0 : map.get("alarmIncruitId");
-		this.alarmSubscribeId = map.get("alarmSubscribeId") == null ? 0 : map.get("alarmSubscribeId");
-		this.alarmCompanyLikeId = map.get("alarmCompanyLikeId") == null ? 0 : map.get("alarmCompanyLikeId");
-		this.alarmPersonalLikeId = map.get("alarmPersonalLikeId") == null ? 0 : map.get("alarmPersonalLikeId");
+		this.alarmApplyId = map.get("alarmApplyId") == null ? null : map.get("alarmApplyId");
+		this.alarmIncruitId = map.get("alarmIncruitId") == null ? null : map.get("alarmIncruitId");
+		this.alarmSubscribeId = map.get("alarmSubscribeId") == null ? null : map.get("alarmSubscribeId");
+		this.alarmCompanyLikeId = map.get("alarmCompanyLikeId") == null ? null : map.get("alarmCompanyLikeId");
+		this.alarmPersonalLikeId = map.get("alarmPersonalLikeId") == null ? null : map.get("alarmPersonalLikeId");
 		map.forEach((key, value) -> {
 			if (AlarmEnum.findBy(key.toUpperCase()).AlarmMessage(key, username) != null)
 				this.alarmMessage = AlarmEnum.findBy(key.toUpperCase()).AlarmMessage(key, username);

@@ -43,8 +43,7 @@
 	<insert id="insert">
 		INSERT INTO
 		job_posting_board
-		(
-		company_id,
+		(company_id,
 		job_posting_board_category_id,
 		job_posting_board_career_id,
 		job_posting_board_title,
@@ -52,10 +51,8 @@
 		job_posting_board_place,
 		job_posting_board_content,
 		job_posting_board_deadline,
-		created_at
-		)
-		VALUE(
-		#{companyId},
+		created_at)
+		VALUES(#{companyId},
 		#{jobPostingBoardCategoryId},
 		#{jobPostingBoardCareerId},
 		#{jobPostingBoardTitle},
@@ -63,8 +60,7 @@
 		#{jobPostingBoardPlace},
 		#{jobPostingBoardContent},
 		#{jobPostingBoardDeadline},
-		now()
-		)
+		now())
 	</insert>
 
 	<update id="update">
@@ -137,7 +133,7 @@
 
 
 	<select id="jobPostingBoardPaging"
-		resultType="site.metacoding.miniproject.web.dto.response.etc.PagingDto">
+		resultType="site.metacoding.miniproject.dto.jobpostingboard.JobPostingBoardRespDto$PagingDto">
 		SELECT totalCount, totalPage, currentPage,
 		if(currentPage=0, 1, 0)
 		FIRST,
@@ -156,7 +152,7 @@
 		) paging
 	</select>
 
-	<select id="findAll"
+	<!-- <select id="findAll"
 		resultType="site.metacoding.miniproject.web.dto.response.personal.PersonalMainDto">
 		SELECT job_posting_board_id, job_posting_board_title, job_posting_board_deadline,
 		if(job_posting_board_deadline > NOW(),'모집중','모집 마감') state 
@@ -171,7 +167,7 @@
 		FROM job_posting_board
 		WHERE job_posting_board_title like CONCAT('%', #{keyword}, '%')
 		OFFSET #{startNum} ROWS FETCH NEXT 5 ROWS ONLY
-	</select>
+	</select> -->
 
 	<select id="findCategory"
 		resultType="site.metacoding.miniproject.domain.jobpostingboard.JobPostingBoard">
@@ -226,4 +222,39 @@
 		</if>
 	</select>
 
+
+	<select id="findByJobPostingBoardToPer"
+		resultType="site.metacoding.miniproject.dto.jobpostingboard.JobPostingBoardRespDto$JobPostingDetailWithPersonalRespDto">
+			SELECT 
+		jpb.job_posting_board_id,
+		jpb.company_id,
+		jpb.job_posting_board_category_id,
+		jpb.job_posting_board_career_id,
+		jpb.job_posting_board_title ,
+		jpb.job_posting_board_content,
+		jpb.job_posting_salary,
+		jpb.job_posting_board_place,
+		jpb.job_posting_board_deadline,
+		c.category_id,
+		c.category_frontend,
+		c.category_backend,
+		c.category_devops,
+		cr.one_year_less,
+		cr.two_year_over,
+		cr.three_year_over,
+		cr.five_year_over,
+		cr.career_id,
+		cp.company_picture,
+		cp.company_name,
+		cp.company_email,
+		cp.company_phone_number
+		FROM job_posting_board jpb
+		LEFT OUTER JOIN company cp
+		ON jpb.company_id = cp.company_id
+		INNER JOIN category c
+		ON jpb.job_posting_board_category_id = c.category_id
+		INNER JOIN career cr
+		ON jpb.job_posting_board_career_id = cr.career_id
+		WHERE jpb.job_posting_board_id =  #{jobPostingBoardId}
+	</select>
 </mapper>

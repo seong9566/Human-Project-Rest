@@ -55,6 +55,7 @@ public class JWTToken {
 
         public static Cookie setCookie(String token) {
             Cookie cookie = new Cookie("Authorization", token); // Cookie에 Bearer 추가하면 안됨 - 최대 공간 초과....
+            cookie.setPath("/");
             cookie.setMaxAge(6 * 100 * 60); // 토큰값도 1시간이기에....
             return cookie;
         }

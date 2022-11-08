@@ -1,6 +1,9 @@
 package site.metacoding.miniproject.service.personal;
 
+import java.sql.Timestamp;
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.List;
 
 import org.springframework.stereotype.Service;
@@ -12,6 +15,8 @@ import site.metacoding.miniproject.domain.career.Career;
 import site.metacoding.miniproject.domain.career.CareerDao;
 import site.metacoding.miniproject.domain.category.Category;
 import site.metacoding.miniproject.domain.category.CategoryDao;
+import site.metacoding.miniproject.domain.company.CompanyDao;
+import site.metacoding.miniproject.domain.jobpostingboard.JobPostingBoardDao;
 import site.metacoding.miniproject.domain.personal.Personal;
 import site.metacoding.miniproject.domain.personal.PersonalDao;
 import site.metacoding.miniproject.domain.portfolio.Portfolio;
@@ -20,6 +25,10 @@ import site.metacoding.miniproject.domain.resumes.Resumes;
 import site.metacoding.miniproject.domain.resumes.ResumesDao;
 import site.metacoding.miniproject.domain.users.Users;
 import site.metacoding.miniproject.domain.users.UsersDao;
+import site.metacoding.miniproject.dto.company.CompanyRespDto.CompanyAddressRespDto;
+import site.metacoding.miniproject.dto.company.CompanyRespDto.CompanyDetailRespDto;
+import site.metacoding.miniproject.dto.company.CompanyRespDto.CompanyDetailWithPerRespDto;
+import site.metacoding.miniproject.dto.jobpostingboard.JobPostingBoardRespDto.JobPostingDetailWithPersonalRespDto;
 import site.metacoding.miniproject.dto.personal.PersonalReqDto.PersonalUpdatReqDto;
 import site.metacoding.miniproject.dto.personal.PersonalRespDto.PersonalAddressRespDto;
 import site.metacoding.miniproject.dto.personal.PersonalRespDto.PersonalDetailRespDto;
@@ -34,7 +43,6 @@ import site.metacoding.miniproject.dto.resumes.ResumesRespDto.ResumesDetailRespD
 import site.metacoding.miniproject.dto.resumes.ResumesRespDto.ResumesInsertRespDto;
 import site.metacoding.miniproject.dto.resumes.ResumesRespDto.ResumesUpdateRespDto;
 import site.metacoding.miniproject.exception.ApiException;
-import site.metacoding.miniproject.web.dto.response.company.CompanyMainDto;
 
 @Service
 @RequiredArgsConstructor
@@ -46,6 +54,8 @@ public class PersonalService {
 	private final PortfolioDao portfolioDao;
 	private final CareerDao careerDao;
 	private final UsersDao usersDao;
+	private final CompanyDao companyDao;
+	private final JobPostingBoardDao jobPostingBoardDao;
 
 	// 이력서 작성 하기
 	@Transactional(rollbackFor = RuntimeException.class)
@@ -89,6 +99,9 @@ public class PersonalService {
 	// 내가 작성한 이력서 목록 보기
 	@Transactional(readOnly = true)
 	public List<ResumesAllByIdRespDto> findAllMyResumes(ResumesAllByIdRespDto resumesAllByIdRespDto) {
+		if (resumesAllByIdRespDto.getPersonalId() == null) {
+			throw new ApiException("해당 " + resumesAllByIdRespDto.getPersonalId() + " 유저가 없습니다.");
+		}
 		List<Resumes> resumesList = resumesDao.findAllMyResumes(resumesAllByIdRespDto.getPersonalId());
 		List<ResumesAllByIdRespDto> resumesAllByIdRespDtoList = new ArrayList<>();
 		for (Resumes resumes : resumesList) {
@@ -101,6 +114,9 @@ public class PersonalService {
 	@Transactional(readOnly = true)
 	public ResumesDetailRespDto findByResumesId(Integer resumesId) {
 		ResumesDetailRespDto resumesDetailRespDto = resumesDao.findByResumesId(resumesId);
+		if (resumesDetailRespDto == null) {
+			throw new ApiException("해당 이력서가 존재하지 않습니다.");
+		}
 		return resumesDetailRespDto;
 	}
 
@@ -115,24 +131,25 @@ public class PersonalService {
 		}
 
 		Resumes resumesPS = resumesDao.findById(resumesUpdateReqDto.getResumesId());
+		if (resumesPS == null) {
+			throw new ApiException("해당 이력서가 없습니다.");
+		}
 		resumesUpdateReqDto.setCategoryId(resumesPS.getResumesCategoryId());
 		resumesUpdateReqDto.setPortfolioId(resumesPS.getPortfolioId());
 		resumesUpdateReqDto.setCareerId(resumesPS.getCareerId());
-		resumesPS = resumesUpdateReqDto.ResumesUpdateReqDtoToResumesEntity();
+		resumesPS.updateResumes(resumesUpdateReqDto);
 		resumesDao.update(resumesPS);
 
 		Category categoryPS = categoryDao.findById(resumesUpdateReqDto.getCategoryId());
-		categoryPS = resumesUpdateReqDto
-				.ResumesUpdateReqDtoToCategoryEntity();
+		categoryPS.updateCategory(resumesUpdateReqDto);
 		categoryDao.update(categoryPS);
 
 		Portfolio portfolioPS = portfolioDao.findById(resumesUpdateReqDto.getPortfolioId());
-		portfolioPS = resumesUpdateReqDto
-				.ResumesUpdateReqDtoToPortfolioEntity();
+		portfolioPS.updatePortfolio(resumesUpdateReqDto);
 		portfolioDao.update(portfolioPS);
 
 		Career careerPS = careerDao.findById(resumesUpdateReqDto.getCareerId());
-		careerPS = resumesUpdateReqDto.ResumesUpdateReqDtoToCareerEntity();
+		careerPS.updateCareer(resumesUpdateReqDto);
 		careerDao.update(careerPS);
 
 		ResumesUpdateRespDto resumesUpdateRespDto = new ResumesUpdateRespDto(resumesPS, categoryPS, careerPS,
@@ -150,37 +167,6 @@ public class PersonalService {
 		}
 		resumesDao.deleteById(resumesId);
 	}
-
-	// // 전체 이력서 목록 보기 (페이징+검색)
-	// @Transactional(readOnly = true)
-	// public List<ResumesAllRespDto> findAllResumes(ResumesAllRespDto
-	// resumesAllRespDto) {
-	// if (resumesAllRespDto.getKeyword() == null ||
-	// resumesAllRespDto.getKeyword().isEmpty()) {
-	// List<Resumes> resumesList =
-	// resumesDao.findAllResumes(resumesAllRespDto.getStartNum());
-	// List<ResumesAllRespDto> resumesAllRespDtoList = new ArrayList<>();
-	// for (Resumes resumes : resumesList) {
-	// resumesAllRespDtoList.add(new ResumesAllRespDto(resumes));
-	// }
-	// PagingDto paging = resumesDao.resumesPaging(resumesAllRespDto.getPage(),
-	// resumesAllRespDto.getKeyword());
-	// paging.makeBlockInfo(resumesAllRespDto.getKeyword());
-	// return resumesAllRespDtoList;
-	// } else {
-	// List<Resumes> resumesList =
-	// resumesDao.findSearch(resumesAllRespDto.getStartNum(),
-	// resumesAllRespDto.getKeyword());
-	// List<ResumesAllRespDto> resumesAllRespDtoList = new ArrayList<>();
-	// for (Resumes resumes : resumesList) {
-	// resumesAllRespDtoList.add(new ResumesAllRespDto(resumes));
-	// }
-	// PagingDto paging = resumesDao.resumesPaging(resumesAllRespDto.getPage(),
-	// resumesAllRespDto.getKeyword());
-	// paging.makeBlockInfo(resumesAllRespDto.getKeyword());
-	// return resumesAllRespDtoList;
-	// }
-	// }
 
 	// 전체 이력서 목록 보기 (페이징+검색+카테고리id별)
 	@Transactional(readOnly = true)
@@ -208,23 +194,21 @@ public class PersonalService {
 		}
 	}
 
-	// // 카테고리 별 리스트 보기
-	// public List<CompanyMainDto> findCategory(int startNum, Integer id) {
-	// return resumesDao.findCategory(startNum, id);
-	// }
-
-	// // 카테고리 별 검색 결과 리스트
-	// public List<CompanyMainDto> findCategorySearch(int startNum, String keyword,
-	// Integer id) {
-	// return resumesDao.findCategorySearch(startNum, keyword, id);
-	// }
-
-	// 개인 정보에 보기
+	// 개인 정보 보기
 	@Transactional(readOnly = true)
 	public PersonalDetailRespDto findByPersonal(Integer personalId) {
-		PersonalAddressRespDto personalAddressRespDto = personalDao.personalAddressById(personalId);
 		Personal personalPS = personalDao.personaldetailById(personalId);
-		PersonalDetailRespDto personalDetailRespDto = new PersonalDetailRespDto(personalPS, personalAddressRespDto);
+		if (personalPS == null) {
+			throw new ApiException("해당 정보를 찾을 수 없습니다.");
+		}
+		PersonalDetailRespDto personalDetailRespDto = new PersonalDetailRespDto(personalPS);
+		String address = personalPS.getPersonalAddress();
+		String[] arry = address.split(",");
+		for (int i = 0; i < arry.length; i++) {
+			personalDetailRespDto.setZoneCode(arry[0]);
+			personalDetailRespDto.setRoadJibunAddr(arry[1]);
+			personalDetailRespDto.setDetailAddress(arry[2]);
+		}
 
 		return personalDetailRespDto;
 	}
@@ -235,7 +219,9 @@ public class PersonalService {
 		PersonalAddressRespDto personalAddressRespDto = personalDao.personalAddressById(personalId);
 
 		PersonalUpdateFormRespDto personalUpdatePS = personalDao.personalUpdateById(personalId);
-
+		if (personalUpdatePS == null) {
+			throw new ApiException("해당 유저가 없습니다.");
+		}
 		PersonalUpdateFormRespDto personalUpdateFormRespDto = new PersonalUpdateFormRespDto(personalUpdatePS,
 				personalAddressRespDto);
 
@@ -254,15 +240,53 @@ public class PersonalService {
 
 		// user패스워드 수정
 		Users personalUserPS = usersDao.findById(userId);
-		personalUserPS.update(personalUpdatReqDto.personalPassWordUpdateReqDto());
-		usersDao.update(personalUserPS);
 
 		// personal 개인정보 수정
 		Personal personalPS = personalDao.findById(perosnalId);
+
+		if (personalUserPS == null || personalPS == null) {
+			throw new ApiException("유저 정보가 없습니다.");
+		}
+		personalUserPS.update(personalUpdatReqDto.personalPassWordUpdateReqDto());
+		usersDao.update(personalUserPS);
 		personalPS.updatePersonal(personalUpdatReqDto);
 		personalDao.update(personalPS);
 		PersonalUpdateRespDto personalUpdateRespDto = new PersonalUpdateRespDto(personalPS, personalUserPS);
 
 		return personalUpdateRespDto;
+	}
+
+	// 채용공고 상세 보기(개인)
+	@Transactional(readOnly = true)
+	public JobPostingDetailWithPersonalRespDto jobPostingBoardDetail(Integer jobPostingBoardId) {
+		JobPostingDetailWithPersonalRespDto jobPostingBoardDetailRespDto = jobPostingBoardDao
+				.findByJobPostingBoardToPer(jobPostingBoardId);
+		if (jobPostingBoardDetailRespDto == null) {
+			throw new ApiException("해당 채용공고가 존재하지 않습니다.");
+		}
+		Timestamp ts = jobPostingBoardDetailRespDto.getJobPostingBoardDeadline();
+		Date date = new Date();
+		date.setTime(ts.getTime());
+		String formattedDate = new SimpleDateFormat("yyyy년MM월dd일").format(date);
+		jobPostingBoardDetailRespDto.setFormatDeadLine(formattedDate);
+		return jobPostingBoardDetailRespDto;
+	}
+
+	@Transactional(readOnly = true)
+	public CompanyDetailWithPerRespDto findByCompany(Integer companyId) {
+		CompanyDetailWithPerRespDto companyPS = companyDao.findByCompanyToPer(companyId);
+		if (companyPS == null) {
+			throw new ApiException("회사 정보를 찾을 수 없습니다.");
+		}
+		CompanyDetailWithPerRespDto companyDetailRespDto = new CompanyDetailWithPerRespDto(companyPS);
+		String address = companyDetailRespDto.getCompanyAddress();
+		String[] arry = address.split(",");
+		for (int i = 0; i < arry.length; i++) {
+			companyDetailRespDto.setZoneCode(arry[0]);
+			companyDetailRespDto.setRoadJibunAddr(arry[1]);
+			companyDetailRespDto.setDetailAddress(arry[2]);
+		}
+
+		return companyDetailRespDto;
 	}
 }

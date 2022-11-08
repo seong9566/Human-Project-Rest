@@ -5,29 +5,29 @@ import java.util.Map;
 
 import org.springframework.util.ObjectUtils;
 
+import site.metacoding.miniproject.dto.resumes.ResumesReqDto.ResumesInsertReqDto;
+import site.metacoding.miniproject.dto.resumes.ResumesReqDto.ResumesUpdateReqDto;
 import site.metacoding.miniproject.exception.NormalException;
 import site.metacoding.miniproject.exception.ValCheckException;
-import site.metacoding.miniproject.web.dto.request.resume.ResumesInsertDto;
-import site.metacoding.miniproject.web.dto.request.resume.ResumesUpdateDto;
 
 public class ResumesValidationCheck {
 
-	public static void valCheckToInsertResumes(ResumesInsertDto insertResumesDto) {
+	public static void valCheckToInsertResumes(ResumesInsertReqDto resumesInsertReqDto) {
 
-		if (insertResumesDto == null)
+		if (resumesInsertReqDto == null)
 			throw new NormalException("잘못된 요청입니다.");
 
 		// 검증 오류 결과 보관
 		Map<String, String> errors = new HashMap<>();
 
 		// 검증 로직
-		if (ObjectUtils.isEmpty(insertResumesDto.getResumesTitle())) {
+		if (ObjectUtils.isEmpty(resumesInsertReqDto.getResumesTitle())) {
 			errors.put("title", "이력서 제목을 입력해주세요.");
 		}
-		if (ObjectUtils.isEmpty(insertResumesDto.getResumesPlace())) {
+		if (ObjectUtils.isEmpty(resumesInsertReqDto.getResumesPlace())) {
 			errors.put("place", "희망 근무 지역을 입력해주세요.");
 		}
-		if (ObjectUtils.isEmpty(insertResumesDto.getResumesIntroduce())) {
+		if (ObjectUtils.isEmpty(resumesInsertReqDto.getResumesIntroduce())) {
 			errors.put("introduce", "자기소개 글을 입력해주세요.");
 		}
 
@@ -38,23 +38,23 @@ public class ResumesValidationCheck {
 		}
 	}
 
-	public static void valCheckToUpdateResumes(ResumesUpdateDto updateResumesDto) {
+	public static void valCheckToUpdateResumes(ResumesUpdateReqDto resumesUpdateReqDto) {
 
-		if (updateResumesDto == null)
+		if (resumesUpdateReqDto == null)
 			throw new NormalException("잘못된 요청입니다.");
 
 		// 검증 오류 결과 보관
 		Map<String, String> errors = new HashMap<>();
 
-		if (ObjectUtils.isEmpty(updateResumesDto.getResumesTitle())) {
+		if (ObjectUtils.isEmpty(resumesUpdateReqDto.getResumesTitle())) {
 			errors.put("updatetitle", "수정할 이력서 제목을 입력해주세요.");
 		}
-		if (ObjectUtils.isEmpty(updateResumesDto.getResumesIntroduce())) {
+		if (ObjectUtils.isEmpty(resumesUpdateReqDto.getResumesIntroduce())) {
 			errors.put("updatetitle", "수정할 이력서 자기소개 글을 입력해주세요.");
 		}
-		if (ObjectUtils.isEmpty(updateResumesDto.getCategoryFrontend()) &&
-				ObjectUtils.isEmpty(updateResumesDto.getCategoryBackend()) &&
-				ObjectUtils.isEmpty(updateResumesDto.getCategoryDevops())) {
+		if (ObjectUtils.isEmpty(resumesUpdateReqDto.getCategoryFrontend()) &&
+				ObjectUtils.isEmpty(resumesUpdateReqDto.getCategoryBackend()) &&
+				ObjectUtils.isEmpty(resumesUpdateReqDto.getCategoryDevops())) {
 			errors.put("category", "관심분야를 하나 이상 선택해주세요.");
 		}
 

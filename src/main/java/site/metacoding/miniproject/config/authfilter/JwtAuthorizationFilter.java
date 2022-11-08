@@ -32,8 +32,8 @@ public class JwtAuthorizationFilter implements Filter {
 
         HttpServletRequest req = (HttpServletRequest) request;
         HttpServletResponse resp = (HttpServletResponse) response;
-
         String tokenForCookie = CookieForToken.cookieToToken(req.getCookies());
+        
         if (tokenForCookie == null) {
             throw new ApiException("쿠키값 없음 또는 만료된 쿠키 - 로그인 요망");
         }

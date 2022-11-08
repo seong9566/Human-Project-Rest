@@ -34,26 +34,20 @@ public class CompanyRespDto {
         private String companyPhoneNumber;
         private String companyEmail;
         private String companyPicture;
+        private String companyAddress;
         private Integer count;
 
-        private Integer companyForAddressId;
         private String zoneCode;
         private String roadJibunAddr;
         private String detailAddress;
 
-        public CompanyDetailRespDto(CompanyDetailRespDto companyDetailRespDto,
-                CompanyAddressRespDto companyAddressRespDto) {
+        public CompanyDetailRespDto(CompanyDetailRespDto companyDetailRespDto) {
             this.companyId = companyDetailRespDto.getCompanyId();
             this.companyName = companyDetailRespDto.getCompanyName();
             this.companyPhoneNumber = companyDetailRespDto.getCompanyPhoneNumber();
             this.companyEmail = companyDetailRespDto.getCompanyEmail();
             this.companyPicture = companyDetailRespDto.getCompanyPicture();
             this.count = companyDetailRespDto.getCount();
-
-            this.companyForAddressId = companyAddressRespDto.getCompanyId();
-            this.zoneCode = companyAddressRespDto.getZoneCode();
-            this.roadJibunAddr = companyAddressRespDto.getRoadJibunAddr();
-            this.detailAddress = companyAddressRespDto.getDetailAddress();
         }
 
     }
@@ -108,4 +102,32 @@ public class CompanyRespDto {
         }
     }
 
+    @Setter
+    @Getter
+    @NoArgsConstructor
+    public static class CompanyDetailWithPerRespDto {
+        private Integer companyId;
+        private String companyName;
+        private String companyPhoneNumber;
+        private String companyEmail;
+        private String companyPicture;
+        private String companyAddress;
+        private Integer count;
+
+        private Integer companyForAddressId;
+        private String zoneCode;
+        private String roadJibunAddr;
+        private String detailAddress;
+
+        public CompanyDetailWithPerRespDto(CompanyDetailWithPerRespDto companyDetailWithPerRespDto) {
+            this.companyId = companyDetailWithPerRespDto.getCompanyId();
+            this.companyName = companyDetailWithPerRespDto.getCompanyName();
+            this.companyPhoneNumber = companyDetailWithPerRespDto.getCompanyPhoneNumber();
+            this.companyEmail = companyDetailWithPerRespDto.getCompanyEmail();
+            this.companyPicture = companyDetailWithPerRespDto.getCompanyPicture();
+            this.companyAddress = companyDetailWithPerRespDto.getCompanyAddress();
+            this.count = companyDetailWithPerRespDto.getCount();
+        }
+
+    }
 }

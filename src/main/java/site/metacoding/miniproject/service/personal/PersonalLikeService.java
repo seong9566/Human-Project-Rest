@@ -17,6 +17,8 @@ import site.metacoding.miniproject.domain.users.Users;
 import site.metacoding.miniproject.domain.users.UsersDao;
 import site.metacoding.miniproject.dto.like.LikeReqDto.PersonalLikeReqDto;
 import site.metacoding.miniproject.dto.like.LikeRespDto.PersonalLikeRespDto;
+import site.metacoding.miniproject.dto.user.UserRespDto.SignCompanyDto;
+import site.metacoding.miniproject.dto.user.UserRespDto.SignedDto;
 import site.metacoding.miniproject.utill.AlarmEnum;
 
 @RequiredArgsConstructor
@@ -35,16 +37,17 @@ public class PersonalLikeService {
 		personalLikesDao.insert(personalLikePS);
 
 		personallikes.put(AlarmEnum.ALARMPERSONALLIKEID.key(), personalLikePS.getPersonalLikeId());
-
 		Users users = usersDao.findByResumesId(resumesId);
 		Company companyPS = companyDao.findById(personalLikePS.getCompanyId());
-		// Alarm alarm = new Alarm(users.getUsersId(), personallikes,
-		// companyPS.getCompanyName());
+		Alarm alarm = new Alarm(users.getUsersId(), personallikes,
+				companyPS.getCompanyName());
 
-		// alarmDao.insert(alarm);
-		// personalLikePS.setAlarmId(alarm.getAlarmId());
+		alarmDao.insert(alarm);
+		personalLikePS.setAlarmId(alarm.getAlarmId());
+
 		personalLikesDao.update(personalLikePS);
 		PersonalLikeRespDto personalLikeRespDto = new PersonalLikeRespDto(personalLikePS);
+
 		return personalLikeRespDto;
 	}
 

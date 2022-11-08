@@ -13,13 +13,13 @@ import org.springframework.web.bind.annotation.RestController;
 
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import site.metacoding.miniproject.dto.ResponseDto;
 import site.metacoding.miniproject.dto.alarm.AlarmReqDto.AlarmReqDtoToDelete;
 import site.metacoding.miniproject.dto.alarm.AlarmReqDto.AlarmReqListDtoToCheck;
 import site.metacoding.miniproject.dto.alarm.AlarmRespDto.UserAlarmRespDto;
 import site.metacoding.miniproject.dto.alarm.AlarmRespDto.UserAlarmRespDtoToChecked;
 import site.metacoding.miniproject.dto.user.UserRespDto.SignedDto;
 import site.metacoding.miniproject.service.users.UsersService;
-import site.metacoding.miniproject.web.dto.response.ResponseDto;
 
 @RestController
 @RequiredArgsConstructor
@@ -32,7 +32,11 @@ public class AlarmController {
 	private final HttpSession session;
 
 	// 유저알람 갱신 해주기
+<<<<<<< HEAD
 	@GetMapping("/s/users/alarm")
+=======
+	@GetMapping("/s/api/users/alarm")
+>>>>>>> f4f8027a10e783e60f6ec3814695da795214e813
 	public ResponseDto<?> refreshUserAlarm() {
 
 		ResponseDto<?> responseDto = new ResponseDto<>(1, "알람없음", null);
@@ -48,7 +52,11 @@ public class AlarmController {
 	}
 
 	// 알람 확인시 ischeck -> true 변경
+<<<<<<< HEAD
 	@PutMapping("/s/users/alarm/readed")
+=======
+	@PutMapping("/s/api/users/alarm/readed")
+>>>>>>> f4f8027a10e783e60f6ec3814695da795214e813
 	public ResponseDto<?> readedAlarm(@RequestBody AlarmReqListDtoToCheck alarmReqListDtoToCheck) {
 		SignedDto<?> signedDto = (SignedDto<?>) session.getAttribute("principal");
 		alarmReqListDtoToCheck.setUsersId(signedDto.getUsersId());
@@ -57,7 +65,7 @@ public class AlarmController {
 	}
 
 	// 알람지우기
-	@DeleteMapping("/s/users/alarm/delete/{alarmId}")
+	@DeleteMapping("/s/api/users/alarm/delete/{alarmId}")
 	public ResponseDto<?> deleteUserAlarm(@PathVariable Integer alarmId) {
 
 		SignedDto<?> signedDto = (SignedDto<?>) session.getAttribute("principal");
@@ -66,7 +74,15 @@ public class AlarmController {
 		usersService.deleteAlarm(alarmReqDtoToDelete);
 		return new ResponseDto<>(1, "삭제 성공", null);
 	}
+	// 웹소켓 의존 제외로 인해서 사용 안됨
+	// @MessageMapping("/Personal/{userId}")
+	// public void messageToTopicPersonal(@DestinationVariable Integer userId,
+	// Integer resumesId) {
+	// simpMessagingTemplate.convertAndSend("/topic/Personal", new ResponseDto<>(1,
+	// "success", resumesId));
+	// }
 
+<<<<<<< HEAD
 	// @MessageMapping("/Personal/{userId}")
 	// public void messageToTopicPersonal(@DestinationVariable Integer userId,
 	// Integer resumesId) {
@@ -97,6 +113,31 @@ public class AlarmController {
 	// new ResponseDto<>(1, "success", FromUsersId));
 	// }
 
+=======
+	// @MessageMapping("/Personal/subscribe/{companyId}")
+	// public void messageToSubscribePersonal(@DestinationVariable Integer
+	// companyId, String companyName) {
+	// simpMessagingTemplate.convertAndSend("/topic/Company/" + companyId,
+	// new ResponseDto<>(1, "success", companyName + "님이 새로운 채용공고를 등록 했습니다."));
+	// }
+
+	// @MessageMapping("/Company/Likeresume/{resumesId}")
+	// public void messageToResume(@DestinationVariable Integer resumesId, Integer
+	// FromUsersId) {
+	// Integer usersId = userService.findUserIdByResumesId(resumesId);
+	// simpMessagingTemplate.convertAndSend("/queue/Personal/" + usersId,
+	// new ResponseDto<>(1, "success", resumesId));
+	// }
+
+	// @MessageMapping("/Personal/LikeCompany/{companyId}")
+	// public void messageToCompany(@DestinationVariable Integer companyId, Integer
+	// FromUsersId) {
+	// Integer usersId = userService.findUserIdByCompanyId(companyId);
+	// simpMessagingTemplate.convertAndSend("/queue/Company/" + usersId,
+	// new ResponseDto<>(1, "success", FromUsersId));
+	// }
+
+>>>>>>> f4f8027a10e783e60f6ec3814695da795214e813
 	// @GetMapping("/user/alarm/notreaded/{userId}")
 	// public @ResponseBody ResponseDto<?> notReadedAlarm(@PathVariable Integer
 	// userId) {

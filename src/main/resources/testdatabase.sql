@@ -1,6 +1,6 @@
 CREATE TABLE users (
   users_id INTEGER auto_increment PRIMARY KEY,
-  login_id varchar(20) UNIQUE,
+  login_id varchar(20),
   login_password varchar(100),
   personal_id integer,
   company_id integer,
@@ -164,18 +164,6 @@ ALTER TABLE company_like ADD FOREIGN KEY (company_id) REFERENCES company (compan
 ALTER TABLE resumes ADD FOREIGN KEY (career_id) REFERENCES career (career_id);
 
 
-ALTER TABLE company_like ADD FOREIGN KEY (alarm_id) REFERENCES alarm (alarm_id);
-
-
-ALTER TABLE personal_like ADD FOREIGN KEY (alarm_id) REFERENCES alarm (alarm_id);
-
-
-ALTER TABLE subscribe ADD FOREIGN KEY (alarm_id) REFERENCES alarm (alarm_id);
-
-
-ALTER TABLE apply ADD FOREIGN KEY (alarm_id) REFERENCES alarm (alarm_id);
-
-
 ALTER TABLE alarm ADD FOREIGN KEY (alarm_company_like_id) REFERENCES company_like (company_like_id);
 
 
@@ -203,3 +191,4 @@ ALTER TABLE job_posting_board ADD FOREIGN KEY (job_posting_board_career_id) REFE
 ALTER TABLE job_posting_board ADD FOREIGN KEY (job_posting_board_category_id) REFERENCES category (category_id);
 
 ALTER TABLE resumes ADD FOREIGN KEY (resumes_category_id) REFERENCES category (category_id);
+

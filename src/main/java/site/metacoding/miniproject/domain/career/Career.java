@@ -8,7 +8,7 @@ import lombok.NoArgsConstructor;
 import lombok.Setter;
 import site.metacoding.miniproject.dto.jobpostingboard.JobPostingBoardReqDto.JobPostingBoardInsertReqDto;
 import site.metacoding.miniproject.dto.jobpostingboard.JobPostingBoardReqDto.JobPostingBoardUpdateReqDto;
-import site.metacoding.miniproject.web.dto.request.jobpostingboard.JobPostingBoardUpdateDto;
+import site.metacoding.miniproject.dto.resumes.ResumesReqDto.ResumesUpdateReqDto;
 
 @NoArgsConstructor
 @Getter
@@ -31,14 +31,11 @@ public class Career {
 	}
 
 	// 이력서 수정
-	@Builder
-	public Career(Integer careerId, Boolean oneYearLess, Boolean twoYearOver, Boolean threeYearOver,
-			Boolean fiveYearOver) {
-		this.careerId = careerId;
-		this.oneYearLess = oneYearLess;
-		this.twoYearOver = twoYearOver;
-		this.threeYearOver = threeYearOver;
-		this.fiveYearOver = fiveYearOver;
+	public void updateCareer(ResumesUpdateReqDto resumesUpdateReqDto) {
+		this.oneYearLess = resumesUpdateReqDto.getOneYearLess();
+		this.twoYearOver = resumesUpdateReqDto.getTwoYearOver();
+		this.threeYearOver = resumesUpdateReqDto.getThreeYearOver();
+		this.fiveYearOver = resumesUpdateReqDto.getFiveYearOver();
 	}
 
 	public Career(JobPostingBoardInsertReqDto jobPostingBoardInsertReqDto) {

@@ -13,10 +13,10 @@ import org.springframework.web.bind.annotation.ResponseBody;
 
 import lombok.RequiredArgsConstructor;
 import site.metacoding.miniproject.domain.subscribe.Subscribe;
+import site.metacoding.miniproject.dto.ResponseDto;
 import site.metacoding.miniproject.dto.user.UserRespDto.SignedDto;
 import site.metacoding.miniproject.exception.ApiException;
 import site.metacoding.miniproject.service.users.SubscribeService;
-import site.metacoding.miniproject.web.dto.response.ResponseDto;
 
 @Controller
 @RequiredArgsConstructor
@@ -25,14 +25,9 @@ public class SubscribeController {
 	private final SubscribeService subscribeService;
 	private final HttpSession session;
 
-	@GetMapping("/subscribe/{companyId}")
+	@GetMapping("/s/api/subscribe/{companyId}")
 	public @ResponseBody ResponseDto<?> subscribeToCompany(@PathVariable Integer companyId) {
 		SignedDto<?> signedDto = (SignedDto<?>) session.getAttribute("principal");
-
-		if (signedDto == null) {
-			throw new ApiException("로그인 후 구독해주세요!");
-		}
-
 		List<Subscribe> subscribes = new ArrayList<>();
 		Subscribe subscribe = subscribeService.subscribeToCompany(signedDto, companyId);
 		subscribes.add(subscribe);
@@ -41,7 +36,7 @@ public class SubscribeController {
 		return new ResponseDto<>(1, "구독 성공!", subscribe.getSubscribeId());
 	}
 
-	@DeleteMapping("/subscribe/{subscribeId}")
+	@DeleteMapping("s/api/subscribe/{subscribeId}")
 	public @ResponseBody ResponseDto<?> subscribeCancelToCompany(@PathVariable Integer subscribeId) {
 		SignedDto<?> signedDto = (SignedDto<?>) session.getAttribute("principal");
 		if (signedDto == null) {
