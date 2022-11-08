@@ -3,14 +3,12 @@ package site.metacoding.miniproject.web;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.delete;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
 
-import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureMockMvc;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.boot.test.context.SpringBootTest.WebEnvironment;
 import org.springframework.mock.web.MockCookie;
-import org.springframework.mock.web.MockHttpSession;
 import org.springframework.test.context.ActiveProfiles;
 import org.springframework.test.context.jdbc.Sql;
 import org.springframework.test.web.servlet.MockMvc;
@@ -37,18 +35,14 @@ public class LikeApiControllerTest {
     private MockMvc mvc;
     @Autowired
     private ObjectMapper om;
-    private MockHttpSession session;
-    private MockCookie mockCookie;
+    private static MockCookie mockCookie;
 
-    public void sessionCompanyInit() {
+    public static void sessionCompanyInit() {
 
-        session = new MockHttpSession();
         SignCompanyDto signCompanyDto = new SignCompanyDto();
 
         signCompanyDto.setCompanyId(1);
         SignedDto<?> signedDto = new SignedDto<>(1, "testuser1", signCompanyDto);
-
-        session.setAttribute("principal", signedDto);
 
         String JwtToken = CreateJWTToken.createToken(signedDto); // Authorization
         mockCookie = new MockCookie("Authorization", JwtToken);
@@ -57,22 +51,14 @@ public class LikeApiControllerTest {
 
     public void sessionPersonalInit() {
 
-        session = new MockHttpSession();
         SignPersonalDto signPersonalDto = new SignPersonalDto();
 
         signPersonalDto.setPersonalId(1);
         SignedDto<?> signedDto = new SignedDto<>(1, "testuser1", signPersonalDto);
 
-        session.setAttribute("principal", signedDto);
-
         String JwtToken = CreateJWTToken.createToken(signedDto); // Authorization
         mockCookie = new MockCookie("Authorization", JwtToken);
 
-    }
-
-    @AfterEach
-    public void sessionClear() {
-        session.clearAttributes();
     }
 
     @Sql({ "classpath:truncate.sql", "classpath:testsql/insertuserforlike.sql" })
@@ -106,10 +92,9 @@ public class LikeApiControllerTest {
         ResultActions resultActions = mvc
                 .perform(delete("/s/api/personalLike/" + resumesId)
                         .cookie(mockCookie)
-                        .accept(APPLICATION_JSON)
-                        .session(session));
+                        .accept(APPLICATION_JSON));
 
-        // then
+        // then/ charset=utf-8안넣으면바로한글이깨진다
 
         MvcResult mvcResult = resultActions.andReturn();
     }
@@ -171,7 +156,6 @@ public class LikeApiControllerTest {
     @Test
     public void bestCompanye_test() throws Exception {
         // given
-        sessionCompanyInit();
         // when
         ResultActions resultActions = mvc
 
