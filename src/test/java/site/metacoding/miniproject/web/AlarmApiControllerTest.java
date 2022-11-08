@@ -3,12 +3,9 @@ package site.metacoding.miniproject.web;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.*;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.jsonPath;
 
-<<<<<<< HEAD
-=======
 import java.util.ArrayList;
 import java.util.List;
 
->>>>>>> f4f8027a10e783e60f6ec3814695da795214e813
 import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.BeforeEach;
@@ -18,10 +15,6 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureMockMvc;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.boot.test.context.SpringBootTest.WebEnvironment;
-<<<<<<< HEAD
-import org.springframework.core.io.ResourceLoader;
-=======
->>>>>>> f4f8027a10e783e60f6ec3814695da795214e813
 import org.springframework.mock.web.MockCookie;
 import org.springframework.mock.web.MockHttpSession;
 import org.springframework.test.context.ActiveProfiles;
@@ -32,20 +25,13 @@ import org.springframework.test.web.servlet.ResultActions;
 import com.fasterxml.jackson.databind.ObjectMapper;
 
 import lombok.extern.slf4j.Slf4j;
-<<<<<<< HEAD
-=======
 import site.metacoding.miniproject.dto.alarm.AlarmReqDto.AlarmReqListDtoToCheck;
->>>>>>> f4f8027a10e783e60f6ec3814695da795214e813
 import site.metacoding.miniproject.dto.user.UserRespDto.SignPersonalDto;
 import site.metacoding.miniproject.dto.user.UserRespDto.SignedDto;
 import site.metacoding.miniproject.utill.JWTToken.CreateJWTToken;
 
 @Slf4j
 @ActiveProfiles("test")
-<<<<<<< HEAD
-@Sql("classpath:truncate.sql")
-=======
->>>>>>> f4f8027a10e783e60f6ec3814695da795214e813
 @AutoConfigureMockMvc
 @SpringBootTest(webEnvironment = WebEnvironment.MOCK)
 public class AlarmApiControllerTest {
@@ -90,45 +76,30 @@ public class AlarmApiControllerTest {
 
     @Order(1)
     @Test
-<<<<<<< HEAD
-    @Sql("classpath:testsql/insertuserforpersonal.sql")
-    public void cookie_test() throws Exception {
-=======
-    @Sql(value = { "classpath:truncate.sql", "classpath:testsql/insertalarmfortest.sql"})
+    @Sql(value = { "classpath:truncate.sql", "classpath:testsql/insertalarmfortest.sql" })
     public void refreshUserAlarm_test() throws Exception {
->>>>>>> f4f8027a10e783e60f6ec3814695da795214e813
 
         // given
 
         // when
-<<<<<<< HEAD
-        ResultActions resultActions = mvc.perform(get("/s/users/alarm")
-                .session(session)
-                .cookie(mockCookie)
-                .accept(APPLICATION_JSON));
-        // then
-        log.debug("디버그 : " + resultActions.andReturn().getResponse().getContentAsString());
-=======
         ResultActions resultActions = mvc.perform(get("/s/api/users/alarm")
                 .session(session)
                 .cookie(mockCookie)
                 .accept(APPLICATION_JSON))
 
-        // then
-        
+                // then
+
                 .andExpect(jsonPath("$.code").value("1"))
                 .andExpect(jsonPath("$.message").value("통신 성공"));
-        
-    }
-    
 
-    
+    }
+
     @Order(2)
     @Test
-    @Sql(value = { "classpath:truncate.sql", "classpath:testsql/insertalarmfortest.sql"})
+    @Sql(value = { "classpath:truncate.sql", "classpath:testsql/insertalarmfortest.sql" })
     public void readedAlarm_test() throws Exception {
 
-        //given
+        // given
         AlarmReqListDtoToCheck alarmReqListDtoToCheck = new AlarmReqListDtoToCheck();
         List<Integer> alarmsId = new ArrayList<>();
 
@@ -138,11 +109,9 @@ public class AlarmApiControllerTest {
 
         alarmReqListDtoToCheck.setAlarmsId(alarmsId);
 
-
         String body = om.writeValueAsString(alarmReqListDtoToCheck);
 
-
-        //when
+        // when
         ResultActions resultActions = mvc.perform(put("/s/api/users/alarm/readed")
                 .content(body)
                 .cookie(mockCookie)
@@ -159,53 +128,50 @@ public class AlarmApiControllerTest {
                     fixedAlarmsId.add(1);
                     fixedAlarmsId.add(2);
                     fixedAlarmsId.add(3);
-            
+
                     final AlarmReqListDtoToCheck fixedbody = alarmReqListDtoToCheck;
-                    
+
                     fixedbody.setAlarmsId(fixedAlarmsId);
 
-
                     mvc.perform(
-                    put("/s/api/users/alarm/readed")
-                    .content(om.writeValueAsString(fixedbody))
-                    .cookie(mockCookie)
-                    .session(session)
-                    .contentType(APPLICATION_JSON)
-                    .accept(APPLICATION_JSON))
+                            put("/s/api/users/alarm/readed")
+                                    .content(om.writeValueAsString(fixedbody))
+                                    .cookie(mockCookie)
+                                    .session(session)
+                                    .contentType(APPLICATION_JSON)
+                                    .accept(APPLICATION_JSON))
 
-                    
-        //then
-                    .andExpect(jsonPath("$.code").value("1"));
-    });
+                            // then
+                            .andExpect(jsonPath("$.code").value("1"));
+                });
     }
 
     @Test
-    @Sql(value = { "classpath:truncate.sql", "classpath:testsql/insertalarmfortest.sql"})
-    public void deleteUserAlarm_test() throws Exception{
+    @Sql(value = { "classpath:truncate.sql", "classpath:testsql/insertalarmfortest.sql" })
+    public void deleteUserAlarm_test() throws Exception {
 
-        //given
+        // given
 
         Integer alarmId = 5;
 
-        //when
+        // when
 
         ResultActions resultActions = mvc
                 .perform(delete("/s/api/users/alarm/delete/" + alarmId)
-                .session(session)
-                .cookie(mockCookie)
-                .accept(APPLICATION_JSON))
-        
-        //then
+                        .session(session)
+                        .cookie(mockCookie)
+                        .accept(APPLICATION_JSON))
+
+                // then
 
                 .andExpect(jsonPath("$.code").value("-1"))
                 .andDo(result -> {
                     mvc.perform(delete("/s/api/users/alarm/delete/" + 1)
-                    .session(session)
-                    .cookie(mockCookie)
-                    .accept(APPLICATION_JSON))
-                    .andExpect(jsonPath("$.code").value("1"));
+                            .session(session)
+                            .cookie(mockCookie)
+                            .accept(APPLICATION_JSON))
+                            .andExpect(jsonPath("$.code").value("1"));
                 });
->>>>>>> f4f8027a10e783e60f6ec3814695da795214e813
     }
 
 }

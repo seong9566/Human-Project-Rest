@@ -1,16 +1,8 @@
 package site.metacoding.miniproject.web;
 
-<<<<<<< HEAD
-import static org.mockito.Answers.RETURNS_MOCKS;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.*;
-=======
-import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
-import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.multipart;
-import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
->>>>>>> f4f8027a10e783e60f6ec3814695da795214e813
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.jsonPath;
 
-import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Order;
@@ -19,17 +11,9 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureMockMvc;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.boot.test.context.SpringBootTest.WebEnvironment;
-<<<<<<< HEAD
 import org.springframework.core.io.Resource;
 import org.springframework.core.io.ResourceLoader;
 import org.springframework.http.HttpMethod;
-import org.springframework.mock.web.MockCookie;
-=======
-import org.junit.jupiter.api.Order;
-import org.springframework.core.io.Resource;
-import org.springframework.core.io.ResourceLoader;
-import org.springframework.http.HttpMethod;
->>>>>>> f4f8027a10e783e60f6ec3814695da795214e813
 import org.springframework.mock.web.MockHttpSession;
 import org.springframework.mock.web.MockMultipartFile;
 import org.springframework.test.context.ActiveProfiles;
@@ -45,17 +29,11 @@ import site.metacoding.miniproject.dto.personal.PersonalReqDto.PersonalJoinDto;
 import site.metacoding.miniproject.dto.user.UserReqDto.LoginDto;
 import site.metacoding.miniproject.dto.user.UserRespDto.SignPersonalDto;
 import site.metacoding.miniproject.dto.user.UserRespDto.SignedDto;
-import site.metacoding.miniproject.utill.JWTToken.CreateJWTToken;
-import site.metacoding.miniproject.web.dto.request.etc.LoginDto;
 
 @Slf4j
 @ActiveProfiles("test")
 @AutoConfigureMockMvc
 @SpringBootTest(webEnvironment = WebEnvironment.MOCK)
-<<<<<<< HEAD
-@Sql("classpath:truncate.sql")
-=======
->>>>>>> f4f8027a10e783e60f6ec3814695da795214e813
 public class UsersApiControllerTest {
 
     private static final String APPLICATION_JSON = "application/json; charset=utf-8";
@@ -65,46 +43,10 @@ public class UsersApiControllerTest {
 
     @Autowired
     private ObjectMapper om;
-<<<<<<< HEAD
-
-    @Autowired
-    private ResourceLoader loader;
-=======
->>>>>>> f4f8027a10e783e60f6ec3814695da795214e813
 
     @Autowired
     private ResourceLoader loader;
 
-<<<<<<< HEAD
-    private MockCookie mockCookie;
-
-    @BeforeAll // 선언시 static으로 선언해야한다. - container에 띄우기 위해 사용한다.
-    public static void init() {
-
-    }
-
-    @BeforeEach
-    public void sessionInit() {
-
-        session = new MockHttpSession();
-        SignPersonalDto signPersonalDto = new SignPersonalDto();
-
-        signPersonalDto.setPersonalId(1);
-        SignedDto<?> signedDto = new SignedDto<>(1, "testuser1", signPersonalDto);
-
-        session.setAttribute("principal", signedDto);
-
-        String JwtToken = CreateJWTToken.createToken(signedDto); // Authorization
-        mockCookie = new MockCookie("Authorization", JwtToken);
-
-    }
-
-    @AfterEach
-    public void sessionClear() {
-        session.clearAttributes();
-    }
-
-=======
     private static MockHttpSession session = new MockHttpSession();
 
     @BeforeAll // 선언시 static으로 선언해야한다. - container에 띄우기 위해 사용한다.
@@ -113,7 +55,7 @@ public class UsersApiControllerTest {
 
         signPersonalDto.setPersonalId(1);
         SignedDto<?> signedDto = new SignedDto<>(1, "testuser1", signPersonalDto);
-        
+
         session.setAttribute("principal", signedDto);
 
     }
@@ -123,7 +65,6 @@ public class UsersApiControllerTest {
 
     }
 
->>>>>>> f4f8027a10e783e60f6ec3814695da795214e813
     @Order(1)
     @Test
     @Sql("classpath:truncate.sql")
@@ -143,110 +84,18 @@ public class UsersApiControllerTest {
 
         // when
         ResultActions resultActions = mvc
-<<<<<<< HEAD
-                .perform(post("/join/personal").content(body)
-                        .contentType("application/json; charset=utf-8").accept(APPLICATION_JSON));
-
-        // then
-        resultActions.andExpect(jsonPath("$.code").value("1"));
-        resultActions.andExpect(jsonPath("$.message").value("계정생성완료"));
-        resultActions.andExpect(jsonPath("$.data.usersId").value("1"));
-
-    }
-
-    @Order(2)
-    @Test
-    public void joinCompany_test() throws Exception {
-
-        // given
-        CompanyJoinDto joinDto = new CompanyJoinDto();
-        joinDto.setCompanyName("testcompany");
-        joinDto.setCompanyPhoneNumber("010-4444-6666");
-        joinDto.setLoginId("testId");
-        joinDto.setLoginPassword("Qwer1234!");
-        joinDto.setCompanyEmail("example@example.com");
-
-        String filename = "p4.jpg";
-        Resource resource = loader.getResource("classpath:/static/images/" + filename);
-        MockMultipartFile file = new MockMultipartFile("file", "test.jpg", "image/jpg", resource.getInputStream());
-
-        String body = om.writeValueAsString(joinDto);
-        MockMultipartFile multipartBody = new MockMultipartFile("joinDto", "formData", APPLICATION_JSON,
-                body.getBytes());
-
-        ResultActions resultActions = mvc.perform(
-                multipart(HttpMethod.POST, "/join/company")
-                        .file(file)
-                        .file(multipartBody)
-                        .accept(APPLICATION_JSON));
-
-        // then
-        resultActions.andExpect(jsonPath("$.code").value("1"));
-        resultActions.andExpect(jsonPath("$.message").value("계정생성완료"));
-        resultActions.andExpect(jsonPath("$.data.usersId").value("1"));
-    }
-
-    @Order(3)
-    @Test
-    @Sql("classpath:testsql/insertuserforpersonal.sql")
-    public void login_test() throws Exception {
-        // given
-        String loginId = "testuser1";
-        String loginPassword = "Qwer1234!!!";
-        LoginDto loginDto = new LoginDto(loginId, loginPassword);
-
-        String body = om.writeValueAsString(loginDto);
-
-        // when
-        ResultActions resultActions = mvc.perform(post("/login")
-                .content(body)
-                .contentType(APPLICATION_JSON)
-                .accept(APPLICATION_JSON));
-
-        // String whatIsThat =
-        // resultActions.andReturn().getResponse().getContentAsString();
-        // log.debug("디버그 : " + whatIsThat);
-
-        // then
-        resultActions.andExpect(jsonPath("$.code").value("1"));
-        resultActions.andExpect(jsonPath("$.message").value("로그인완료"));
-        resultActions.andExpect(jsonPath("$.data.userInfo.personalId").value("1"));
-    }
-
-    @Order(4)
-    @Test
-    public void loginForm_test() throws Exception {
-        // given
-
-        // when
-        ResultActions resultActions = mvc.perform(get("/loginForm")
-                .session(session)
-                .accept(APPLICATION_JSON));
-        // then
-        resultActions.andExpect(jsonPath("$.code").value("-1"));
-        resultActions.andExpect(jsonPath("$.message").value("이미 로그인 되어 있음"));
-=======
                 .perform(post("/api/join/personal").content(body)
                         .contentType(APPLICATION_JSON).accept(APPLICATION_JSON));
 
         // then
         resultActions.andExpect(jsonPath("$.code").value("1"))
-        .andExpect(jsonPath("$.message").value("계정생성완료"))
-        .andExpect(jsonPath("$.data.usersId").value("1"));
->>>>>>> f4f8027a10e783e60f6ec3814695da795214e813
+                .andExpect(jsonPath("$.message").value("계정생성완료"))
+                .andExpect(jsonPath("$.data.usersId").value("1"));
 
     }
 
     @Order(2)
     @Test
-<<<<<<< HEAD
-    @Sql("classpath:testsql/insertuserforpersonal.sql")
-    public void userIdSameCheck_test() throws Exception {
-
-        // given
-
-        String loginId = "testuser";
-=======
     @Sql("classpath:truncate.sql")
     public void joinCompany_test() throws Exception {
 
@@ -274,13 +123,13 @@ public class UsersApiControllerTest {
 
         // then
         resultActions.andExpect(jsonPath("$.code").value("1"))
-        .andExpect(jsonPath("$.message").value("계정생성완료"))
-        .andExpect(jsonPath("$.data.usersId").value("1"));
+                .andExpect(jsonPath("$.message").value("계정생성완료"))
+                .andExpect(jsonPath("$.data.usersId").value("1"));
     }
 
     @Order(3)
     @Test
-    @Sql({"classpath:truncate.sql", "classpath:testsql/insertuserforpersonal.sql"})
+    @Sql({ "classpath:truncate.sql", "classpath:testsql/insertuserforpersonal.sql" })
     public void login_test() throws Exception {
         // given
         String loginId = "testuser1";
@@ -301,8 +150,8 @@ public class UsersApiControllerTest {
 
         // then
         resultActions.andExpect(jsonPath("$.code").value("1"))
-        .andExpect(jsonPath("$.message").value("로그인완료"))
-        .andExpect(jsonPath("$.data.userInfo.personalId").value("1"));
+                .andExpect(jsonPath("$.message").value("로그인완료"))
+                .andExpect(jsonPath("$.data.userInfo.personalId").value("1"));
     }
 
     @Order(4)
@@ -317,27 +166,13 @@ public class UsersApiControllerTest {
                 .accept(APPLICATION_JSON));
         // then
         resultActions.andExpect(jsonPath("$.code").value("-1"))
-        .andExpect(jsonPath("$.message").value("이미 로그인 되어 있음"));
->>>>>>> f4f8027a10e783e60f6ec3814695da795214e813
+                .andExpect(jsonPath("$.message").value("이미 로그인 되어 있음"));
 
-        // when
-
-        ResultActions resultActions = mvc.perform(get("/checkId/" + loginId)
-                .accept(APPLICATION_JSON))
-                .andExpect(jsonPath("$.code").value("-1"))
-                .andDo(mvc.perform(get("/checkId/" + "testuser2").accept(APPLICATION_JSON)));
-
-        log.debug("디버그 : " + resultActions.andReturn().getResponse().getContentAsString());
-
-        // then
     }
 
-<<<<<<< HEAD
-}
-=======
     @Order(5)
     @Test
-    @Sql({"classpath:truncate.sql", "classpath:testsql/insertuserforpersonal.sql" })
+    @Sql({ "classpath:truncate.sql", "classpath:testsql/insertuserforpersonal.sql" })
     public void userIdSameCheck_test() throws Exception {
 
         // given
@@ -360,4 +195,3 @@ public class UsersApiControllerTest {
     }
 
 }
->>>>>>> f4f8027a10e783e60f6ec3814695da795214e813
