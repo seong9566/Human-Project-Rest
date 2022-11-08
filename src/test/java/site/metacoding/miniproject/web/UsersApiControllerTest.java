@@ -50,29 +50,22 @@ public class UsersApiControllerTest {
     @Autowired
     private ResourceLoader loader;
 
-    private MockHttpSession session;
+    private static MockHttpSession session = new MockHttpSession();
 
     @BeforeAll // 선언시 static으로 선언해야한다. - container에 띄우기 위해 사용한다.
     public static void init() {
+        SignPersonalDto signPersonalDto = new SignPersonalDto();
+
+        signPersonalDto.setPersonalId(1);
+        SignedDto<?> signedDto = new SignedDto<>(1, "testuser1", signPersonalDto);
+        
+        session.setAttribute("principal", signedDto);
 
     }
 
     @BeforeEach
     public void sessionInit() {
 
-        session = new MockHttpSession();
-        SignPersonalDto signPersonalDto = new SignPersonalDto();
-
-        signPersonalDto.setPersonalId(1);
-        SignedDto<?> signedDto = new SignedDto<>(1, "testuser1", signPersonalDto);
-
-        session.setAttribute("principal", signedDto);
-
-    }
-
-    @AfterEach
-    public void sessionClear() {
-        session.clearAttributes();
     }
 
     @Order(1)
