@@ -1,4 +1,4 @@
-name: aws-v5
+name: MiniProject-Rest
 on:
   push:
     branches:
