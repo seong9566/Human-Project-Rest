@@ -178,8 +178,8 @@ public class ResumesRespDto {
         private Integer totalCount;
         private Integer totalPage;
         private Integer currentPage;
-        private boolean isFirst;
-        private boolean isLast;
+        // private boolean isFirst;
+        // private boolean isLast;
 
         private Integer blockCount;
         private Integer currentBlock;
