@@ -15,3 +15,14 @@ INSERT INTO resumes(resumes_title, resumes_picture, resumes_introduce,personal_i
  VALUES('삼성용이력서', '사진값', '안녕하세요',1, NOW());
 INSERT INTO resumes(resumes_title, resumes_picture, resumes_introduce,personal_id,created_at)
  VALUES('LG용이력서', '사진값', '안녕하세요',1, NOW());
+ INSERT INTO resumes(resumes_title, resumes_picture, resumes_introduce,personal_id,created_at)
+ VALUES('농심용이력서', '사진값', '안녕하세요',1, NOW());
+ INSERT INTO resumes(resumes_title, resumes_picture, resumes_introduce,personal_id,created_at)
+ VALUES('두산용이력서', '사진값', '안녕하세요',1, NOW());
+ INSERT INTO resumes(resumes_title, resumes_picture, resumes_introduce,personal_id,created_at)
+ VALUES('한화용이력서', '사진값', '안녕하세요',1, NOW());
+ INSERT INTO resumes(resumes_title, resumes_picture, resumes_introduce,personal_id,created_at)
+ VALUES('롯데용이력서', '사진값', '안녕하세요',1, NOW());
+ INSERT INTO resumes(resumes_title, resumes_picture, resumes_introduce,personal_id,created_at)
+ VALUES('키움증권용이력서', '사진값', '안녕하세요',1, NOW());
+

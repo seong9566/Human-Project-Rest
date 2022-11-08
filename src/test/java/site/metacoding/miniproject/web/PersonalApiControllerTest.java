@@ -31,6 +31,7 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 import site.metacoding.miniproject.dto.personal.PersonalReqDto.PersonalUpdatReqDto;
 import site.metacoding.miniproject.dto.resumes.ResumesReqDto.ResumesInsertReqDto;
 import site.metacoding.miniproject.dto.resumes.ResumesReqDto.ResumesUpdateReqDto;
+import site.metacoding.miniproject.dto.resumes.ResumesRespDto.PagingDto;
 import site.metacoding.miniproject.dto.resumes.ResumesRespDto.ResumesAllRespDto;
 import site.metacoding.miniproject.dto.user.UserRespDto.SignPersonalDto;
 import site.metacoding.miniproject.dto.user.UserRespDto.SignedDto;
@@ -258,21 +259,16 @@ public class PersonalApiControllerTest {
 
     }
 
-    @Sql(scripts = "classpath:testsql/findallresumes.sql")
+    @Sql({ "classpath:truncate.sql", "classpath:testsql/findallresumes.sql" })
     @Test
     public void findAllResumes_test() throws Exception {
-        Integer page = 0;
-        Integer id = 1;
-        String keyword = "s";
-        int startNum = page * 5;
-
-        ResumesAllRespDto resumesAllByIdRespDto = new ResumesAllRespDto();
-        resumesAllByIdRespDto.setId(id);
-        resumesAllByIdRespDto.setPage(page);
-        resumesAllByIdRespDto.setStartNum(startNum);
-        resumesAllByIdRespDto.setKeyword(keyword);
-        String body = om.writeValueAsString(resumesAllByIdRespDto);
-        ResultActions resultActions = mvc.perform(get("/resumes/resumesList/" + id).content(body)
+        ResumesAllRespDto resumesAllRespDto = new ResumesAllRespDto();
+        resumesAllRespDto.setId(1);
+        resumesAllRespDto.setStartNum(1);
+        resumesAllRespDto.setKeyword("s");
+        resumesAllRespDto.setResumesTitle("안녕");
+        String body = om.writeValueAsString(resumesAllRespDto);
+        ResultActions resultActions = mvc.perform(get("/resumes/resumesList/" + resumesAllRespDto.getId()).content(body)
                 .cookie(mockCookie)
                 .accept(APPLICATION_JSON));
 
