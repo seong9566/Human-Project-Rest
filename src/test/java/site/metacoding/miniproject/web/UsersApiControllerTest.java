@@ -170,7 +170,7 @@ public class UsersApiControllerTest {
 
     }
 
-    @Order(5)
+    @Order(2)
     @Test
     @Sql({ "classpath:truncate.sql", "classpath:testsql/insertuserforpersonal.sql" })
     public void userIdSameCheck_test() throws Exception {
