@@ -1,11 +1,11 @@
 package site.metacoding.miniproject.web;
 
+import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.put;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.jsonPath;
 
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.*;
 import java.sql.Timestamp;
-import java.util.Date;
 
 import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.BeforeAll;
@@ -19,6 +19,7 @@ import org.springframework.mock.web.MockCookie;
 import org.springframework.mock.web.MockHttpSession;
 import org.springframework.test.context.ActiveProfiles;
 import org.springframework.test.context.jdbc.Sql;
+import org.springframework.test.context.jdbc.Sql.ExecutionPhase;
 import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.test.web.servlet.MvcResult;
 import org.springframework.test.web.servlet.ResultActions;
@@ -50,8 +51,6 @@ public class CompanyApiControllerTest {
     @Autowired
     private ObjectMapper om;
 
-    private MockHttpSession session;
-
     private MockCookie mockCookie;
 
     @BeforeAll // 선언시 static으로 선언해야한다. - container에 띄우기 위해 사용한다.
@@ -62,7 +61,6 @@ public class CompanyApiControllerTest {
     @BeforeEach
     public void sessionInit() {
 
-        session = new MockHttpSession();
         SignCompanyDto signCompanyDto = new SignCompanyDto();
 
         signCompanyDto.setCompanyId(1);
@@ -71,13 +69,6 @@ public class CompanyApiControllerTest {
         String JwtToken = CreateJWTToken.createToken(signedDto); // Authorization
         mockCookie = new MockCookie("Authorization", JwtToken);
 
-        session.setAttribute("principal", signedDto);
-
-    }
-
-    @AfterEach
-    public void sessionClear() {
-        session.clearAttributes();
     }
 
     // 채용공고업데이트
@@ -111,7 +102,6 @@ public class CompanyApiControllerTest {
                 .perform(put("/s/api/jobPostingBoard/update/" + 1)
                         .content(body)
                         .contentType(APPLICATION_JSON)
-                        .session(session)
                         .cookie(mockCookie)
                         .accept(APPLICATION_JSON));
 
@@ -131,7 +121,8 @@ public class CompanyApiControllerTest {
 
         // when
         ResultActions resultActions = mvc.perform(MockMvcRequestBuilders.get("/s/company/jobPostingBoardList")
-                .session(session).cookie(mockCookie).content(APPLICATION_JSON).accept(APPLICATION_JSON));
+
+                .cookie(mockCookie).content(APPLICATION_JSON).accept(APPLICATION_JSON));
 
         // then
         MvcResult mvcResult = resultActions.andReturn();
@@ -164,7 +155,6 @@ public class CompanyApiControllerTest {
         // when
         ResultActions resultActions = mvc.perform(post("/s/api/jobpostingboard/insert")
                 .content(body)
-                .session(session)
                 .cookie(mockCookie)
                 .contentType(APPLICATION_JSON)
                 .accept(APPLICATION_JSON));
@@ -189,7 +179,6 @@ public class CompanyApiControllerTest {
         // when
         ResultActions resultActions = mvc
                 .perform(MockMvcRequestBuilders.delete("/s/company/jobPostingBoard/delete/1")
-                        .session(session)
                         .cookie(mockCookie)
                         .accept(APPLICATION_JSON));
 
@@ -197,7 +186,6 @@ public class CompanyApiControllerTest {
         MvcResult mvcResult = resultActions.andReturn();
         System.out.println("debugggg:" + mvcResult.getResponse().getContentAsString());
         resultActions.andExpect(MockMvcResultMatchers.jsonPath("$.code").value(1));
-
     }
 
     @Test
@@ -222,23 +210,22 @@ public class CompanyApiControllerTest {
     }
 
     @Test
-    @Sql(scripts = "classpath:testsql/companytest.sql")
+    @Sql("classpath:testsql/companytest.sql")
     public void findByCompany_test() throws Exception {
         // given
 
         // when
         ResultActions resultActions = mvc
 
-                .perform(get("/api/company/detail").session(session).cookie(mockCookie)
+                .perform(get("/api/company/detail").cookie(mockCookie)
                         .accept(APPLICATION_JSON));
         // then
         MvcResult mvcResult = resultActions.andReturn();
-        System.out.println("디버그 : " + mvcResult.getResponse().getContentAsString());
 
     }
 
     @Test
-    @Sql(scripts = "classpath:testsql/companytest.sql")
+    @Sql({ "classpath:truncate.sql", "classpath:testsql/companytest.sql" })
     public void companyUpdate_test() throws Exception {
         // given
         CompanyUpdateReqDto companyUpdateReqDto = new CompanyUpdateReqDto();
@@ -252,10 +239,8 @@ public class CompanyApiControllerTest {
         String body = om.writeValueAsString(companyUpdateReqDto);
         // when
         ResultActions resultActions = mvc
-                .perform(put("/s/api/company/update").session(session).cookie(mockCookie).content(body)
+                .perform(put("/s/api/company/update").cookie(mockCookie).content(body)
                         .contentType(APPLICATION_JSON).accept(APPLICATION_JSON));
-        MvcResult mvcResult = resultActions.andReturn();
-        System.out.println("디버그 : " + mvcResult.getResponse().getContentAsString());
     }
 
 }

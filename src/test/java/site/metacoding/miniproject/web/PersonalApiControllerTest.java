@@ -31,6 +31,8 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 import site.metacoding.miniproject.dto.personal.PersonalReqDto.PersonalUpdatReqDto;
 import site.metacoding.miniproject.dto.resumes.ResumesReqDto.ResumesInsertReqDto;
 import site.metacoding.miniproject.dto.resumes.ResumesReqDto.ResumesUpdateReqDto;
+import site.metacoding.miniproject.dto.resumes.ResumesRespDto.PagingDto;
+import site.metacoding.miniproject.dto.resumes.ResumesRespDto.ResumesAllRespDto;
 import site.metacoding.miniproject.dto.user.UserRespDto.SignPersonalDto;
 import site.metacoding.miniproject.dto.user.UserRespDto.SignedDto;
 import site.metacoding.miniproject.service.personal.PersonalService;
@@ -61,24 +63,15 @@ public class PersonalApiControllerTest {
 
     private MockCookie mockCookie;
 
-    private MockHttpSession session;
-
     @BeforeEach
     public void sessionInit() {
-        session = new MockHttpSession();
+
         SignPersonalDto signPersonalDto = new SignPersonalDto();
         signPersonalDto.setPersonalId(1);
         SignedDto<?> signedDto = new SignedDto<>(1, "testusers1", signPersonalDto);
 
-        session.setAttribute("principal", signedDto);
-
         String JwtToken = CreateJWTToken.createToken(signedDto);
         mockCookie = new MockCookie("Authorization", JwtToken);
-    }
-
-    @AfterEach
-    public void sessionClear() {
-        session.clearAttributes();
     }
 
     @Test
@@ -115,8 +108,7 @@ public class PersonalApiControllerTest {
                         .file(file)
                         .file(multipartBody)
                         .accept(APPLICATION_JSON)
-                        .cookie(mockCookie)
-                        .session(session));
+                        .cookie(mockCookie));
 
         // then
         MvcResult mvcResult = resultActions.andReturn();
@@ -136,8 +128,7 @@ public class PersonalApiControllerTest {
         // when
         ResultActions resultActions = mvc
                 .perform(get("/s/resumes/myList").accept(APPLICATION_JSON)
-                        .cookie(mockCookie)
-                        .session(session));
+                        .cookie(mockCookie));
 
         // then
         MvcResult mvcResult = resultActions.andReturn();
@@ -155,8 +146,7 @@ public class PersonalApiControllerTest {
         // when
         ResultActions resultActions = mvc
                 .perform(MockMvcRequestBuilders.get("/resumes/" + resumesId).accept(APPLICATION_JSON)
-                        .cookie(mockCookie)
-                        .session(session));
+                        .cookie(mockCookie));
 
         // then
         MvcResult mvcResult = resultActions.andReturn();
@@ -200,8 +190,7 @@ public class PersonalApiControllerTest {
                         .file(file)
                         .file(multipartBody)
                         .accept(APPLICATION_JSON)
-                        .cookie(mockCookie)
-                        .session(session));
+                        .cookie(mockCookie));
 
         // then
         MvcResult mvcResult = resultActions.andReturn();
@@ -220,8 +209,7 @@ public class PersonalApiControllerTest {
         ResultActions resultActions = mvc
                 .perform(delete("/s/resumes/delete/" + id)
                         .accept(APPLICATION_JSON)
-                        .cookie(mockCookie)
-                        .session(session));
+                        .cookie(mockCookie));
 
         // then
         MvcResult mvcResult = resultActions.andReturn();
@@ -237,7 +225,6 @@ public class PersonalApiControllerTest {
 
         // when
         ResultActions resultActions = mvc.perform(get("/s/api/personal/detail")
-                .session(session)
                 .cookie(mockCookie)
                 .accept(APPLICATION_JSON));
 
@@ -263,13 +250,31 @@ public class PersonalApiControllerTest {
 
         // when
         ResultActions resultActions = mvc.perform(put("/s/api/personal/update").content(body)
-                .contentType(APPLICATION_JSON).accept(APPLICATION_JSON).session(session).cookie(mockCookie));
+                .contentType(APPLICATION_JSON).accept(APPLICATION_JSON).cookie(mockCookie));
         System.out.println("debugggg:" + resultActions.andReturn().getResponse().getContentAsString());
 
         // then
         MvcResult mvcResult = resultActions.andReturn();
         System.out.println("debugggg:" + mvcResult.getResponse().getContentAsString());
 
+    }
+
+    @Sql({ "classpath:truncate.sql", "classpath:testsql/findallresumes.sql" })
+    @Test
+    public void findAllResumes_test() throws Exception {
+        ResumesAllRespDto resumesAllRespDto = new ResumesAllRespDto();
+        resumesAllRespDto.setId(1);
+        resumesAllRespDto.setStartNum(1);
+        resumesAllRespDto.setKeyword("s");
+        resumesAllRespDto.setResumesTitle("안녕");
+        String body = om.writeValueAsString(resumesAllRespDto);
+        ResultActions resultActions = mvc.perform(get("/resumes/resumesList/" + resumesAllRespDto.getId()).content(body)
+                .cookie(mockCookie)
+                .accept(APPLICATION_JSON));
+
+        // then
+        MvcResult mvcResult = resultActions.andReturn();
+        System.out.println("debugggg: " + mvcResult.getResponse().getContentAsString());
     }
 
     @Test
@@ -281,8 +286,7 @@ public class PersonalApiControllerTest {
         // when
         ResultActions resultActions = mvc
                 .perform(MockMvcRequestBuilders.get("/personal/company/" + companyId).accept(APPLICATION_JSON)
-                        .cookie(mockCookie)
-                        .session(session));
+                        .cookie(mockCookie));
 
         // then
         MvcResult mvcResult = resultActions.andReturn();
@@ -302,8 +306,7 @@ public class PersonalApiControllerTest {
         ResultActions resultActions = mvc
                 .perform(MockMvcRequestBuilders.get("/personal/jobPostingBoard/" + jobPostingBoardId)
                         .accept(APPLICATION_JSON)
-                        .cookie(mockCookie)
-                        .session(session));
+                        .cookie(mockCookie));
 
         // then
         MvcResult mvcResult = resultActions.andReturn();
