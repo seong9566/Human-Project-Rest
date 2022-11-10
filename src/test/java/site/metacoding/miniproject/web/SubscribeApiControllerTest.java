@@ -18,12 +18,10 @@ import org.springframework.test.context.jdbc.Sql;
 import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.test.web.servlet.ResultActions;
 
-import lombok.extern.slf4j.Slf4j;
 import site.metacoding.miniproject.dto.user.UserRespDto.SignPersonalDto;
 import site.metacoding.miniproject.dto.user.UserRespDto.SignedDto;
 import site.metacoding.miniproject.utill.JWTToken.CreateJWTToken;
 
-@Slf4j
 @ActiveProfiles("test")
 @AutoConfigureMockMvc
 @SpringBootTest(webEnvironment = WebEnvironment.MOCK)
@@ -39,7 +37,7 @@ public class SubscribeApiControllerTest {
 
     @BeforeAll
     public static void init() {
-        
+
         SignPersonalDto signPersonalDto = new SignPersonalDto();
 
         signPersonalDto.setPersonalId(1);
@@ -53,39 +51,38 @@ public class SubscribeApiControllerTest {
     @BeforeEach
     public void sessionInit() {
 
-
     }
-
 
     @Order(1)
     @Test
-    @Sql({"classpath:truncate.sql", "classpath:testsql/insertcompanyfortest.sql", "classpath:testsql/insertuserforpersonal.sql"})
+    @Sql({ "classpath:truncate.sql", "classpath:testsql/insertcompanyfortest.sql",
+            "classpath:testsql/insertuserforpersonal.sql" })
     public void subscribeToCompany_test() throws Exception {
-        //given
+        // given
         Integer companyId = 1;
-        //when
+        // when
         ResultActions resultActions = mvc.perform(
                 get("/s/api/subscribe/" + companyId)
-                .cookie(mockCookie).accept(APPLICATION_JSON))
-                //then
-                .andExpect(jsonPath("$.code").value("1")
-        );
+                        .cookie(mockCookie).accept(APPLICATION_JSON))
+                // then
+                .andExpect(jsonPath("$.code").value("1"));
     }
-    
+
     @Order(2)
     @Test
-    @Sql({"classpath:truncate.sql", "classpath:testsql/insertcompanyfortest.sql", "classpath:testsql/insertuserforpersonal.sql", "classpath:testsql/insertsubscribefortest.sql"})
+    @Sql({ "classpath:truncate.sql", "classpath:testsql/insertcompanyfortest.sql",
+            "classpath:testsql/insertuserforpersonal.sql", "classpath:testsql/insertsubscribefortest.sql" })
     public void subscribeCancelToCompany_test() throws Exception {
-        //given
+        // given
         Integer subscribeId = 1;
-        //when
-        
-        ResultActions resultActions = mvc.perform(delete("/s/api/subscribe/" + subscribeId)
-        .cookie(mockCookie)
-        .accept(APPLICATION_JSON))
+        // when
 
-        //then
-        .andExpect(jsonPath("$.code").value("1"));
+        ResultActions resultActions = mvc.perform(delete("/s/api/subscribe/" + subscribeId)
+                .cookie(mockCookie)
+                .accept(APPLICATION_JSON))
+
+                // then
+                .andExpect(jsonPath("$.code").value("1"));
     }
 
 }

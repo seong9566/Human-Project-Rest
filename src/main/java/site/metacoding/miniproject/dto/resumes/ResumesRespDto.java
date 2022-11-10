@@ -29,11 +29,20 @@ public class ResumesRespDto {
         private Boolean categoryBackend;
         private Boolean categoryDevops;
 
+        private Integer careerId;
+        private Integer portfolioId;
+        private Integer resumesCategoryId;
+        private Integer personalId;
+
         public ResumesInsertRespDto(Resumes resumes, Category category, Career career, Portfolio portfolio) {
+            this.personalId = resumes.getPersonalId();
             this.resumesTitle = resumes.getResumesTitle();
             this.resumesPicture = resumes.getResumesPicture();
             this.resumesIntroduce = resumes.getResumesIntroduce();
             this.resumesPlace = resumes.getResumesPlace();
+            this.resumesCategoryId = resumes.getResumesCategoryId();
+            this.careerId = resumes.getCareerId();
+            this.portfolioId = resumes.getPortfolioId();
             this.categoryFrontend = category.getCategoryFrontend();
             this.categoryBackend = category.getCategoryBackend();
             this.categoryDevops = category.getCategoryDevops();

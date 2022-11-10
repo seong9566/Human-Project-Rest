@@ -29,7 +29,6 @@ import org.springframework.test.web.servlet.result.MockMvcResultMatchers;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.jayway.jsonpath.JsonPath;
 
-import lombok.extern.slf4j.Slf4j;
 import site.metacoding.miniproject.dto.company.CompanyReqDto.CompanyUpdateReqDto;
 import site.metacoding.miniproject.dto.jobpostingboard.JobPostingBoardReqDto.JobPostingBoardInsertReqDto;
 import site.metacoding.miniproject.dto.jobpostingboard.JobPostingBoardReqDto.JobPostingBoardUpdateReqDto;
@@ -37,7 +36,6 @@ import site.metacoding.miniproject.dto.user.UserRespDto.SignCompanyDto;
 import site.metacoding.miniproject.dto.user.UserRespDto.SignedDto;
 import site.metacoding.miniproject.utill.JWTToken.CreateJWTToken;
 
-@Slf4j
 @ActiveProfiles("test")
 @AutoConfigureMockMvc
 @SpringBootTest(webEnvironment = WebEnvironment.MOCK)
@@ -151,7 +149,7 @@ public class CompanyApiControllerTest {
         jobPostingBoardInsertReqDto.setFiveYearOver(false);
 
         String body = om.writeValueAsString(jobPostingBoardInsertReqDto);
-        log.debug("mytest : " + body);
+
         // when
         ResultActions resultActions = mvc.perform(post("/s/api/jobpostingboard/insert")
                 .content(body)

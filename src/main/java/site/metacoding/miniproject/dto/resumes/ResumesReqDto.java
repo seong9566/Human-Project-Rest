@@ -65,6 +65,10 @@ public class ResumesReqDto {
                                         .resumesPicture(resumesPicture)
                                         .resumesIntroduce(resumesIntroduce)
                                         .resumesPlace(resumesPlace)
+                                        .personalId(personalId)
+                                        .careerId(careerId)
+                                        .resumesCategoryId(resumesCategoryId)
+                                        .portfolioId(portfolioId)
                                         .build();
                 }
 
