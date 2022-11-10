@@ -49,10 +49,6 @@ jobs:
           aws_secret_key: ${{ secrets.AWS_SECRET_KEY }}
           application_name: miniProject-rest # 엘리스틱 빈스톡 애플리케이션 이름!
           environment_name: Miniprojectrest-env # 엘리스틱 빈스톡 환경 이름!
-<<<<<<< HEAD
           version_label: miniProject-rest${{steps.current-time.outputs.formattedTime}}
-=======
-          version_label: miniProject-rest-${{steps.current-time.outputs.formattedTime}}
->>>>>>> 07be0edd486f8607f42453f3d2d51d0c1f8b5520
           region: ap-northeast-2 # 서울 ap-northeast-2 버지니아북부 us-east-1
           deployment_package: deploy/deploy.zip
