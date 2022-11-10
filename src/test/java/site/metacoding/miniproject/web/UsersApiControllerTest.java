@@ -1,19 +1,16 @@
 package site.metacoding.miniproject.web;
 
-import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
-import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.multipart;
-import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
+import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.*;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.jsonPath;
 
-import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.Order;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureMockMvc;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.boot.test.context.SpringBootTest.WebEnvironment;
-import org.junit.jupiter.api.Order;
 import org.springframework.core.io.Resource;
 import org.springframework.core.io.ResourceLoader;
 import org.springframework.http.HttpMethod;
@@ -58,7 +55,7 @@ public class UsersApiControllerTest {
 
         signPersonalDto.setPersonalId(1);
         SignedDto<?> signedDto = new SignedDto<>(1, "testuser1", signPersonalDto);
-        
+
         session.setAttribute("principal", signedDto);
 
     }
@@ -92,8 +89,8 @@ public class UsersApiControllerTest {
 
         // then
         resultActions.andExpect(jsonPath("$.code").value("1"))
-        .andExpect(jsonPath("$.message").value("계정생성완료"))
-        .andExpect(jsonPath("$.data.usersId").value("1"));
+                .andExpect(jsonPath("$.message").value("계정생성완료"))
+                .andExpect(jsonPath("$.data.usersId").value("1"));
 
     }
 
@@ -126,13 +123,13 @@ public class UsersApiControllerTest {
 
         // then
         resultActions.andExpect(jsonPath("$.code").value("1"))
-        .andExpect(jsonPath("$.message").value("계정생성완료"))
-        .andExpect(jsonPath("$.data.usersId").value("1"));
+                .andExpect(jsonPath("$.message").value("계정생성완료"))
+                .andExpect(jsonPath("$.data.usersId").value("1"));
     }
 
     @Order(3)
     @Test
-    @Sql({"classpath:truncate.sql", "classpath:testsql/insertuserforpersonal.sql"})
+    @Sql({ "classpath:truncate.sql", "classpath:testsql/insertuserforpersonal.sql" })
     public void login_test() throws Exception {
         // given
         String loginId = "testuser1";
@@ -153,8 +150,8 @@ public class UsersApiControllerTest {
 
         // then
         resultActions.andExpect(jsonPath("$.code").value("1"))
-        .andExpect(jsonPath("$.message").value("로그인완료"))
-        .andExpect(jsonPath("$.data.userInfo.personalId").value("1"));
+                .andExpect(jsonPath("$.message").value("로그인완료"))
+                .andExpect(jsonPath("$.data.userInfo.personalId").value("1"));
     }
 
     @Order(4)
@@ -169,13 +166,13 @@ public class UsersApiControllerTest {
                 .accept(APPLICATION_JSON));
         // then
         resultActions.andExpect(jsonPath("$.code").value("-1"))
-        .andExpect(jsonPath("$.message").value("이미 로그인 되어 있음"));
+                .andExpect(jsonPath("$.message").value("이미 로그인 되어 있음"));
 
     }
 
-    @Order(5)
+    @Order(2)
     @Test
-    @Sql({"classpath:truncate.sql", "classpath:testsql/insertuserforpersonal.sql" })
+    @Sql({ "classpath:truncate.sql", "classpath:testsql/insertuserforpersonal.sql" })
     public void userIdSameCheck_test() throws Exception {
 
         // given
