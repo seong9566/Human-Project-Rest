@@ -51,10 +51,10 @@ public class UsersApiControllerTest {
         public static void init() {
                 SignPersonalDto signPersonalDto = new SignPersonalDto();
 
-                signPersonalDto.setPersonalId(1);
-                SignedDto<?> signedDto = new SignedDto<>(1, "testuser1", signPersonalDto);
-
-                session.setAttribute("principal", signedDto);
+        signPersonalDto.setPersonalId(1);
+        SignedDto<?> signedDto = new SignedDto<>(1, "testuser1", signPersonalDto);
+        
+        session.setAttribute("principal", signedDto);
 
         }
 
