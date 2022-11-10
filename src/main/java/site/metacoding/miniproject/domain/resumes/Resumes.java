@@ -27,11 +27,16 @@ public class Resumes {
 
 	// 이력서 작성
 	@Builder
-	public Resumes(String resumesTitle, String resumesPicture, String resumesIntroduce, String resumesPlace) {
+	public Resumes(String resumesTitle, String resumesPicture, String resumesIntroduce, String resumesPlace,
+			Integer personalId, Integer resumesCategoryId, Integer careerId, Integer portfolioId) {
 		this.resumesTitle = resumesTitle;
 		this.resumesPicture = resumesPicture;
 		this.resumesIntroduce = resumesIntroduce;
 		this.resumesPlace = resumesPlace;
+		this.personalId = personalId;
+		this.resumesCategoryId = resumesCategoryId;
+		this.careerId = careerId;
+		this.portfolioId = portfolioId;
 	}
 
 	// 이력서 수정

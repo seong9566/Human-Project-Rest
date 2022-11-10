@@ -6,7 +6,6 @@ import static org.springframework.test.web.servlet.request.MockMvcRequestBuilder
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.put;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.jsonPath;
 
-import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -17,7 +16,6 @@ import org.springframework.core.io.Resource;
 import org.springframework.core.io.ResourceLoader;
 import org.springframework.http.HttpMethod;
 import org.springframework.mock.web.MockCookie;
-import org.springframework.mock.web.MockHttpSession;
 import org.springframework.mock.web.MockMultipartFile;
 import org.springframework.test.context.ActiveProfiles;
 import org.springframework.test.context.jdbc.Sql;
@@ -31,13 +29,10 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 import site.metacoding.miniproject.dto.personal.PersonalReqDto.PersonalUpdatReqDto;
 import site.metacoding.miniproject.dto.resumes.ResumesReqDto.ResumesInsertReqDto;
 import site.metacoding.miniproject.dto.resumes.ResumesReqDto.ResumesUpdateReqDto;
-import site.metacoding.miniproject.dto.resumes.ResumesRespDto.PagingDto;
 import site.metacoding.miniproject.dto.resumes.ResumesRespDto.ResumesAllRespDto;
 import site.metacoding.miniproject.dto.user.UserRespDto.SignPersonalDto;
 import site.metacoding.miniproject.dto.user.UserRespDto.SignedDto;
-import site.metacoding.miniproject.service.personal.PersonalService;
 import site.metacoding.miniproject.utill.JWTToken.CreateJWTToken;
-import site.metacoding.miniproject.utill.SHA256;
 
 @ActiveProfiles("test")
 @AutoConfigureMockMvc
@@ -50,13 +45,7 @@ public class PersonalApiControllerTest {
     private ObjectMapper om;
 
     @Autowired
-    private SHA256 sha256;
-
-    @Autowired
     private ResourceLoader loader;
-
-    @Autowired
-    private PersonalService personalService;
 
     @Autowired
     private MockMvc mvc;
@@ -78,45 +67,46 @@ public class PersonalApiControllerTest {
     @Sql({ "classpath:truncate.sql", "classpath:testsql/insertresumes.sql" })
     public void insertResumes_test() throws Exception { // 이력서 작성
         // given
-        ResumesInsertReqDto resumesInsertReqDto = new ResumesInsertReqDto();
-
-        resumesInsertReqDto.setCategoryFrontend(true);
-        resumesInsertReqDto.setCategoryBackend(true);
-        resumesInsertReqDto.setCategoryDevops(true);
-        resumesInsertReqDto.setPortfolioFile("포트폴리오파일");
-        resumesInsertReqDto.setPortfolioSource("http://github.com/asdfqwer");
-        resumesInsertReqDto.setOneYearLess(true);
-        resumesInsertReqDto.setTwoYearOver(false);
-        resumesInsertReqDto.setThreeYearOver(false);
-        resumesInsertReqDto.setFiveYearOver(false);
-        resumesInsertReqDto.setResumesTitle("이력서제목1");
-        resumesInsertReqDto.setResumesPicture("사진자리");
-        resumesInsertReqDto.setResumesIntroduce("자기소개1");
-        resumesInsertReqDto.setResumesPlace("부산경남");
+        ResumesInsertReqDto reqDto = new ResumesInsertReqDto();
+        reqDto.setCategoryFrontend(true);
+        reqDto.setCategoryBackend(true);
+        reqDto.setCategoryDevops(true);
+        reqDto.setPortfolioFile("portfoliofile");
+        reqDto.setPortfolioSource("github.com/asdfqwer");
+        reqDto.setOneYearLess(true);
+        reqDto.setTwoYearOver(false);
+        reqDto.setThreeYearOver(false);
+        reqDto.setFiveYearOver(false);
+        reqDto.setResumesTitle("resumes1");
+        reqDto.setResumesIntroduce("introduce1");
+        reqDto.setResumesPlace("장소1");
 
         String filename = "p4.jpg";
         Resource resource = loader.getResource("classpath:/static/images/" + filename);
         MockMultipartFile file = new MockMultipartFile("file", "test.jpg", "image/jpg", resource.getInputStream());
 
-        String body = om.writeValueAsString(resumesInsertReqDto);
-        MockMultipartFile multipartBody = new MockMultipartFile("reqDto", "formData", APPLICATION_JSON,
-                body.getBytes());
+        String body = om.writeValueAsString(reqDto);
+        MockMultipartFile formData = new MockMultipartFile("reqDto", "formData", APPLICATION_JSON,
+                body.getBytes("utf-8"));
 
         // when
-        ResultActions resultActions = mvc
-                .perform(multipart(HttpMethod.POST, "/s/resumes/insert")
+        ResultActions resultActions = mvc.perform(
+                multipart(HttpMethod.POST, "/s/resumes/insert")
                         .file(file)
-                        .file(multipartBody)
-                        .accept(APPLICATION_JSON)
-                        .cookie(mockCookie));
+                        .file(formData)
+                        .cookie(mockCookie)
+                        .accept(APPLICATION_JSON));
 
         // then
-        MvcResult mvcResult = resultActions.andReturn();
+        // MvcResult mvcResult = resultActions.andReturn();
         // System.out.println("디버그 : " + mvcResult.getResponse().getStatus());
         // System.out.println("디버그 : " + mvcResult.getResponse().getContentAsString());
         resultActions.andExpect(jsonPath("$.code").value(1));
         resultActions.andExpect(jsonPath("$.message").value("이력서 등록 성공"));
-        resultActions.andExpect(jsonPath("$.data.resumesTitle").value("이력서제목1"));
+        resultActions.andExpect(jsonPath("$.data.resumesTitle").value("resumes1"));
+        resultActions.andExpect(jsonPath("$.data.oneYearLess").value(true));
+        resultActions.andExpect(jsonPath("$.data.portfolioFile").value("portfoliofile"));
+        resultActions.andExpect(jsonPath("$.data.categoryFrontend").value(true));
     }
 
     @Test
@@ -164,38 +154,39 @@ public class PersonalApiControllerTest {
         resumesUpdateReqDto.setCategoryFrontend(true);
         resumesUpdateReqDto.setCategoryBackend(true);
         resumesUpdateReqDto.setCategoryDevops(true);
-        resumesUpdateReqDto.setPortfolioFile("포트폴리오파일수정");
-        resumesUpdateReqDto.setPortfolioSource("http://github.com/asdfqwer");
+        resumesUpdateReqDto.setPortfolioFile("portfolioupdate");
+        resumesUpdateReqDto.setPortfolioSource("github.com/asdfqwer");
         resumesUpdateReqDto.setOneYearLess(true);
         resumesUpdateReqDto.setTwoYearOver(false);
         resumesUpdateReqDto.setThreeYearOver(false);
         resumesUpdateReqDto.setFiveYearOver(false);
-        resumesUpdateReqDto.setResumesTitle("이력서제목수정확인합니다");
-        resumesUpdateReqDto.setResumesPicture("사진자리");
-        resumesUpdateReqDto.setResumesIntroduce("자기소개1");
-        resumesUpdateReqDto.setResumesPlace("부산경남");
+        resumesUpdateReqDto.setResumesTitle("titleupdate1");
+        resumesUpdateReqDto.setResumesIntroduce("introduce1");
+        resumesUpdateReqDto.setResumesPlace("place1");
 
         String filename = "p4.jpg";
         Resource resource = loader.getResource("classpath:/static/images/" + filename);
         MockMultipartFile file = new MockMultipartFile("file", "test.jpg", "image/jpg", resource.getInputStream());
 
         String body = om.writeValueAsString(resumesUpdateReqDto);
-        MockMultipartFile multipartBody = new MockMultipartFile("resumesUpdateReqDto", "formData", APPLICATION_JSON,
-                body.getBytes());
+        MockMultipartFile formData = new MockMultipartFile("resumesUpdateReqDto", "formData", APPLICATION_JSON,
+                body.getBytes("utf-8"));
 
         // when
         ResultActions resultActions = mvc
                 .perform(multipart(HttpMethod.PUT, "/s/resumes/update/" + resumesId)
                         .file(file)
-                        .file(multipartBody)
+                        .file(formData)
                         .accept(APPLICATION_JSON)
                         .cookie(mockCookie));
 
         // then
-        MvcResult mvcResult = resultActions.andReturn();
+        // MvcResult mvcResult = resultActions.andReturn();
+        // System.out.println("디버그 : " + mvcResult.getResponse().getStatus());
+        // System.out.println("디버그 : " + mvcResult.getResponse().getContentAsString());
         resultActions.andExpect(jsonPath("$.code").value(1));
         resultActions.andExpect(jsonPath("$.message").value("이력서 수정 성공"));
-        resultActions.andExpect(jsonPath("$.data.resumesTitle").value("이력서제목수정확인합니다"));
+        resultActions.andExpect(jsonPath("$.data.resumesTitle").value("titleupdate1"));
     }
 
     @Test
