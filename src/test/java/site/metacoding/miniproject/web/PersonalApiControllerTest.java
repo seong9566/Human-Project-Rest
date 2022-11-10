@@ -150,7 +150,6 @@ public class PersonalApiControllerTest {
 
         // then
         MvcResult mvcResult = resultActions.andReturn();
-        System.out.println("디버그 : " + mvcResult.getResponse().getContentAsString());
         resultActions.andExpect(jsonPath("$.code").value(1));
         resultActions.andExpect(jsonPath("$.message").value("내 이력서 상세 보기 성공"));
         resultActions.andExpect(jsonPath("$.data.resumesTitle").value("resumes_title_example1"));
@@ -230,7 +229,6 @@ public class PersonalApiControllerTest {
 
         // then
         MvcResult mvcResult = resultActions.andReturn();
-        System.out.println("debugggg: " + mvcResult.getResponse().getContentAsString());
     }
 
     // 내정보수정
@@ -251,30 +249,31 @@ public class PersonalApiControllerTest {
         // when
         ResultActions resultActions = mvc.perform(put("/s/api/personal/update").content(body)
                 .contentType(APPLICATION_JSON).accept(APPLICATION_JSON).cookie(mockCookie));
-        System.out.println("debugggg:" + resultActions.andReturn().getResponse().getContentAsString());
 
         // then
         MvcResult mvcResult = resultActions.andReturn();
-        System.out.println("debugggg:" + mvcResult.getResponse().getContentAsString());
 
     }
 
-    @Sql({ "classpath:truncate.sql", "classpath:testsql/findallresumes.sql" })
+    // 전체 이력서 목록 보기
+    @Sql({ "classpath:truncate.sql", "classpath:testsql/findallmyresumes.sql" })
     @Test
     public void findAllResumes_test() throws Exception {
         ResumesAllRespDto resumesAllRespDto = new ResumesAllRespDto();
         resumesAllRespDto.setId(1);
-        resumesAllRespDto.setStartNum(1);
+        resumesAllRespDto.setPage(0);
+        resumesAllRespDto.setStartNum(0);
         resumesAllRespDto.setKeyword("s");
-        resumesAllRespDto.setResumesTitle("안녕");
         String body = om.writeValueAsString(resumesAllRespDto);
-        ResultActions resultActions = mvc.perform(get("/resumes/resumesList/" + resumesAllRespDto.getId()).content(body)
+        ResultActions resultActions = mvc.perform(get("/resumes/resumesList/" + resumesAllRespDto.getId())
                 .cookie(mockCookie)
                 .accept(APPLICATION_JSON));
 
         // then
         MvcResult mvcResult = resultActions.andReturn();
-        System.out.println("debugggg: " + mvcResult.getResponse().getContentAsString());
+        resultActions.andExpect(jsonPath("$.code").value(1));
+        resultActions.andExpect(jsonPath("$.message").value("전체 이력서 목록 보기 성공"));
+        resultActions.andExpect(jsonPath("$.data.[0].resumesTitle").value("resumes_title_example1"));
     }
 
     @Test
@@ -290,7 +289,6 @@ public class PersonalApiControllerTest {
 
         // then
         MvcResult mvcResult = resultActions.andReturn();
-        System.out.println("디버그 : " + mvcResult.getResponse().getContentAsString());
         resultActions.andExpect(jsonPath("$.code").value(1));
         resultActions.andExpect(jsonPath("$.message").value("회사정보보기"));
         resultActions.andExpect(jsonPath("$.data.companyName").value("testCompanyname"));
@@ -310,7 +308,6 @@ public class PersonalApiControllerTest {
 
         // then
         MvcResult mvcResult = resultActions.andReturn();
-        System.out.println("디버그 : " + mvcResult.getResponse().getContentAsString());
         resultActions.andExpect(jsonPath("$.code").value(1));
         resultActions.andExpect(jsonPath("$.message").value("채용공고 상세보기"));
         resultActions.andExpect(jsonPath("$.data.jobPostingBoardTitle").value("title"));
