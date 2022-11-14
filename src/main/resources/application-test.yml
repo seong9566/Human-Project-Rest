@@ -39,5 +39,5 @@ spring:
 
 logging:
   level:
-    root: DEBUG
+    root: warn
     #'[org.hibernate]': DEBUG - 하이버네이트 사용 안함
